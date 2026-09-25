@@ -48,13 +48,13 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-20 sm:pb-8">
-      {/* HEADER DESKTOP & MOBILE */}
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-24 sm:pb-8">
+      {/* HEADER UTAMA SHARED */}
       <Header />
 
       {/* MAIN CONTENT */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
-        <SummaryCards summary={summary} />
+        <SummaryCards summary={summary} wallets={wallets} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
@@ -65,7 +65,6 @@ export default function DashboardPage() {
             />
             <RecentTx
               transactions={summary?.recentTransactions}
-              onOpenModal={() => setShowTxModal(true)}
               onRefresh={fetchDashboardData}
             />
           </div>
@@ -88,8 +87,8 @@ export default function DashboardPage() {
         wallets={wallets}
       />
 
-      {/* BOTTOM NAVIGATION FOR MOBILE */}
-      <BottomNav />
+      {/* BOTTOM NAVIGATION MOBILE WITH FLOATING ACTION BUTTON */}
+      <BottomNav onOpenTxModal={() => setShowTxModal(true)} />
     </div>
   );
 }

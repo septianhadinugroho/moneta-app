@@ -10,10 +10,11 @@ const config: Config = {
     extend: {
       colors: {
         moneta: {
-          primary: "#0F3D34",   // Deep Forest Green
-          secondary: "#16A085", // Emerald Teal
-          accent: "#22C55E",    // Vibrant Mint Green
-          bg: "#E6F7EF",        // Light Soft Mint Background
+          primary: "#064E3B",   // Emerald Dark
+          secondary: "#059669", // Emerald Medium
+          surface: "#F8FAFC",   // Clean Slate Light
+          card: "#FFFFFF",
+          rose: "#E11D48",      // Soft Rose untuk Expense
         },
       },
     },
