@@ -2,34 +2,21 @@
 
 import { useEffect, useState } from 'react';
 import api from '@/lib/api';
-import Header from '@/components/Header';
-import BottomNav from '@/components/BottomNav';
-import ConfirmModal from '@/components/ConfirmModal';
 import { formatRupiah } from '@/lib/utils';
-import { Search, ArrowUpRight, ArrowDownLeft, Filter, Trash2 } from 'lucide-react';
+import { Search, ArrowUpRight, ArrowDownLeft, ChevronRight, Filter } from 'lucide-react';
+import TransactionDetailModal from '@/components/TransactionDetailModal';
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<any[]>([]);
-  const [wallets, setWallets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
-  // Filters
   const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState<'ALL' | 'INCOME' | 'EXPENSE'>('ALL');
-  const [walletFilter, setWalletFilter] = useState<string>('ALL');
-
-  // Selected for Delete
+  const [typeFilter, setTypeFilter] = useState('ALL');
   const [selectedTx, setSelectedTx] = useState<any>(null);
-  const [actionLoading, setActionLoading] = useState(false);
 
   const fetchTransactions = async () => {
     try {
-      const [txRes, walletRes] = await Promise.all([
-        api.get('/transactions'),
-        api.get('/wallets'),
-      ]);
-      setTransactions(txRes.data.data || []);
-      setWallets(walletRes.data.data || []);
+      const res = await api.get('/transactions');
+      setTransactions(res.data.data || []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -41,155 +28,128 @@ export default function TransactionsPage() {
     fetchTransactions();
   }, []);
 
-  const handleDeleteTx = async () => {
-    if (!selectedTx) return;
-    setActionLoading(true);
-    try {
-      await api.delete(`/transactions/${selectedTx.id}`);
-      setSelectedTx(null);
-      fetchTransactions();
-    } catch (err: any) {
-      alert(err.response?.data?.message || 'Gagal menghapus transaksi');
-    } finally {
-      setActionLoading(false);
-    }
+  const formatDate = (rawDate: string) => {
+    if (!rawDate) return '';
+    const d = new Date(rawDate);
+    return d.toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
   };
 
-  // Logic Filtering
   const filteredTx = transactions.filter((tx) => {
-    const matchSearch =
-      tx.description?.toLowerCase().includes(search.toLowerCase()) ||
-      tx.category?.name?.toLowerCase().includes(search.toLowerCase());
-    const matchType = typeFilter === 'ALL' || tx.type === typeFilter;
-    const matchWallet = walletFilter === 'ALL' || String(tx.walletId) === String(walletFilter);
-    return matchSearch && matchType && matchWallet;
+    const name = (tx.category?.name || tx.description || '').toLowerCase();
+    const matchesSearch = name.includes(search.toLowerCase());
+    const matchesType =
+      typeFilter === 'ALL' || String(tx.type).toUpperCase() === typeFilter;
+    return matchesSearch && matchesType;
   });
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="py-12 flex justify-center items-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-24 sm:pb-8">
-      <Header />
+    <div className="p-4 sm:p-5 space-y-4">
+      <div className="flex justify-between items-center">
+        <h1 className="text-base sm:text-lg font-black text-slate-900">Riwayat Transaksi</h1>
+        <span className="px-2.5 py-1 bg-slate-200/60 text-slate-700 text-[10px] font-extrabold rounded-full">
+          {filteredTx.length} Transaksi
+        </span>
+      </div>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 pt-6 space-y-4">
-        <div className="flex justify-between items-center">
-          <h1 className="text-base sm:text-lg font-black text-slate-900">Riwayat Transaksi</h1>
-          <span className="text-xs font-bold text-slate-500">{filteredTx.length} Transaksi</span>
+      {/* FILTER & SEARCH */}
+      <div className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs space-y-2.5">
+        <div className="relative">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Cari deskripsi atau kategori..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-9 pr-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900 transition"
+          />
         </div>
 
-        {/* SEARCH & FILTER CONTROLS */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
-          <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Cari transaksi..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900"
-            />
-          </div>
-
-          <div className="flex flex-wrap gap-2 text-xs">
-            {/* Tipe Filter */}
-            <select
-              value={typeFilter}
-              onChange={(e: any) => setTypeFilter(e.target.value)}
-              className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-700 focus:outline-hidden"
-            >
-              <option value="ALL">Semua Tipe</option>
-              <option value="INCOME">Pemasukan</option>
-              <option value="EXPENSE">Pengeluaran</option>
-            </select>
-
-            {/* Dompet Filter */}
-            <select
-              value={walletFilter}
-              onChange={(e) => setWalletFilter(e.target.value)}
-              className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-700 focus:outline-hidden"
-            >
-              <option value="ALL">Semua Dompet / Rekening</option>
-              {wallets.map((w) => (
-                <option key={w.id} value={w.id}>
-                  {w.name}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="flex gap-2">
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-hidden focus:ring-2 focus:ring-slate-900"
+          >
+            <option value="ALL">Semua Tipe</option>
+            <option value="EXPENSE">Pengeluaran</option>
+            <option value="INCOME">Pemasukan</option>
+          </select>
         </div>
+      </div>
 
-        {/* TRANSACTION LIST */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs divide-y divide-slate-100 overflow-hidden">
-          {filteredTx.length === 0 ? (
-            <p className="text-xs text-slate-400 text-center py-10">Tidak ada transaksi ditemukan.</p>
-          ) : (
-            filteredTx.map((tx) => (
+      {/* LIST TRANSAKSI */}
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs divide-y divide-slate-100 overflow-hidden">
+        {filteredTx.length === 0 ? (
+          <p className="text-xs text-slate-400 text-center py-10 font-medium">
+            Tidak ada transaksi ditemukan.
+          </p>
+        ) : (
+          filteredTx.map((tx) => {
+            const isIncome = String(tx.type).toUpperCase() === 'INCOME';
+            return (
               <div
                 key={tx.id}
-                className="p-4 flex justify-between items-center hover:bg-slate-50 transition"
+                onClick={() => setSelectedTx(tx)}
+                className="p-3.5 flex justify-between items-center cursor-pointer hover:bg-slate-50 transition group"
               >
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 min-w-0 pr-2">
                   <div
                     className={`p-2.5 rounded-xl shrink-0 ${
-                      tx.type === 'INCOME' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
+                      isIncome ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
                     }`}
                   >
-                    {tx.type === 'INCOME' ? (
-                      <ArrowUpRight className="w-4 h-4" />
+                    {isIncome ? (
+                      <ArrowUpRight className="w-4.5 h-4.5" />
                     ) : (
-                      <ArrowDownLeft className="w-4 h-4" />
+                      <ArrowDownLeft className="w-4.5 h-4.5" />
                     )}
                   </div>
-                  <div>
-                    <p className="text-xs font-extrabold text-slate-900">
-                      {tx.description || tx.category?.name}
+                  <div className="truncate">
+                    <p className="text-xs font-bold text-slate-900 truncate">
+                      {tx.category?.name || tx.description || 'Transaksi'}
                     </p>
-                    <p className="text-[10px] font-semibold text-slate-400 mt-0.5">
-                      {tx.wallet?.name} • {new Date(tx.date).toLocaleDateString('id-ID')}
+                    <p className="text-[10px] text-slate-400 font-medium truncate mt-0.5">
+                      {tx.wallet?.name || 'Dompet'} • {formatDate(tx.date || tx.createdAt)}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-3">
+                {/* NOMINAL & CHEVRON (BEBAS TURUS / WRAP) */}
+                <div className="flex items-center space-x-2 shrink-0 pl-2">
                   <span
-                    className={`text-xs font-black ${
-                      tx.type === 'INCOME' ? 'text-emerald-600' : 'text-slate-900'
+                    className={`text-xs font-black whitespace-nowrap ${
+                      isIncome ? 'text-emerald-600' : 'text-slate-900'
                     }`}
                   >
-                    {tx.type === 'INCOME' ? '+' : '-'}{formatRupiah(tx.amount)}
+                    {isIncome ? '+' : '-'}{formatRupiah(tx.amount)}
                   </span>
-                  <button
-                    onClick={() => setSelectedTx(tx)}
-                    className="p-1.5 text-slate-300 hover:text-rose-600 transition rounded-lg"
-                    title="Hapus Transaksi"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-600 transition" />
                 </div>
               </div>
-            ))
-          )}
-        </div>
-      </main>
+            );
+          })
+        )}
+      </div>
 
-      <ConfirmModal
+      {/* MODAL DETAIL */}
+      <TransactionDetailModal
         isOpen={Boolean(selectedTx)}
         onClose={() => setSelectedTx(null)}
-        onConfirm={handleDeleteTx}
-        title="Hapus Transaksi?"
-        description={`Nominal ${formatRupiah(selectedTx?.amount || 0)} (${selectedTx?.type}) dari dompet ${selectedTx?.wallet?.name}. Saldo dompet akan dikembalikan secara otomatis.`}
-        confirmLabel="Hapus Transaksi"
-        variant="danger"
-        loading={actionLoading}
+        transaction={selectedTx}
+        onSuccess={fetchTransactions}
       />
-
-      <BottomNav />
     </div>
   );
 }
