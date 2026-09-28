@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { formatRupiah } from '@/lib/utils';
 import { History, ArrowUpRight, ArrowDownLeft, ChevronRight } from 'lucide-react';
 import TransactionDetailModal from '@/components/TransactionDetailModal';
+import EditTransactionModal from '@/components/modals/EditTransactionModal';
 
 export default function RecentTx({
   transactions = [],
@@ -14,6 +15,7 @@ export default function RecentTx({
   onRefresh?: () => void;
 }) {
   const [selectedTx, setSelectedTx] = useState<any>(null);
+  const [editingTx, setEditingTx] = useState<any>(null);
 
   const formatDate = (rawDate: string) => {
     if (!rawDate) return '';
@@ -94,11 +96,26 @@ export default function RecentTx({
         )}
       </div>
 
+      {/* MODAL DETAIL */}
       <TransactionDetailModal
         isOpen={Boolean(selectedTx)}
         onClose={() => setSelectedTx(null)}
         transaction={selectedTx}
         onSuccess={onRefresh}
+        onEditClick={(tx) => {
+          setSelectedTx(null);
+          setEditingTx(tx);
+        }}
+      />
+
+      {/* MODAL EDIT */}
+      <EditTransactionModal
+        isOpen={Boolean(editingTx)}
+        onClose={() => setEditingTx(null)}
+        transaction={editingTx}
+        onSuccess={() => {
+          if (onRefresh) onRefresh();
+        }}
       />
     </>
   );

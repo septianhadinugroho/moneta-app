@@ -7,15 +7,16 @@ import RecentTx from '@/components/cards/RecentTx';
 import ExpenseChart from '@/components/cards/ExpenseChart';
 
 export default function DashboardPage() {
-  const [summary, setSummary] = useState<any>(null);
+  const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchDashboardData = async () => {
     try {
+      // 👈 Pakai endpoint /dashboard/summary sesuai router backend
       const res = await api.get('/dashboard/summary');
-      setSummary(res.data.data);
+      setData(res.data.data || res.data || {});
     } catch (err) {
-      // Error handling diam tanpa mencetak log sensitif di browser
+      console.error('Gagal mengambil data dashboard:', err);
     } finally {
       setLoading(false);
     }
@@ -33,19 +34,31 @@ export default function DashboardPage() {
     );
   }
 
-  return (
-    <div className="p-4 sm:p-5 space-y-4">
-      <SummaryCards summary={summary} />
+  const totalNetWorth = data?.totalNetWorth || 0;
+  const monthlySummary = data?.monthlySummary || { income: 0, expense: 0 };
+  const recentTransactions = data?.recentTransactions || [];
 
+  return (
+    <div className="p-4 sm:p-5 space-y-4 pb-20">
+      {/* SUMMARY CARDS */}
+      <SummaryCards
+        totalNetWorth={totalNetWorth}
+        monthlySummary={monthlySummary}
+      />
+
+      {/* TRANSAKSI TERAKHIR */}
       <RecentTx
-        transactions={summary?.recentTransactions || []}
+        transactions={recentTransactions}
         onRefresh={fetchDashboardData}
       />
 
-      <ExpenseChart
-        expenseCategories={summary?.expenseCategoryBreakdown || []}
-        incomeCategories={summary?.incomeCategoryBreakdown || []}
-      />
+      {/* CHART KATEGORI */}
+      {(data?.expenseCategoryBreakdown || data?.incomeCategoryBreakdown) && (
+        <ExpenseChart
+          expenseCategories={data.expenseCategoryBreakdown || []}
+          incomeCategories={data.incomeCategoryBreakdown || []}
+        />
+      )}
     </div>
   );
 }

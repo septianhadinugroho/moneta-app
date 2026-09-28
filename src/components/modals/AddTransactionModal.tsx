@@ -170,7 +170,7 @@ export default function AddTransactionModal({
                   onClick={() => setIsCategoryModalOpen(true)}
                   className="text-[11px] font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-0.5 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md transition"
                 >
-                  <Plus className="w-3 h-3 stroke-[3]" />
+                  <Plus className="w-3 h-3 stroke-3" />
                   <span>Kategori Baru</span>
                 </button>
               </div>

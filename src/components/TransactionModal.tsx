@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
-import { Plus, X } from 'lucide-react';
+import { Plus, Settings, X } from 'lucide-react';
 import CategoryModal from '@/components/modals/CategoryModal';
+import Link from 'next/link';
 
 export default function TransactionModal({
   isOpen,
@@ -47,7 +48,6 @@ export default function TransactionModal({
 
   if (!isOpen) return null;
 
-  // Filter kategori berdasarkan tipe yang dipilih (toleran kapital/kecil)
   const filteredCategories = categories.filter(
     (c) => String(c.type).toUpperCase() === type
   );
@@ -82,7 +82,7 @@ export default function TransactionModal({
   return (
     <>
       <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-        <div className="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-xl border border-slate-100 relative">
+        <div className="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-xl border border-slate-100 relative animate-in fade-in zoom-in duration-150">
           <div className="flex justify-between items-center">
             <h3 className="text-sm font-extrabold text-slate-900">Catat Transaksi</h3>
             <button
@@ -150,18 +150,28 @@ export default function TransactionModal({
               </select>
             </div>
 
-            {/* KATEGORI + TOMBOL MIKRO "+ BARU" */}
+            {/* KATEGORI HEADER + DUA TOMBOL MIKRO (TAMBAH & KELOLA) */}
             <div>
               <div className="flex justify-between items-center mb-1">
                 <label className="block text-xs font-bold text-slate-700">Kategori</label>
-                <button
-                  type="button"
-                  onClick={() => setIsCategoryModalOpen(true)}
-                  className="text-[10px] font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-0.5 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md transition"
-                >
-                  <Plus className="w-3 h-3 stroke-[3]" />
-                  <span>Tambah Kategori</span>
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setIsCategoryModalOpen(true)}
+                    className="text-[10px] font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-0.5 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md transition"
+                  >
+                    <Plus className="w-3 h-3 stroke-3" />
+                    <span>Tambah Kategori</span>
+                  </button>
+                  <Link
+                    href="/dashboard/categories"
+                    onClick={onClose}
+                    className="text-[10px] font-bold text-slate-600 hover:text-slate-800 flex items-center gap-0.5 bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded-md transition"
+                  >
+                    <Settings className="w-3 h-3" />
+                    <span>Kelola</span>
+                  </Link>
+                </div>
               </div>
 
               <select
@@ -209,7 +219,7 @@ export default function TransactionModal({
         </div>
       </div>
 
-      {/* MODAL QUICK ADD KATEGORI */}
+      {/* QUICK MODAL TAMBAH KATEGORI */}
       <CategoryModal
         isOpen={isCategoryModalOpen}
         onClose={() => setIsCategoryModalOpen(false)}

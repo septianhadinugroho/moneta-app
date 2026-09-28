@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
 import ConfirmModal from '@/components/ConfirmModal';
 import { Eye, EyeOff, ShieldCheck, Trash2, Mail, Lock, User as UserIcon } from 'lucide-react';
+import Link from 'next/link';
+import { Tag, ChevronRight } from 'lucide-react';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -252,6 +254,22 @@ export default function ProfilePage() {
           </button>
         </form>
       </div>
+      
+      <Link
+        href="/dashboard/categories"
+        className="flex items-center justify-between p-4 bg-white border border-slate-200/80 rounded-2xl hover:bg-slate-50 transition shadow-xs"
+      >
+        <div className="flex items-center space-x-3">
+          <div className="p-2.5 bg-purple-50 text-purple-600 rounded-xl">
+            <Tag className="w-4.5 h-4.5" />
+          </div>
+          <div>
+            <p className="text-xs font-extrabold text-slate-900">Kelola Kategori</p>
+            <p className="text-[10px] text-slate-400 font-medium">Tambah, edit, atau hapus kategori transaksi</p>
+          </div>
+        </div>
+        <ChevronRight className="w-4 h-4 text-slate-400" />
+      </Link>
 
       {/* Change Password / Google Auth Info */}
       {!isGoogleUser ? (

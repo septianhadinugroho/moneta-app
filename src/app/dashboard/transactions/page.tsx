@@ -3,15 +3,19 @@
 import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import { formatRupiah } from '@/lib/utils';
-import { Search, ArrowUpRight, ArrowDownLeft, ChevronRight, Filter } from 'lucide-react';
+import { Search, ArrowUpRight, ArrowDownLeft, ChevronRight } from 'lucide-react';
 import TransactionDetailModal from '@/components/TransactionDetailModal';
+import EditTransactionModal from '@/components/modals/EditTransactionModal';
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('ALL');
+  
+  // State Modal
   const [selectedTx, setSelectedTx] = useState<any>(null);
+  const [editingTx, setEditingTx] = useState<any>(null);
 
   const fetchTransactions = async () => {
     try {
@@ -126,7 +130,6 @@ export default function TransactionsPage() {
                   </div>
                 </div>
 
-                {/* NOMINAL & CHEVRON (BEBAS TURUS / WRAP) */}
                 <div className="flex items-center space-x-2 shrink-0 pl-2">
                   <span
                     className={`text-xs font-black whitespace-nowrap ${
@@ -143,11 +146,23 @@ export default function TransactionsPage() {
         )}
       </div>
 
-      {/* MODAL DETAIL */}
+      {/* MODAL DETAIL TRANSAKSI */}
       <TransactionDetailModal
         isOpen={Boolean(selectedTx)}
         onClose={() => setSelectedTx(null)}
         transaction={selectedTx}
+        onSuccess={fetchTransactions}
+        onEditClick={(tx) => {
+          setSelectedTx(null);
+          setEditingTx(tx);
+        }}
+      />
+
+      {/* MODAL EDIT TRANSAKSI */}
+      <EditTransactionModal
+        isOpen={Boolean(editingTx)}
+        onClose={() => setEditingTx(null)}
+        transaction={editingTx}
         onSuccess={fetchTransactions}
       />
     </div>

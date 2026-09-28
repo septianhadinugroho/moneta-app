@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Wallet, CreditCard, Landmark, Banknote } from 'lucide-react';
+import { X, Wallet, CreditCard, Landmark, Banknote, Nfc } from 'lucide-react';
 import api from '@/lib/api';
+import ColorPicker from '@/components/ColorPicker';
 
 interface WalletModalProps {
   isOpen: boolean;
@@ -14,10 +15,9 @@ interface WalletModalProps {
 const WALLET_TYPES = [
   { value: 'BANK', label: 'Bank', icon: Landmark },
   { value: 'E_WALLET', label: 'E-Wallet', icon: CreditCard },
+  { value: 'E_MONEY', label: 'E-Money', icon: Nfc },
   { value: 'CASH', label: 'Tunai', icon: Banknote },
 ];
-
-const PRESET_COLORS = ['#0f172a', '#2563eb', '#059669', '#d97706', '#dc2626', '#7c3aed'];
 
 export default function WalletModal({
   isOpen,
@@ -104,7 +104,7 @@ export default function WalletModal({
 
           <div>
             <label className="block text-slate-600 font-bold mb-1">Tipe Dompet</label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-4 gap-1.5">
               {WALLET_TYPES.map((t) => {
                 const IconComponent = t.icon;
                 const isSelected = type === t.value;
@@ -113,14 +113,14 @@ export default function WalletModal({
                     key={t.value}
                     type="button"
                     onClick={() => setType(t.value)}
-                    className={`py-2 px-2 rounded-xl border font-bold flex flex-col items-center gap-1 transition ${
+                    className={`py-2 px-1 rounded-xl border font-bold flex flex-col items-center gap-1 transition ${
                       isSelected
                         ? 'bg-slate-900 text-white border-slate-900'
                         : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
                     }`}
                   >
                     <IconComponent className="w-4 h-4" />
-                    <span className="text-[10px]">{t.label}</span>
+                    <span className="text-[9px] truncate">{t.label}</span>
                   </button>
                 );
               })}
@@ -140,22 +140,10 @@ export default function WalletModal({
             />
           </div>
 
-          <div>
-            <label className="block text-slate-600 font-bold mb-1.5">Warna Tema</label>
-            <div className="flex gap-2">
-              {PRESET_COLORS.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setColor(c)}
-                  className={`w-6 h-6 rounded-full border-2 transition ${
-                    color === c ? 'scale-110 border-slate-900' : 'border-transparent'
-                  }`}
-                  style={{ backgroundColor: c }}
-                />
-              ))}
-            </div>
-          </div>
+          <ColorPicker
+            selectedColor={color}
+            onChange={(newColor) => setColor(newColor)}
+          />
 
           <button
             type="submit"
