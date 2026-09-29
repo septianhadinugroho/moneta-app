@@ -9,6 +9,7 @@ interface TransactionModalProps {
   onClose: () => void;
   transactionToEdit?: any;
   onSuccess: () => void;
+  wallets?: any[]; // Ditambahkan agar Vercel build tidak error!
 }
 
 const getTodayString = () => {
@@ -44,6 +45,7 @@ export default function TransactionModal({
   onClose,
   transactionToEdit,
   onSuccess,
+  wallets: initialWallets, // Menerima prop wallets opsional
 }: TransactionModalProps) {
   const [type, setType] = useState<'EXPENSE' | 'INCOME'>('EXPENSE');
   const [amount, setAmount] = useState('');
@@ -52,7 +54,7 @@ export default function TransactionModal({
   const [notes, setNotes] = useState('');
   const [date, setDate] = useState(getTodayString());
 
-  const [wallets, setWallets] = useState<any[]>([]);
+  const [wallets, setWallets] = useState<any[]>(initialWallets || []);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -117,7 +119,7 @@ export default function TransactionModal({
         categoryId: categoryId ? Number(categoryId) : null,
         notes,
         description: notes,
-        date: getCombinedDateTime(date), // 👈 MENGGUNAKAN HELPER JAM PRESISI
+        date: getCombinedDateTime(date),
       };
 
       if (transactionToEdit) {
