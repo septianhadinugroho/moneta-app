@@ -8,7 +8,8 @@ export default function BottomNav({ onOpenTxModal }: { onOpenTxModal?: () => voi
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-slate-200 z-50 px-2 py-2 shadow-lg">
+    // Z-INDEX UBAH MENJADI z-30
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-slate-200 z-30 px-2 py-2 shadow-lg">
       <div className="grid grid-cols-5 items-center justify-items-center">
         {/* 1. Overview */}
         <Link

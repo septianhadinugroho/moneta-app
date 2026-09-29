@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Header from '@/components/Header';
-import BottomNav from '@/components/BottomNav';
-import TransactionModal from '@/components/TransactionModal';
+import Header from '@/components/ui/Header';
+import BottomNav from '@/components/ui/BottomNav';
+import TransactionModal from '@/components/modals/TransactionModal';
 import api from '@/lib/api';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

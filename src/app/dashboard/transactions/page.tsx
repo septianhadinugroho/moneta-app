@@ -3,15 +3,15 @@
 import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import { formatRupiah } from '@/lib/utils';
-import { Search, ArrowUpRight, ArrowDownLeft, ChevronRight } from 'lucide-react';
-import TransactionDetailModal from '@/components/TransactionDetailModal';
+import { Search, ArrowUpRight, ArrowDownLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
+import TransactionDetailModal from '@/components/modals/TransactionDetailModal';
 import EditTransactionModal from '@/components/modals/EditTransactionModal';
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState('ALL');
+  const [typeFilter, setTypeFilter] = useState<'ALL' | 'EXPENSE' | 'INCOME'>('ALL');
   
   // State Modal
   const [selectedTx, setSelectedTx] = useState<any>(null);
@@ -60,45 +60,75 @@ export default function TransactionsPage() {
 
   return (
     <div className="p-4 sm:p-5 space-y-4">
+      {/* HEADER PAGE */}
       <div className="flex justify-between items-center">
         <h1 className="text-base sm:text-lg font-black text-slate-900">Riwayat Transaksi</h1>
-        <span className="px-2.5 py-1 bg-slate-200/60 text-slate-700 text-[10px] font-extrabold rounded-full">
+        <span className="px-2.5 py-1 bg-slate-100 text-slate-700 text-[10px] font-extrabold rounded-full border border-slate-200/60">
           {filteredTx.length} Transaksi
         </span>
       </div>
 
-      {/* FILTER & SEARCH */}
-      <div className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs space-y-2.5">
+      {/* FILTER & SEARCH MODERN */}
+      <div className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
+        {/* INPUT SEARCH */}
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Cari deskripsi atau kategori..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900 transition"
+            className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-900 placeholder:text-slate-400 placeholder:font-normal focus:outline-hidden focus:ring-2 focus:ring-slate-900 transition"
           />
         </div>
 
-        <div className="flex gap-2">
-          <select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-hidden focus:ring-2 focus:ring-slate-900"
+        {/* PILL SEGMENTED FILTER */}
+        <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100/80 rounded-xl text-xs font-extrabold">
+          <button
+            type="button"
+            onClick={() => setTypeFilter('ALL')}
+            className={`py-1.5 rounded-lg transition text-[11px] ${
+              typeFilter === 'ALL'
+                ? 'bg-slate-900 text-white shadow-xs'
+                : 'text-slate-500 hover:text-slate-800'
+            }`}
           >
-            <option value="ALL">Semua Tipe</option>
-            <option value="EXPENSE">Pengeluaran</option>
-            <option value="INCOME">Pemasukan</option>
-          </select>
+            Semua
+          </button>
+          <button
+            type="button"
+            onClick={() => setTypeFilter('EXPENSE')}
+            className={`py-1.5 rounded-lg transition text-[11px] ${
+              typeFilter === 'EXPENSE'
+                ? 'bg-rose-600 text-white shadow-xs'
+                : 'text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            Pengeluaran
+          </button>
+          <button
+            type="button"
+            onClick={() => setTypeFilter('INCOME')}
+            className={`py-1.5 rounded-lg transition text-[11px] ${
+              typeFilter === 'INCOME'
+                ? 'bg-emerald-600 text-white shadow-xs'
+                : 'text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            Pemasukan
+          </button>
         </div>
       </div>
 
       {/* LIST TRANSAKSI */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs divide-y divide-slate-100 overflow-hidden">
         {filteredTx.length === 0 ? (
-          <p className="text-xs text-slate-400 text-center py-10 font-medium">
-            Tidak ada transaksi ditemukan.
-          </p>
+          <div className="py-12 text-center space-y-1">
+            <p className="text-xs font-extrabold text-slate-700">Transaksi tidak ditemukan</p>
+            <p className="text-[11px] text-slate-400 font-medium">
+              Coba cari kata kunci lain atau ubah filter tipe transaksi.
+            </p>
+          </div>
         ) : (
           filteredTx.map((tx) => {
             const isIncome = String(tx.type).toUpperCase() === 'INCOME';
@@ -106,7 +136,7 @@ export default function TransactionsPage() {
               <div
                 key={tx.id}
                 onClick={() => setSelectedTx(tx)}
-                className="p-3.5 flex justify-between items-center cursor-pointer hover:bg-slate-50 transition group"
+                className="p-3.5 flex justify-between items-center cursor-pointer hover:bg-slate-50/80 transition group"
               >
                 <div className="flex items-center space-x-3 min-w-0 pr-2">
                   <div

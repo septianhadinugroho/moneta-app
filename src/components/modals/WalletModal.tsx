@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { X, Wallet, CreditCard, Landmark, Banknote, Nfc } from 'lucide-react';
 import api from '@/lib/api';
-import ColorPicker from '@/components/ColorPicker';
+import ColorPicker from '@/components/ui/ColorPicker';
 
 interface WalletModalProps {
   isOpen: boolean;

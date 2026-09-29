@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { formatRupiah } from '@/lib/utils';
 import api from '@/lib/api';
-import ConfirmModal from '@/components/ConfirmModal';
+import ConfirmModal from '@/components/modals/ConfirmModal';
 import { Wallet, Plus, Trash2, Landmark, Coins, CreditCard } from 'lucide-react';
 
 export default function WalletList({

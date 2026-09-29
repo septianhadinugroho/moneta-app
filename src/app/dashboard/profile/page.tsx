@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
-import ConfirmModal from '@/components/ConfirmModal';
+import ConfirmModal from '@/components/modals/ConfirmModal';
 import { Eye, EyeOff, ShieldCheck, Trash2, Mail, Lock, User as UserIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Tag, ChevronRight } from 'lucide-react';

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { formatRupiah } from '@/lib/utils';
 import { History, ArrowUpRight, ArrowDownLeft, ChevronRight } from 'lucide-react';
-import TransactionDetailModal from '@/components/TransactionDetailModal';
+import TransactionDetailModal from '@/components/modals/TransactionDetailModal';
 import EditTransactionModal from '@/components/modals/EditTransactionModal';
 
 export default function RecentTx({
