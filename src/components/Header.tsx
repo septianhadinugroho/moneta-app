@@ -50,7 +50,7 @@ export default function Header() {
               }`}
             >
               <LayoutDashboard className="w-3.5 h-3.5" />
-              <span>Overview</span>
+              <span>Dasbor</span>
             </Link>
             <Link
               href="/dashboard/profile"

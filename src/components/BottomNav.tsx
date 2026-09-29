@@ -18,7 +18,7 @@ export default function BottomNav({ onOpenTxModal }: { onOpenTxModal?: () => voi
           }`}
         >
           <LayoutDashboard className="w-5 h-5" />
-          <span className="text-[10px]">Overview</span>
+          <span className="text-[10px]">Dasbor</span>
         </Link>
 
         {/* 2. Riwayat */}

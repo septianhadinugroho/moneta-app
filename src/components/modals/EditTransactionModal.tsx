@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
-import { X } from 'lucide-react';
+import { X, Calendar, DollarSign } from 'lucide-react';
 
 interface EditTransactionModalProps {
   isOpen: boolean;
@@ -10,6 +10,34 @@ interface EditTransactionModalProps {
   transaction: any;
   onSuccess?: () => void;
 }
+
+const formatDateString = (dateInput?: string | Date) => {
+  const d = dateInput ? new Date(dateInput) : new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+// HELPER GABUNGAN TANGGAL + JAM SEKARANG
+const getCombinedDateTime = (selectedDateStr: string) => {
+  const now = new Date();
+  if (!selectedDateStr) return now.toISOString();
+
+  const [year, month, day] = selectedDateStr.split('-').map(Number);
+
+  const combinedDate = new Date(
+    year,
+    month - 1,
+    day,
+    now.getHours(),
+    now.getMinutes(),
+    now.getSeconds(),
+    now.getMilliseconds()
+  );
+
+  return combinedDate.toISOString();
+};
 
 export default function EditTransactionModal({
   isOpen,
@@ -22,12 +50,12 @@ export default function EditTransactionModal({
   const [categoryId, setCategoryId] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
+  const [date, setDate] = useState(formatDateString());
 
   const [wallets, setWallets] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch Wallets & Categories
   useEffect(() => {
     if (isOpen && transaction) {
       setType(String(transaction.type).toUpperCase() as 'EXPENSE' | 'INCOME');
@@ -35,6 +63,7 @@ export default function EditTransactionModal({
       setCategoryId(String(transaction.categoryId || transaction.category?.id || ''));
       setAmount(String(transaction.amount || ''));
       setDescription(transaction.description || '');
+      setDate(formatDateString(transaction.date));
 
       api.get('/wallets').then((res) => setWallets(res.data.data || []));
       api.get('/categories').then((res) => setCategories(res.data.data || []));
@@ -60,6 +89,7 @@ export default function EditTransactionModal({
         amount: parseFloat(amount),
         type,
         description,
+        date: getCombinedDateTime(date), // Kirim tanggal pilihan dengan jam & waktu saat ini
       });
 
       if (onSuccess) onSuccess();
@@ -75,17 +105,19 @@ export default function EditTransactionModal({
     <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-xl border border-slate-100 relative animate-in fade-in zoom-in duration-150">
         <div className="flex justify-between items-center">
-          <h3 className="text-sm font-extrabold text-slate-900">Edit Transaksi</h3>
+          <div className="flex items-center gap-2">
+            <DollarSign className="w-4 h-4 text-emerald-600" />
+            <h3 className="text-sm font-extrabold text-slate-900">Edit Transaksi</h3>
+          </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 p-1"
+            className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* TOGGLE INCOME / EXPENSE */}
         <div className="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-xl">
           <button
             type="button"
@@ -123,6 +155,20 @@ export default function EditTransactionModal({
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-[#16A085]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1">
+              <Calendar className="w-3.5 h-3.5 text-slate-500" />
+              Tanggal Transaksi
+            </label>
+            <input
+              type="date"
+              required
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-[#16A085]"
             />
           </div>
 
