@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Download, FileText, Calendar, Loader2, AlertCircle, Mail, CheckCircle2 } from 'lucide-react';
+import { X, Download, FileText, Calendar, Loader2, AlertCircle, Mail, CheckCircle2, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
 import api from '@/lib/api';
 import { generateTransactionsPdf } from '@/lib/exportPdf';
+import { formatRupiah } from '@/lib/utils';
 
 interface PdfPreviewModalProps {
   isOpen: boolean;
@@ -25,11 +26,11 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
   const [emailSentSuccess, setEmailSentSuccess] = useState(false);
 
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-  const [pdfRawBlob, setPdfRawBlob] = useState<Blob | null>(null);
   const [transactions, setTransactions] = useState<any[]>([]);
+  const [summary, setSummary] = useState({ income: 0, expense: 0, net: 0 });
   const [error, setError] = useState('');
 
-  const loadPdfPreview = async () => {
+  const loadPdfData = async () => {
     setLoading(true);
     setError('');
     setEmailSentSuccess(false);
@@ -56,7 +57,13 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
         .filter((t: any) => t.type === 'EXPENSE')
         .reduce((acc: number, curr: any) => acc + Number(curr.amount || 0), 0);
 
-    // Generate PDF
+      setSummary({
+        income: totalIncome,
+        expense: totalExpense,
+        net: totalIncome - totalExpense,
+      });
+
+      // Generate PDF Blob URL
       const pdfResult = await generateTransactionsPdf({
         periodText: `${MONTH_NAMES[selectedMonth - 1]} ${selectedYear}`,
         transactions: txData,
@@ -67,11 +74,9 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
         returnBlob: true,
       });
 
-      const pdfBlobUrl = (pdfResult as unknown) as string;
-
-      setPdfUrl(pdfBlobUrl);
+      setPdfUrl((pdfResult as unknown) as string);
     } catch (err) {
-      console.error('Gagal membuat preview PDF:', err);
+      console.error('Gagal memuat data PDF:', err);
       setError('Gagal memuat data laporan PDF.');
     } finally {
       setLoading(false);
@@ -80,7 +85,7 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
 
   useEffect(() => {
     if (isOpen) {
-      loadPdfPreview();
+      loadPdfData();
     } else {
       if (pdfUrl) URL.revokeObjectURL(pdfUrl);
       setPdfUrl(null);
@@ -97,14 +102,12 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
     link.click();
   };
 
-  // FUNGSI KIRIM LAPORAN PDF KE EMAIL USER
   const handleSendEmail = async () => {
     if (!pdfUrl) return;
     setSendingEmail(true);
     setEmailSentSuccess(false);
 
     try {
-      // Ambil file Blob dari Blob URL
       const blobRes = await fetch(pdfUrl);
       const blobData = await blobRes.blob();
 
@@ -128,7 +131,7 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200 font-sans text-slate-900">
-      <div className="bg-white rounded-3xl max-w-2xl w-full h-[85vh] shadow-2xl border border-slate-100 flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+      <div className="bg-white rounded-3xl max-w-xl w-full max-h-[90vh] shadow-2xl border border-slate-100 flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* HEADER MODAL */}
         <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 shrink-0">
@@ -137,8 +140,8 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
               <FileText className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-sm font-black text-slate-900">Preview Laporan Keuangan</h2>
-              <p className="text-[10px] text-slate-400 font-bold">PDF Siap Cetak & Kirim Email</p>
+              <h2 className="text-sm font-black text-slate-900">Pratinjau Laporan Keuangan</h2>
+              <p className="text-[10px] text-slate-400 font-bold">Ringkasan Siap Cetak & Kirim Email</p>
             </div>
           </div>
 
@@ -183,31 +186,109 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
 
         {/* NOTIFIKASI EMAIL SUKSES */}
         {emailSentSuccess && (
-          <div className="bg-emerald-50 border-b border-emerald-200 px-4 py-2 text-emerald-800 text-xs font-bold flex items-center gap-2 shrink-0 animate-in fade-in duration-200">
+          <div className="bg-emerald-50 border-b border-emerald-200 px-4 py-2.5 text-emerald-800 text-xs font-bold flex items-center gap-2 shrink-0 animate-in fade-in duration-200">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>Laporan PDF berhasil dikirimkan ke <strong className="underline">{user?.email}</strong></span>
           </div>
         )}
 
-        {/* BODY AREA (PREVIEW PDF) */}
-        <div className="flex-1 bg-slate-100 relative overflow-hidden flex items-center justify-center p-2">
+        {/* BODY AREA (RESPONSIVE NATIVE PREVIEW CARD FOR MOBILE & PC) */}
+        <div className="flex-1 bg-slate-100 overflow-y-auto p-3 space-y-3">
           {loading ? (
-            <div className="flex flex-col items-center gap-2 text-slate-500">
+            <div className="py-16 flex flex-col items-center justify-center gap-2 text-slate-500">
               <Loader2 className="w-7 h-7 animate-spin text-emerald-600" />
-              <span className="text-xs font-bold">Memuat logo & merender PDF...</span>
+              <span className="text-xs font-bold">Memuat data laporan...</span>
             </div>
           ) : error ? (
-            <div className="p-6 bg-white rounded-2xl border border-slate-200 text-center space-y-2 max-w-xs shadow-xs">
+            <div className="py-12 px-6 bg-white rounded-2xl border border-slate-200 text-center space-y-2 max-w-xs mx-auto shadow-xs my-6">
               <AlertCircle className="w-8 h-8 text-amber-500 mx-auto" />
               <p className="text-xs text-slate-600 font-bold">{error}</p>
             </div>
-          ) : pdfUrl ? (
-            <iframe
-              src={pdfUrl}
-              className="w-full h-full rounded-xl border border-slate-200 bg-white shadow-xs"
-              title="PDF Preview"
-            />
-          ) : null}
+          ) : (
+            <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs space-y-3.5 text-slate-900">
+              
+              {/* HEADER BRAND DOKUMEN */}
+              <div className="bg-slate-900 text-white p-3.5 rounded-xl flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 bg-emerald-500 rounded-lg flex items-center justify-center font-black text-xs text-white">
+                    M
+                  </div>
+                  <div>
+                    <p className="text-xs font-extrabold tracking-tight">Moneta Financial Report</p>
+                    <p className="text-[10px] text-slate-400 font-medium">Periode {MONTH_NAMES[selectedMonth - 1]} {selectedYear}</p>
+                  </div>
+                </div>
+                <span className="text-[9px] px-2 py-0.5 bg-slate-800 text-emerald-400 font-mono font-bold rounded-md border border-slate-700">
+                  PDF READY
+                </span>
+              </div>
+
+              {/* SUMMARY STATS GRID */}
+              <div className="grid grid-cols-3 gap-2">
+                <div className="p-2.5 bg-emerald-50/80 border border-emerald-200/60 rounded-xl">
+                  <p className="text-[9px] font-bold text-emerald-800 uppercase tracking-wider flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3 text-emerald-600" />
+                    Pemasukan
+                  </p>
+                  <p className="text-xs font-black text-emerald-700 mt-1">{formatRupiah(summary.income)}</p>
+                </div>
+
+                <div className="p-2.5 bg-rose-50/80 border border-rose-200/60 rounded-xl">
+                  <p className="text-[9px] font-bold text-rose-800 uppercase tracking-wider flex items-center gap-1">
+                    <TrendingDown className="w-3 h-3 text-rose-600" />
+                    Pengeluaran
+                  </p>
+                  <p className="text-xs font-black text-rose-700 mt-1">{formatRupiah(summary.expense)}</p>
+                </div>
+
+                <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl">
+                  <p className="text-[9px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                    <Wallet className="w-3 h-3 text-slate-700" />
+                    Arus Kas
+                  </p>
+                  <p className={`text-xs font-black mt-1 ${summary.net >= 0 ? 'text-slate-900' : 'text-rose-600'}`}>
+                    {summary.net >= 0 ? '+' : ''}{formatRupiah(summary.net)}
+                  </p>
+                </div>
+              </div>
+
+              {/* TRANSACTIONS TABLE MINI PREVIEW */}
+              <div className="space-y-1.5 pt-1">
+                <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  <span>Daftar Mutasi</span>
+                  <span>{transactions.length} Transaksi</span>
+                </div>
+
+                <div className="max-h-52 overflow-y-auto space-y-1.5 pr-1 text-xs">
+                  {transactions.map((tx, idx) => {
+                    const isIncome = tx.type === 'INCOME';
+                    const isTransfer = tx.type === 'TRANSFER';
+                    const dateStr = new Date(tx.date || tx.createdAt).toLocaleDateString('id-ID', {
+                      day: '2-digit',
+                      month: 'short',
+                    });
+
+                    return (
+                      <div key={idx} className="p-2 bg-slate-50 border border-slate-100 rounded-xl flex justify-between items-center gap-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isTransfer ? 'bg-blue-500' : isIncome ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+                          <div className="truncate">
+                            <p className="font-bold text-slate-900 truncate text-[11px]">{tx.description || tx.notes || 'Transaksi'}</p>
+                            <p className="text-[9px] text-slate-400 font-medium">{dateStr} • {tx.category?.name || 'Umum'}</p>
+                          </div>
+                        </div>
+
+                        <span className={`font-black shrink-0 text-xs ${isTransfer ? 'text-slate-700' : isIncome ? 'text-emerald-600' : 'text-rose-600'}`}>
+                          {isTransfer ? '' : isIncome ? '+' : '-'}{formatRupiah(Number(tx.amount || 0))}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+            </div>
+          )}
         </div>
 
         {/* FOOTER ACTIONS */}
@@ -217,7 +298,6 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
           </span>
 
           <div className="flex gap-2">
-            {/* TOMBOL KIRIM KE EMAIL */}
             <button
               type="button"
               onClick={handleSendEmail}
@@ -232,7 +312,6 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
               <span>{sendingEmail ? 'Mengirim...' : 'Kirim Email'}</span>
             </button>
 
-            {/* TOMBOL UNDUH */}
             <button
               type="button"
               onClick={handleDownload}
