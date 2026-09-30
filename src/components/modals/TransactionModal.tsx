@@ -145,7 +145,7 @@ export default function TransactionModal({
 
   return (
     // Z-INDEX DIGANTI MENJADI z-[100] AGAR MENUTUPI BOTTOM NAV
-    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-[100]">
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-100">
       <div className="bg-white rounded-3xl max-w-sm w-full p-5 space-y-4 border border-slate-100 shadow-2xl relative animate-in fade-in zoom-in duration-150">
         <div className="flex justify-between items-center">
           <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
@@ -166,13 +166,13 @@ export default function TransactionModal({
           </div>
 
           <div>
-            <label className="block text-slate-700 font-bold mb-1">Nominal (Rp) <span className="text-rose-500">*</span></label>
+            <label className="text-slate-700 font-bold mb-1">Nominal (Rp) <span className="text-rose-500">*</span></label>
             <input type="number" placeholder="0" value={amount} onChange={(e) => { setAmount(e.target.value); setFormErrors((p) => ({ ...p, amount: '' })); }} className={`w-full px-3.5 py-2.5 rounded-xl font-black text-slate-900 ${formErrors.amount ? 'bg-rose-50/60 border-rose-500 ring-1 ring-rose-500' : 'bg-slate-50 border-slate-200'}`} />
             {formErrors.amount && <p className="text-[11px] text-rose-600 font-extrabold mt-1">{formErrors.amount}</p>}
           </div>
 
           <div>
-            <label className="block text-slate-700 font-bold mb-1 flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-slate-500" /><span>Tanggal Transaksi <span className="text-rose-500">*</span></span></label>
+            <label className="text-slate-700 font-bold mb-1 flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-slate-500" /><span>Tanggal Transaksi <span className="text-rose-500">*</span></span></label>
             <input type="date" value={date} onChange={(e) => { setDate(e.target.value); setFormErrors((p) => ({ ...p, date: '' })); }} className={`w-full px-3.5 py-2.5 rounded-xl font-bold text-slate-900 ${formErrors.date ? 'bg-rose-50/60 border-rose-500 ring-1 ring-rose-500' : 'bg-slate-50 border-slate-200'}`} />
           </div>
 

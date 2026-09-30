@@ -26,8 +26,8 @@ export default function AuthPage() {
     <main className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between p-4 sm:p-6 relative overflow-hidden font-sans selection:bg-emerald-500 selection:text-white">
       
       {/* 1. MESH GRADIENT & GRID OVERLAY WITH PULSE ANIMATION */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-emerald-200/40 blur-[120px] pointer-events-none rounded-full animate-pulse" style={{ animationDuration: '4s' }} />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f080_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f080_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-150 h-87.5 bg-emerald-200/40 blur-[120px] pointer-events-none rounded-full animate-pulse" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f080_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f080_1px,transparent_1px)] bg-size-[3rem_3rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
 
       {/* NAVIGASI KEMBALI KE LANDING PAGE */}
       <div className="relative z-10 max-w-sm w-full mx-auto flex items-center justify-between pt-1">

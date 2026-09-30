@@ -1,0 +1,245 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { X, ArrowRightLeft, Wallet as WalletIcon, Calendar, FileText, AlertCircle, Check, Building2, Smartphone, Radio, Banknote } from 'lucide-react';
+import api from '@/lib/api';
+import { formatRupiah } from '@/lib/utils';
+import CustomDropdown from '@/components/ui/CustomDropdown';
+
+interface TransferModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  wallets: any[];
+  onSuccess: () => void;
+}
+
+const getWalletTypeBadge = (type?: string) => {
+  switch (String(type || '').toUpperCase()) {
+    case 'BANK': return { icon: Building2, iconBg: 'bg-sky-500/20 text-sky-400' };
+    case 'E_WALLET': return { icon: Smartphone, iconBg: 'bg-purple-500/20 text-purple-400' };
+    case 'E_MONEY': return { icon: Radio, iconBg: 'bg-lime-500/20 text-lime-400' };
+    case 'CASH': return { icon: Banknote, iconBg: 'bg-emerald-500/20 text-emerald-400' };
+    default: return { icon: WalletIcon, iconBg: 'bg-slate-500/20 text-slate-400' };
+  }
+};
+
+export default function TransferModal({ isOpen, onClose, wallets, onSuccess }: TransferModalProps) {
+  const [sourceWalletId, setSourceWalletId] = useState<string>('');
+  const [destinationWalletId, setDestinationWalletId] = useState<string>('');
+  const [amount, setAmount] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  
+  const [isSourceOpen, setIsSourceOpen] = useState(false);
+  const [isDestOpen, setIsDestOpen] = useState(false);
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+
+  useEffect(() => {
+    if (wallets.length >= 2) {
+      if (!sourceWalletId) setSourceWalletId(String(wallets[0].id));
+      if (!destinationWalletId) setDestinationWalletId(String(wallets[1].id));
+    } else if (wallets.length === 1 && !sourceWalletId) {
+      setSourceWalletId(String(wallets[0].id));
+    }
+  }, [wallets, isOpen]);
+
+  if (!isOpen) return null;
+
+  const walletOptions = wallets.map((w) => ({
+    id: w.id,
+    name: `${w.name} (${formatRupiah(w.balance)})`,
+    ...getWalletTypeBadge(w.type),
+  }));
+
+  const selectedSourceWallet = wallets.find((w) => String(w.id) === String(sourceWalletId));
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (!sourceWalletId || !destinationWalletId) {
+      setError('Pilih dompet asal dan dompet tujuan');
+      return;
+    }
+
+    if (sourceWalletId === destinationWalletId) {
+      setError('Dompet asal dan dompet tujuan tidak boleh sama');
+      return;
+    }
+
+    const numericAmount = parseFloat(amount);
+    if (!amount || isNaN(numericAmount) || numericAmount <= 0) {
+      setError('Masukkan nominal transfer yang valid');
+      return;
+    }
+
+    if (selectedSourceWallet && Number(selectedSourceWallet.balance) < numericAmount) {
+      setError(`Saldo ${selectedSourceWallet.name} tidak mencukupi (${formatRupiah(selectedSourceWallet.balance)})`);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Waktu real-time jam sekarang
+      const now = new Date();
+      const [year, month, day] = date.split('-').map(Number);
+      const combinedDate = new Date(
+        year,
+        month - 1,
+        day,
+        now.getHours(),
+        now.getMinutes(),
+        now.getSeconds()
+      );
+
+      await api.post('/transactions', {
+        walletId: Number(sourceWalletId),
+        destinationWalletId: Number(destinationWalletId),
+        amount: numericAmount,
+        type: 'TRANSFER',
+        description: description.trim() || 'Transfer Antar Dompet',
+        date: combinedDate.toISOString(),
+      });
+
+      setAmount('');
+      setDescription('');
+      setError('');
+      onSuccess();
+      onClose();
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Gagal memproses transfer');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200 font-sans text-slate-900">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 max-w-sm w-full shadow-2xl border border-slate-100 space-y-4 animate-in zoom-in-95 duration-200">
+        
+        {/* HEADER MODAL */}
+        <div className="flex justify-between items-center pb-2 border-b border-slate-100">
+          <div className="flex items-center gap-2">
+            <div className="p-2 bg-emerald-100 text-emerald-700 rounded-xl">
+              <ArrowRightLeft className="w-4 h-4" />
+            </div>
+            <h2 className="text-sm sm:text-base font-black text-slate-900">Transfer Antar Dompet</h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition active:scale-95"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {error && (
+          <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl font-bold flex items-center gap-2 animate-in fade-in duration-200">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
+          <CustomDropdown
+            label="Dari Dompet (Asal)"
+            required
+            isOpen={isSourceOpen}
+            onToggle={() => {
+              setIsSourceOpen(!isSourceOpen);
+              setIsDestOpen(false);
+            }}
+            selectedOption={walletOptions.find((w) => String(w.id) === sourceWalletId)}
+            options={walletOptions}
+            onSelect={(id) => {
+              setSourceWalletId(id);
+              setIsSourceOpen(false);
+            }}
+            placeholder="-- Pilih Dompet Asal --"
+            defaultIcon={WalletIcon}
+          />
+
+          <CustomDropdown
+            label="Ke Dompet (Tujuan)"
+            required
+            isOpen={isDestOpen}
+            onToggle={() => {
+              setIsDestOpen(!isDestOpen);
+              setIsSourceOpen(false);
+            }}
+            selectedOption={walletOptions.find((w) => String(w.id) === destinationWalletId)}
+            options={walletOptions.filter((w) => String(w.id) !== sourceWalletId)}
+            onSelect={(id) => {
+              setDestinationWalletId(id);
+              setIsDestOpen(false);
+            }}
+            placeholder="-- Pilih Dompet Tujuan --"
+            defaultIcon={WalletIcon}
+          />
+
+          <div>
+            <label className="block font-bold text-slate-700 mb-1">Nominal Transfer (Rp)</label>
+            <input
+              type="number"
+              placeholder="0"
+              value={amount}
+              onChange={(e) => {
+                setAmount(e.target.value);
+                if (error) setError('');
+              }}
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-extrabold text-slate-900 text-sm focus:ring-2 focus:ring-slate-900 focus:bg-white transition"
+            />
+          </div>
+
+          <div>
+            <label className="block font-bold text-slate-700 mb-1">Tanggal Transfer</label>
+            <div className="relative">
+              <Calendar className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-900 focus:ring-2 focus:ring-slate-900 focus:bg-white transition"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-bold text-slate-700 mb-1">Catatan / Keterangan (Opsional)</label>
+            <div className="relative">
+              <FileText className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Misal: Top up GoPay dari BCA"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-900 focus:ring-2 focus:ring-slate-900 focus:bg-white transition"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition active:scale-95"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="py-3 bg-slate-900 hover:bg-slate-800 text-white font-extrabold rounded-xl transition shadow-md shadow-slate-900/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
+            >
+              <Check className="w-4 h-4 text-emerald-400" />
+              <span>{loading ? 'Memproses...' : 'Kirim Transfer'}</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}

@@ -7,19 +7,21 @@ import Image from 'next/image';
 import { 
   Wallet, 
   TrendingUp, 
-  PieChart, 
   ShieldCheck, 
   ArrowRight, 
   Sparkles, 
   CreditCard,
-  ArrowUp
+  ArrowUp,
+  Target,
+  FileText,
+  ArrowRightLeft
 } from 'lucide-react';
 
 export default function LandingPage() {
   const router = useRouter();
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  // 1. AUTO REDIRECT JIKA SUDAH LOGIN
+  // AUTO REDIRECT JIKA SUDAH LOGIN
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -43,8 +45,8 @@ export default function LandingPage() {
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between relative overflow-hidden font-sans selection:bg-emerald-500 selection:text-white">
       
       {/* GLOWING MESH BACKGROUND */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[550px] h-[320px] bg-emerald-300/30 blur-[110px] pointer-events-none rounded-full animate-pulse" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f080_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f080_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-137.5 h-80 bg-emerald-300/30 blur-[110px] pointer-events-none rounded-full animate-pulse" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f080_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f080_1px,transparent_1px)] bg-size-[3rem_3rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
 
       {/* FIXED NAVBAR HEADER */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/80 px-4 py-2.5 transition-all">
@@ -95,13 +97,13 @@ export default function LandingPage() {
         </h1>
 
         <p className="text-[11px] font-medium text-slate-500 max-w-xs mx-auto leading-relaxed">
-          Catat pemasukan & pengeluaran harian dari bank, e-wallet, hingga uang tunai dalam satu dasbor yang ringkas.
+          Pantau dompet, atur anggaran bulanan, catat transfer antar akun, hingga ekspor laporan PDF resmi dalam satu aplikasi.
         </p>
 
         <div className="pt-1 flex flex-col gap-2">
           <Link
             href="/auth"
-            className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-600/25 transition-all transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 group"
+            className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-600/25 transition-all transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 group cursor-pointer"
           >
             <span>Mulai Catat Keuangan</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -123,11 +125,12 @@ export default function LandingPage() {
                   <p className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">Total Saldo Bersih</p>
                   <p className="text-lg font-black text-slate-900 mt-0.5">Rp 14.250.000</p>
                 </div>
-                <div className="p-2.5 bg-gradient-to-br from-emerald-50 to-teal-100 text-emerald-600 rounded-2xl border border-emerald-200/80 shadow-2xs">
+                <div className="p-2.5 bg-linear-to-br from-emerald-50 to-teal-100 text-emerald-600 rounded-2xl border border-emerald-200/80 shadow-2xs">
                   <Wallet className="w-5 h-5" />
                 </div>
               </div>
 
+              {/* STATS ROW */}
               <div className="grid grid-cols-2 gap-2">
                 <div className="p-2 bg-emerald-50/70 border border-emerald-100 rounded-xl transition-transform hover:scale-[1.02]">
                   <p className="text-[9px] font-extrabold text-emerald-800">Pemasukan</p>
@@ -139,13 +142,29 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              <div className="space-y-1.5 pt-1">
+              {/* BUDGET PROGRESS INDICATOR PREVIEW */}
+              <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl space-y-1.5">
+                <div className="flex justify-between items-center text-[10px]">
+                  <span className="font-extrabold text-slate-700 flex items-center gap-1">
+                    <Target className="w-3 h-3 text-emerald-600" />
+                    <span>Anggaran Jajan & Hiburan</span>
+                  </span>
+                  <span className="font-black text-emerald-600">35%</span>
+                </div>
+                <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-emerald-500 h-full rounded-full w-[35%]" />
+                </div>
+              </div>
+
+              {/* TRANSACTIONS LIST */}
+              <div className="space-y-1.5 pt-0.5">
                 <p className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Transaksi Terbaru</p>
+                
                 <div className="p-2 bg-slate-50 border border-slate-100 rounded-xl flex justify-between items-center text-[11px] hover:bg-slate-100/80 transition">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
                     <div>
-                      <p className="font-bold text-slate-900">Gaji Bulanan</p>
+                      <p className="font-bold text-slate-900">Gaji Utama</p>
                       <p className="text-[9px] text-slate-400 font-medium">BCA • Hari ini</p>
                     </div>
                   </div>
@@ -154,13 +173,13 @@ export default function LandingPage() {
 
                 <div className="p-2 bg-slate-50 border border-slate-100 rounded-xl flex justify-between items-center text-[11px] hover:bg-slate-100/80 transition">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-rose-500" />
+                    <span className="w-2 h-2 rounded-full bg-blue-500" />
                     <div>
-                      <p className="font-bold text-slate-900">Beli Kopi & Jajan</p>
-                      <p className="text-[9px] text-slate-400 font-medium">SeaBank • Kemarin</p>
+                      <p className="font-bold text-slate-900">Transfer ke Mandiri</p>
+                      <p className="text-[9px] text-slate-400 font-medium">Top Up Tabungan</p>
                     </div>
                   </div>
-                  <span className="font-black text-slate-900">-Rp 45.000</span>
+                  <span className="font-black text-slate-700">Rp 1.000.000</span>
                 </div>
               </div>
             </div>
@@ -172,11 +191,12 @@ export default function LandingPage() {
       <section id="features" className="relative z-10 py-8 px-4 bg-white border-t border-slate-200/80">
         <div className="max-w-md mx-auto space-y-5">
           <div className="text-center space-y-1">
-            <h2 className="text-lg font-black text-slate-900">Kenapa Menggunakan Moneta?</h2>
-            <p className="text-[11px] text-slate-500 font-medium">Fitur simpel untuk kontrol penuh dana pribadi kamu.</p>
+            <h2 className="text-lg font-black text-slate-900">Keunggulan Utama Moneta</h2>
+            <p className="text-[11px] text-slate-500 font-medium">Fitur terpadu untuk fleksibilitas arus kas harian kamu.</p>
           </div>
 
           <div className="space-y-3">
+            {/* FEATURE 1 */}
             <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80 hover:border-emerald-300 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
               <div className="p-2.5 bg-sky-100 text-sky-700 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                 <CreditCard className="w-4 h-4" />
@@ -184,31 +204,46 @@ export default function LandingPage() {
               <div>
                 <h3 className="text-xs font-black text-slate-900">Multi Rekening & Dompet</h3>
                 <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
-                  Kelola dompet tunai, rekening bank, hingga e-wallet dalam satu tampilan terpadu.
+                  Pisahkan saldo kas tunai, rekening bank, hingga e-wallet secara akurat dan terisolasi.
                 </p>
               </div>
             </div>
 
+            {/* FEATURE 2 */}
             <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80 hover:border-emerald-300 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
-              <div className="p-2.5 bg-purple-100 text-purple-700 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-                <TrendingUp className="w-4 h-4" />
+              <div className="p-2.5 bg-indigo-100 text-indigo-700 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
+                <ArrowRightLeft className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-xs font-black text-slate-900">Kategori Warna Kustom</h3>
+                <h3 className="text-xs font-black text-slate-900">Transfer Antar Dompet</h3>
                 <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
-                  Kelompokkan transaksi dengan indikator warna visual yang mudah dipahami.
+                  Pindahkan saldo antar akun tanpa merusak statistik beban pengeluaran riil bulanan.
                 </p>
               </div>
             </div>
 
+            {/* FEATURE 3 */}
             <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80 hover:border-emerald-300 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
               <div className="p-2.5 bg-emerald-100 text-emerald-700 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-                <PieChart className="w-4 h-4" />
+                <Target className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-xs font-black text-slate-900">Ringkasan Grafik Instan</h3>
+                <h3 className="text-xs font-black text-slate-900">Anggaran Bulanan (Budgeting)</h3>
                 <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
-                  Visualisasi statistik arus kas otomatis untuk membantu perencanaan anggaran.
+                  Tetapkan batas maksimal belanja per kategori dan cegah pengeluaran berlebih (*overbudget*).
+                </p>
+              </div>
+            </div>
+
+            {/* FEATURE 4 */}
+            <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80 hover:border-emerald-300 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
+              <div className="p-2.5 bg-purple-100 text-purple-700 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
+                <FileText className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-xs font-black text-slate-900">Ekspor Laporan PDF & Email</h3>
+                <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
+                  Pratinjau laporan resmi berlogo Moneta, unduh PDF, atau kirimkan otomatis ke email kamu.
                 </p>
               </div>
             </div>
@@ -232,7 +267,7 @@ export default function LandingPage() {
         <button
           type="button"
           onClick={scrollToTop}
-          className="fixed bottom-5 right-5 z-50 p-3 bg-slate-900/90 hover:bg-slate-900 text-white rounded-full shadow-xl border border-slate-700/50 backdrop-blur-md transition-all transform active:scale-90 animate-in fade-in zoom-in duration-200"
+          className="fixed bottom-5 right-5 z-50 p-3 bg-slate-900/90 hover:bg-slate-900 text-white rounded-full shadow-xl border border-slate-700/50 backdrop-blur-md transition-all transform active:scale-90 animate-in fade-in zoom-in duration-200 cursor-pointer"
           title="Kembali ke Atas"
         >
           <ArrowUp className="w-4 h-4" />

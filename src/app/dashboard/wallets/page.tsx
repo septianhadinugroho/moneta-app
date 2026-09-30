@@ -3,17 +3,38 @@
 import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import { formatRupiah } from '@/lib/utils';
-import { Wallet, Plus, Edit2, Trash2, Landmark, CreditCard, Banknote, Nfc, Eye, EyeOff } from 'lucide-react';
+import { 
+  Wallet, 
+  Plus, 
+  Edit2, 
+  Trash2, 
+  Landmark, 
+  CreditCard, 
+  Banknote, 
+  Nfc, 
+  Eye, 
+  EyeOff, 
+  AlertTriangle, 
+  ArrowUpRight, 
+  ArrowDownLeft,
+  ArrowRightLeft 
+} from 'lucide-react';
 import WalletModal from '@/components/modals/WalletModal';
+import TransferModal from '@/components/modals/TransferModal';
 
 export default function WalletsPage() {
   const [wallets, setWallets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState<any>(null);
-
-  // Default: Tersembunyi (false)
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [showBalance, setShowBalance] = useState(false);
+
+  const [deleteTarget, setDeleteTarget] = useState<any | null>(null);
+  const [relatedTransactions, setRelatedTransactions] = useState<any[]>([]);
+  const [fetchingTx, setFetchingTx] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchWallets = async () => {
     try {
@@ -42,29 +63,42 @@ export default function WalletsPage() {
     setIsModalOpen(true);
   };
 
-  const handleDeleteWallet = async (id: number, name: string) => {
-    if (!confirm(`Apakah kamu yakin ingin menghapus dompet "${name}"? Seluruh riwayat transaksi di dompet ini juga akan terhapus.`)) {
-      return;
-    }
-
+  const handleInitiateDelete = async (wallet: any) => {
+    setDeleteTarget(wallet);
+    setFetchingTx(true);
     try {
-      await api.delete(`/wallets/${id}`);
+      const res = await api.get('/transactions', { params: { walletId: wallet.id } });
+      setRelatedTransactions(res.data.data || []);
+    } catch (err) {
+      console.error('Gagal mengambil riwayat transaksi', err);
+      setRelatedTransactions([]);
+    } finally {
+      setFetchingTx(false);
+    }
+  };
+
+  const confirmDeleteWallet = async () => {
+    if (!deleteTarget) return;
+
+    setIsDeleting(true);
+    try {
+      await api.delete(`/wallets/${deleteTarget.id}`);
+      setDeleteTarget(null);
+      setRelatedTransactions([]);
       fetchWallets();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Gagal menghapus dompet');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
   const getWalletIcon = (type: string) => {
     switch (type?.toUpperCase()) {
-      case 'BANK':
-        return <Landmark className="w-5 h-5" />;
-      case 'E_WALLET':
-        return <CreditCard className="w-5 h-5" />;
-      case 'E_MONEY':
-        return <Nfc className="w-5 h-5" />;
-      default:
-        return <Banknote className="w-5 h-5" />;
+      case 'BANK': return <Landmark className="w-5 h-5" />;
+      case 'E_WALLET': return <CreditCard className="w-5 h-5" />;
+      case 'E_MONEY': return <Nfc className="w-5 h-5" />;
+      default: return <Banknote className="w-5 h-5" />;
     }
   };
 
@@ -77,9 +111,9 @@ export default function WalletsPage() {
   }
 
   return (
-    <div className="p-4 sm:p-5 space-y-4">
-      {/* HEADER TOTAL NET WORTH DENGAN TOMBOL MATA KONTROL */}
-      <div className="bg-slate-900 text-white p-5 rounded-3xl shadow-lg relative overflow-hidden space-y-2">
+    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 pb-24">
+      {/* HEADER NET WORTH */}
+      <div className="bg-slate-900 text-white p-5 rounded-3xl shadow-lg relative overflow-hidden space-y-3">
         <div className="flex justify-between items-center gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider truncate">
@@ -88,76 +122,82 @@ export default function WalletsPage() {
             <button
               type="button"
               onClick={() => setShowBalance(!showBalance)}
-              className="bg-slate-800 hover:bg-slate-700 text-slate-300 p-1.5 rounded-lg transition shrink-0 border border-slate-700/80"
-              title={showBalance ? 'Sembunyikan Saldo' : 'Tampilkan Saldo'}
+              className="bg-slate-800 hover:bg-slate-700 text-slate-300 p-1.5 rounded-lg transition shrink-0 border border-slate-700/80 active:scale-95 cursor-pointer"
             >
-              {showBalance ? (
-                <Eye className="w-4 h-4 text-emerald-400" />
-              ) : (
-                <EyeOff className="w-4 h-4 text-slate-400" />
-              )}
+              {showBalance ? <Eye className="w-3.5 h-3.5 text-emerald-400" /> : <EyeOff className="w-3.5 h-3.5 text-slate-400" />}
             </button>
           </div>
 
-          <span className="text-[10px] font-extrabold bg-slate-800 text-emerald-400 px-2.5 py-1 rounded-full border border-slate-700 whitespace-nowrap shrink-0">
-            {wallets.length} Akun Terhubung
+          <span className="text-[10px] font-extrabold bg-slate-800/80 text-emerald-400 px-2.5 py-1 rounded-full border border-slate-700/80 whitespace-nowrap shrink-0">
+            {wallets.length} Akun
           </span>
         </div>
 
         <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
           {showBalance ? formatRupiah(totalBalance) : '••••••••'}
         </h2>
-      </div>
 
-      {/* DAFTAR REKENING */}
-      <div className="space-y-3 pt-1">
-        <div className="flex justify-between items-center">
-          <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
-            <Wallet className="w-4 h-4 text-slate-700" />
-            Daftar Rekening & Dompet
-          </h3>
+        {/* QUICK ACTION BUTTONS DI DALAM HEADER CARD */}
+        <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800">
+          <button
+            type="button"
+            onClick={() => setIsTransferModalOpen(true)}
+            disabled={wallets.length < 2}
+            className="py-2 px-3 bg-slate-800/90 hover:bg-slate-700 text-white font-extrabold text-xs rounded-xl transition flex items-center justify-center gap-1.5 border border-slate-700/60 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          >
+            <ArrowRightLeft className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Transfer</span>
+          </button>
 
           <button
             type="button"
             onClick={handleOpenCreate}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3 py-1.5 rounded-xl text-xs transition flex items-center gap-1 shadow-xs"
+            className="py-2 px-3 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs rounded-xl transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5 stroke-3" />
-            <span>Tambah</span>
+            <span>Tambah Dompet</span>
           </button>
+        </div>
+      </div>
+
+      {/* DAFTAR REKENING */}
+      <div className="space-y-3 pt-1">
+        <div className="flex justify-between items-center px-0.5">
+          <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
+            <Wallet className="w-4 h-4 text-slate-700" />
+            <span>Daftar Rekening</span>
+          </h3>
+          <span className="text-[11px] font-extrabold text-slate-400">
+            {wallets.length} Akun Terhubung
+          </span>
         </div>
 
         {wallets.length === 0 ? (
           <div className="bg-white p-8 rounded-2xl border border-slate-200/80 text-center space-y-2">
             <p className="text-xs text-slate-400 font-medium">Belum ada dompet atau akun terhubung.</p>
-            <button
-              type="button"
-              onClick={handleOpenCreate}
-              className="text-xs font-extrabold text-emerald-600 hover:underline"
-            >
-              + Tambah Dompet Pertama
-            </button>
           </div>
         ) : (
-          <div className="space-y-2.5">
+          <div className="grid grid-cols-1 gap-2.5">
             {wallets.map((w) => (
               <div
                 key={w.id}
-                className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs flex justify-between items-center hover:border-slate-300 transition"
+                className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs flex justify-between items-center hover:border-slate-300 transition group"
               >
-                <div className="flex items-center space-x-3 min-w-0 pr-2">
+                <div className="flex items-center space-x-3.5 min-w-0 pr-2">
                   <div
-                    className="p-2.5 rounded-2xl shrink-0 text-white shadow-xs"
+                    className="p-3 rounded-2xl shrink-0 text-white shadow-xs"
                     style={{ backgroundColor: w.color || '#0f172a' }}
                   >
                     {getWalletIcon(w.type)}
                   </div>
-                  <div className="truncate">
-                    <p className="text-xs font-bold text-slate-900 truncate">{w.name}</p>
-                    <p className="text-[10px] text-slate-400 font-medium uppercase">
-                      {w.type || 'CASH'}
-                    </p>
-                    <p className="text-xs font-black text-slate-900 mt-0.5">
+                  <div className="truncate space-y-0.5">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <p className="text-xs font-black text-slate-900 truncate">{w.name}</p>
+                      <span className="text-[9px] font-extrabold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md uppercase tracking-wider border border-slate-200/60 shrink-0">
+                        {w.type || 'CASH'}
+                      </span>
+                    </div>
+                    <p className="text-xs sm:text-sm font-black text-slate-900 tracking-tight">
                       {showBalance ? formatRupiah(w.balance) : '••••••••'}
                     </p>
                   </div>
@@ -167,15 +207,15 @@ export default function WalletsPage() {
                   <button
                     type="button"
                     onClick={() => handleOpenEdit(w)}
-                    className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition"
+                    className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition active:scale-95 cursor-pointer"
                     title="Edit Dompet"
                   >
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleDeleteWallet(w.id, w.name)}
-                    className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition"
+                    onClick={() => handleInitiateDelete(w)}
+                    className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition active:scale-95 cursor-pointer"
                     title="Hapus Dompet"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -187,12 +227,96 @@ export default function WalletsPage() {
         )}
       </div>
 
+      {/* MODAL CREATION / EDIT WALLET */}
       <WalletModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         walletToEdit={selectedWallet}
         onSuccess={fetchWallets}
       />
+
+      {/* MODAL TRANSFER ANTAR DOMPET */}
+      <TransferModal
+        isOpen={isTransferModalOpen}
+        onClose={() => setIsTransferModalOpen(false)}
+        wallets={wallets}
+        onSuccess={fetchWallets}
+      />
+
+      {/* MODAL KONFIRMASI HAPUS DOMPET */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-slate-100 space-y-4 animate-in zoom-in-95 duration-200">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-rose-100 text-rose-600 rounded-2xl shrink-0">
+                <AlertTriangle className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-black text-slate-900">Hapus Dompet "{deleteTarget.name}"?</h3>
+                <p className="text-[11px] text-slate-500 font-medium leading-tight mt-0.5">
+                  Menghapus dompet ini akan membuang dompet dan <span className="font-bold text-rose-600">seluruh transaksi di dalamnya secara permanen</span>.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex justify-between items-center text-[11px] font-extrabold text-slate-500">
+                <span>Transaksi Terdampak:</span>
+                <span className="bg-slate-100 px-2 py-0.5 rounded-full">{relatedTransactions.length} Transaksi</span>
+              </div>
+
+              {fetchingTx ? (
+                <div className="p-4 bg-slate-50 rounded-2xl text-center text-xs text-slate-400 font-medium animate-pulse">
+                  Memuat transaksi terkait...
+                </div>
+              ) : relatedTransactions.length === 0 ? (
+                <div className="p-3 bg-slate-50 border border-slate-100 rounded-2xl text-center text-xs text-slate-400 font-medium">
+                  Tidak ada transaksi di dompet ini. Aman dihapus.
+                </div>
+              ) : (
+                <div className="max-h-36 overflow-y-auto space-y-1.5 pr-1 border border-slate-100 rounded-2xl p-2 bg-slate-50/50">
+                  {relatedTransactions.map((tx) => (
+                    <div key={tx.id} className="p-2 bg-white rounded-xl border border-slate-100 flex justify-between items-center text-xs">
+                      <div className="flex items-center gap-2 min-w-0">
+                        {tx.type === 'INCOME' ? (
+                          <ArrowUpRight className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        ) : (
+                          <ArrowDownLeft className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+                        )}
+                        <div className="truncate">
+                          <p className="font-bold text-slate-900 truncate">{tx.description || 'Tanpa Catatan'}</p>
+                          <p className="text-[9px] text-slate-400">{tx.category?.name || 'Lain-lain'}</p>
+                        </div>
+                      </div>
+                      <span className={`font-black text-xs shrink-0 ${tx.type === 'INCOME' ? 'text-emerald-600' : 'text-slate-900'}`}>
+                        {tx.type === 'INCOME' ? '+' : '-'}{formatRupiah(tx.amount)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => { setDeleteTarget(null); setRelatedTransactions([]); }}
+                className="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition active:scale-95 cursor-pointer"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={confirmDeleteWallet}
+                className="py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition shadow-xs active:scale-95 disabled:opacity-50 cursor-pointer"
+              >
+                {isDeleting ? 'Hapus...' : 'Ya, Hapus Semua'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -139,7 +139,7 @@ export default function TransactionDetailModal({
 
             <div className="py-2.5 border-b border-slate-100 text-xs space-y-1">
               <span className="text-slate-500 font-medium block">Catatan</span>
-              <p className="font-semibold text-slate-800 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 break-words leading-relaxed">
+              <p className="font-semibold text-slate-800 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 wrap-break-word leading-relaxed">
                 {transaction?.notes || transaction?.description || 'Tidak ada catatan.'}
               </p>
             </div>

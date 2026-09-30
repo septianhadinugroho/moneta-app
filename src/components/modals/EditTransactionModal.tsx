@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
-import { X, Calendar, DollarSign } from 'lucide-react';
+import { X, Calendar, DollarSign, Wallet, Tag, Building2, Smartphone, Radio, Banknote, ArrowRightLeft } from 'lucide-react';
+import CustomDropdown from '@/components/ui/CustomDropdown';
 
 interface EditTransactionModalProps {
   isOpen: boolean;
@@ -19,13 +20,12 @@ const formatDateString = (dateInput?: string | Date) => {
   return `${year}-${month}-${day}`;
 };
 
-// HELPER GABUNGAN TANGGAL + JAM SEKARANG
+// HELPER GABUNGAN TANGGAL + JAM SEKARANG (REAL-TIME WIB)
 const getCombinedDateTime = (selectedDateStr: string) => {
   const now = new Date();
   if (!selectedDateStr) return now.toISOString();
 
   const [year, month, day] = selectedDateStr.split('-').map(Number);
-
   const combinedDate = new Date(
     year,
     month - 1,
@@ -39,18 +39,33 @@ const getCombinedDateTime = (selectedDateStr: string) => {
   return combinedDate.toISOString();
 };
 
+const getWalletTypeBadge = (type?: string) => {
+  switch (String(type || '').toUpperCase()) {
+    case 'BANK': return { icon: Building2, iconBg: 'bg-sky-500/20 text-sky-400' };
+    case 'E_WALLET': return { icon: Smartphone, iconBg: 'bg-purple-500/20 text-purple-400' };
+    case 'E_MONEY': return { icon: Radio, iconBg: 'bg-lime-500/20 text-lime-400' };
+    case 'CASH': return { icon: Banknote, iconBg: 'bg-emerald-500/20 text-emerald-400' };
+    default: return { icon: Wallet, iconBg: 'bg-slate-500/20 text-slate-400' };
+  }
+};
+
 export default function EditTransactionModal({
   isOpen,
   onClose,
   transaction,
   onSuccess,
 }: EditTransactionModalProps) {
-  const [type, setType] = useState<'EXPENSE' | 'INCOME'>('EXPENSE');
+  const [type, setType] = useState<'EXPENSE' | 'INCOME' | 'TRANSFER'>('EXPENSE');
   const [walletId, setWalletId] = useState('');
+  const [destinationWalletId, setDestinationWalletId] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState(formatDateString());
+
+  const [isWalletOpen, setIsWalletOpen] = useState(false);
+  const [isDestWalletOpen, setIsDestWalletOpen] = useState(false);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 
   const [wallets, setWallets] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -58,38 +73,54 @@ export default function EditTransactionModal({
 
   useEffect(() => {
     if (isOpen && transaction) {
-      setType(String(transaction.type).toUpperCase() as 'EXPENSE' | 'INCOME');
+      const txType = String(transaction.type).toUpperCase() as 'EXPENSE' | 'INCOME' | 'TRANSFER';
+      setType(txType);
       setWalletId(String(transaction.walletId || transaction.wallet?.id || ''));
+      setDestinationWalletId(String(transaction.destinationWalletId || transaction.destinationWallet?.id || ''));
       setCategoryId(String(transaction.categoryId || transaction.category?.id || ''));
       setAmount(String(transaction.amount || ''));
       setDescription(transaction.description || '');
       setDate(formatDateString(transaction.date));
 
-      api.get('/wallets').then((res) => setWallets(res.data.data || []));
-      api.get('/categories').then((res) => setCategories(res.data.data || []));
+      Promise.all([api.get('/wallets'), api.get('/categories')])
+        .then(([wRes, cRes]) => {
+          setWallets(wRes.data.data || []);
+          setCategories(cRes.data.data || []);
+        })
+        .catch((err) => console.error(err));
     }
   }, [isOpen, transaction]);
 
   if (!isOpen || !transaction) return null;
 
-  const filteredCategories = categories.filter(
-    (c) => String(c.type).toUpperCase() === type
-  );
+  const walletOptions = wallets.map((w) => ({
+    id: w.id,
+    name: w.name,
+    ...getWalletTypeBadge(w.type),
+  }));
+
+  const categoryOptions = categories
+    .filter((c) => String(c.type).toUpperCase() === type)
+    .map((c) => ({ id: c.id, name: c.name, color: c.color || '#64748b' }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!walletId) return alert('Pilih dompet terlebih dahulu');
+    if (type === 'TRANSFER' && !destinationWalletId) return alert('Pilih dompet tujuan transfer');
+    if (type === 'TRANSFER' && walletId === destinationWalletId) return alert('Dompet asal dan tujuan tidak boleh sama');
     if (!amount || parseFloat(amount) <= 0) return alert('Nominal harus lebih dari 0');
 
     setLoading(true);
     try {
       await api.put(`/transactions/${transaction.id}`, {
         walletId: Number(walletId),
-        categoryId: categoryId ? Number(categoryId) : null,
+        destinationWalletId: type === 'TRANSFER' ? Number(destinationWalletId) : null,
+        categoryId: type === 'TRANSFER' ? null : (categoryId ? Number(categoryId) : null),
         amount: parseFloat(amount),
         type,
         description,
-        date: getCombinedDateTime(date), // Kirim tanggal pilihan dengan jam & waktu saat ini
+        notes: description,
+        date: getCombinedDateTime(date),
       });
 
       if (onSuccess) onSuccess();
@@ -102,64 +133,77 @@ export default function EditTransactionModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-xl border border-slate-100 relative animate-in fade-in zoom-in duration-150">
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-100 font-sans text-slate-900">
+      <div className="bg-white rounded-3xl max-w-sm w-full p-5 space-y-4 border border-slate-100 shadow-2xl relative animate-in fade-in zoom-in duration-150">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <DollarSign className="w-4 h-4 text-emerald-600" />
-            <h3 className="text-sm font-extrabold text-slate-900">Edit Transaksi</h3>
+            {type === 'TRANSFER' ? (
+              <ArrowRightLeft className="w-4 h-4 text-slate-700" />
+            ) : (
+              <DollarSign className="w-4 h-4 text-emerald-600" />
+            )}
+            <h3 className="text-sm font-extrabold text-slate-900">
+              {type === 'TRANSFER' ? 'Edit Transfer' : 'Edit Transaksi'}
+            </h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+            className="text-slate-400 hover:text-slate-600 p-1 rounded-lg transition"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-xl">
-          <button
-            type="button"
-            onClick={() => {
-              setType('EXPENSE');
-              setCategoryId('');
-            }}
-            className={`py-1.5 text-xs font-extrabold rounded-lg transition ${
-              type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-500'
-            }`}
-          >
-            Pengeluaran
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setType('INCOME');
-              setCategoryId('');
-            }}
-            className={`py-1.5 text-xs font-extrabold rounded-lg transition ${
-              type === 'INCOME' ? 'bg-[#16A085] text-white shadow-xs' : 'text-slate-500'
-            }`}
-          >
-            Pemasukan
-          </button>
-        </div>
+        {/* TIPE SWITCHER (JIKA BUKAN TRANSFER) */}
+        {type !== 'TRANSFER' ? (
+          <div className="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-xl text-xs font-extrabold">
+            <button
+              type="button"
+              onClick={() => {
+                setType('EXPENSE');
+                setCategoryId('');
+              }}
+              className={`py-1.5 rounded-lg transition ${
+                type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-500'
+              }`}
+            >
+              Pengeluaran
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setType('INCOME');
+                setCategoryId('');
+              }}
+              className={`py-1.5 rounded-lg transition ${
+                type === 'INCOME' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-500'
+              }`}
+            >
+              Pemasukan
+            </button>
+          </div>
+        ) : (
+          <div className="p-2 bg-slate-100 rounded-xl text-xs font-bold text-slate-600 text-center">
+            Transfer Antar Dompet
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} className="space-y-3 text-xs">
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Nominal (Rp)</label>
+            <label className="block text-slate-700 font-bold mb-1">Nominal (Rp)</label>
             <input
               type="number"
               required
               placeholder="0"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-[#16A085]"
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-black text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1">
+            <label className="text-slate-700 font-bold mb-1 flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5 text-slate-500" />
               Tanggal Transaksi
             </label>
@@ -168,49 +212,79 @@ export default function EditTransactionModal({
               required
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-[#16A085]"
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900"
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Dompet / Rekening</label>
-            <select
-              value={walletId}
-              onChange={(e) => setWalletId(e.target.value)}
-              className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-[#16A085]"
-            >
-              {wallets.map((w) => (
-                <option key={w.id} value={w.id}>
-                  {w.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* DOMPET ASAL */}
+          <CustomDropdown
+            label={type === 'TRANSFER' ? 'Dari Dompet (Asal)' : 'Dompet / Rekening'}
+            required
+            isOpen={isWalletOpen}
+            onToggle={() => {
+              setIsWalletOpen(!isWalletOpen);
+              setIsDestWalletOpen(false);
+              setIsCategoryOpen(false);
+            }}
+            selectedOption={walletOptions.find((w) => String(w.id) === walletId)}
+            options={walletOptions}
+            onSelect={(id) => {
+              setWalletId(id);
+              setIsWalletOpen(false);
+            }}
+            placeholder="-- Pilih Dompet --"
+            defaultIcon={Wallet}
+          />
+
+          {/* JIKA TRANSFER: TAMPILKAN DOMPET TUJUAN */}
+          {type === 'TRANSFER' ? (
+            <CustomDropdown
+              label="Ke Dompet (Tujuan)"
+              required
+              isOpen={isDestWalletOpen}
+              onToggle={() => {
+                setIsDestWalletOpen(!isDestWalletOpen);
+                setIsWalletOpen(false);
+                setIsCategoryOpen(false);
+              }}
+              selectedOption={walletOptions.find((w) => String(w.id) === destinationWalletId)}
+              options={walletOptions.filter((w) => String(w.id) !== walletId)}
+              onSelect={(id) => {
+                setDestinationWalletId(id);
+                setIsDestWalletOpen(false);
+              }}
+              placeholder="-- Pilih Dompet Tujuan --"
+              defaultIcon={Wallet}
+            />
+          ) : (
+            /* JIKA INCOME/EXPENSE: TAMPILKAN KATEGORI */
+            <CustomDropdown
+              label="Kategori"
+              required
+              isOpen={isCategoryOpen}
+              onToggle={() => {
+                setIsCategoryOpen(!isCategoryOpen);
+                setIsWalletOpen(false);
+              }}
+              selectedOption={categoryOptions.find((c) => String(c.id) === categoryId)}
+              options={categoryOptions}
+              onSelect={(id) => {
+                setCategoryId(id);
+                setIsCategoryOpen(false);
+              }}
+              placeholder="-- Pilih Kategori --"
+              defaultIcon={Tag}
+            />
+          )}
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Kategori</label>
-            <select
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
-              className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-[#16A085]"
-            >
-              <option value="">-- Pilih Kategori --</option>
-              {filteredCategories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Catatan (Opsional)</label>
+            <label className="block text-slate-700 font-bold mb-1">Catatan (Opsional)</label>
             <input
               type="text"
-              placeholder="Contoh: Makan Siang / Gaji Bulan Ini"
+              placeholder="Contoh: Beli Kopi / Top Up E-Wallet"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-[#16A085]"
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-900"
             />
           </div>
 
@@ -218,14 +292,14 @@ export default function EditTransactionModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2 bg-slate-100 text-slate-600 text-xs font-bold rounded-xl"
+              className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition"
             >
               Batal
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-2 bg-[#0F3D34] text-white text-xs font-bold rounded-xl hover:bg-[#16A085] transition disabled:opacity-50"
+              className="flex-1 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold rounded-xl transition disabled:opacity-50"
             >
               {loading ? 'Menyimpan...' : 'Perbarui'}
             </button>
