@@ -1,518 +1,247 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { GoogleLogin } from '@react-oauth/google';
-import api from '@/lib/api';
-import { Eye, EyeOff } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { 
+  Wallet, 
+  TrendingUp, 
+  PieChart, 
+  ShieldCheck, 
+  ArrowRight, 
+  Sparkles, 
+  CreditCard,
+  ArrowUp,
+  Zap,
+  CheckCircle2
+} from 'lucide-react';
 
-type AuthMode = 'login' | 'register' | 'otp' | 'forgot' | 'verify-reset-otp' | 'reset-password';
+export default function LandingPage() {
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
-export default function AuthPage() {
-  const router = useRouter();
-  const [mode, setMode] = useState<AuthMode>('login');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 200);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  // Password Visibility State
-  const [showPass, setShowPass] = useState(false);
-  const [showConfirmPass, setShowConfirmPass] = useState(false);
-
-  // Form State
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [otpCode, setOtpCode] = useState('');
-  const [resetToken, setResetToken] = useState('');
-
-  const clearAlerts = () => {
-    setError('');
-    setMessage('');
-  };
-
-  const Spinner = () => (
-    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-    </svg>
-  );
-
-  const EyeIcon = ({ show, toggle }: { show: boolean; toggle: () => void }) => (
-    <button
-      type="button"
-      onClick={toggle}
-      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded-md z-10"
-    >
-      {/* Jika password sedang KELIATAN (show = true), tampilkan ikon Eye agar user tau bisa klik untuk menyembunyikan (atau EyeOff) */}
-      {/* Standar UX: saat tersembunyi (dots) -> tampilkan Eye (intip). Saat terbuka (teks) -> tampilkan EyeOff (tutup). */}
-      {show ? (
-        <Eye className="w-4 h-4 text-emerald-600" />
-      ) : (
-        <EyeOff className="w-4 h-4 text-slate-400" />
-      )}
-    </button>
-  );
-
-  // 1. Handle Login
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    clearAlerts();
-
-    try {
-      const res = await api.post('/auth/login', { email, password });
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.data));
-      router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Invalid email or password');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 2. Handle Register
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
-    setLoading(true);
-    clearAlerts();
-
-    try {
-      const res = await api.post('/auth/register', { name, email, password, confirmPassword });
-      setMessage(res.data.message);
-      setMode('otp');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 3. Handle Verify Registration OTP
-  const handleVerifyOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    clearAlerts();
-
-    try {
-      const res = await api.post('/auth/verify-otp', { email, otpCode });
-      setMessage('Account verified successfully!');
-      setTimeout(() => {
-        setMode('login');
-        setMessage('');
-        setOtpCode('');
-      }, 1500);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Invalid or expired OTP code');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 4. Step 1 Forgot Password: Send OTP
-  const handleSendResetOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    clearAlerts();
-
-    try {
-      const res = await api.post('/auth/forgot-password', { email });
-      setMessage(`OTP reset code sent to ${email}`);
-      if (res.data.resetToken) setResetToken(res.data.resetToken);
-      setMode('verify-reset-otp');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to request password reset');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 5. Step 2 Forgot Password: Verify OTP Code
-  const handleVerifyResetOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!otpCode) {
-      setError('Please enter the verification code');
-      return;
-    }
-    setLoading(true);
-    clearAlerts();
-
-    setTimeout(() => {
-      setLoading(false);
-      setMessage('OTP verified. Please enter your new password.');
-      setMode('reset-password');
-    }, 800);
-  };
-
-  // 6. Step 3 Forgot Password: Set New Password
-  const handleResetPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
-    setLoading(true);
-    clearAlerts();
-
-    try {
-      const res = await api.post('/auth/reset-password', {
-        token: resetToken || otpCode,
-        newPassword: password,
-        confirmNewPassword: confirmPassword,
-      });
-      setMessage('Password reset successful! Redirecting to login...');
-      setTimeout(() => {
-        setMode('login');
-        setMessage('');
-        setPassword('');
-        setConfirmPassword('');
-        setOtpCode('');
-      }, 1500);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to reset password');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 7. Google Auth
-  const handleGoogleSuccess = async (credentialResponse: any) => {
-    setLoading(true);
-    clearAlerts();
-
-    try {
-      const res = await api.post('/auth/google', {
-        idToken: credentialResponse.credential,
-      });
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.data));
-      router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Google authentication failed');
-    } finally {
-      setLoading(false);
-    }
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 bg-slate-100">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-slate-200/80 p-8">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between relative overflow-hidden font-sans selection:bg-emerald-500 selection:text-white">
+      
+      {/* GLOWING MESH BACKGROUND */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[550px] h-[320px] bg-emerald-300/30 blur-[110px] pointer-events-none rounded-full animate-pulse" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f080_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f080_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
+
+      {/* 1. FIXED NAVBAR HEADER */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/80 px-4 py-2.5 transition-all">
+        <div className="max-w-md mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-2 group cursor-pointer">
+            <div className="w-8 h-8 relative shrink-0 transition-transform group-hover:scale-105">
+              <Image 
+                src="/icon-512x512.png" 
+                alt="Moneta Logo" 
+                width={32} 
+                height={32} 
+                className="object-contain"
+                priority 
+                onError={(e) => {
+                  e.currentTarget.src = "/favicon.ico";
+                }}
+              />
+            </div>
+            <span className="text-lg font-black tracking-tight text-slate-900">Moneta</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Link
+              href="/auth"
+              className="px-3 py-1.5 text-xs font-extrabold text-slate-600 hover:text-slate-900 transition"
+            >
+              Masuk
+            </Link>
+            <Link
+              href="/auth"
+              className="px-3.5 py-1.5 text-xs font-extrabold bg-slate-900 hover:bg-slate-800 text-white rounded-xl shadow-md shadow-slate-900/10 transition-all transform hover:-translate-y-0.5 active:scale-95"
+            >
+              Coba Gratis
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* 2. HERO SECTION */}
+      <section className="relative max-w-md w-full mx-auto px-4 pt-20 pb-8 text-center space-y-4 z-10">
         
-        {/* Header */}
-        <div className="text-center mb-6">
-          <h1 className="text-xl font-bold tracking-tight text-slate-900">
-            {mode === 'login' && 'Welcome Back'}
-            {mode === 'register' && 'Create Account'}
-            {mode === 'otp' && 'Verify Email'}
-            {mode === 'forgot' && 'Forgot Password'}
-            {mode === 'verify-reset-otp' && 'Enter Verification Code'}
-            {mode === 'reset-password' && 'Set New Password'}
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            {mode === 'login' && 'Enter your credentials to access your account'}
-            {mode === 'register' && 'Fill in your details below to get started'}
-            {mode === 'otp' && `Enter the 6-digit code sent to ${email}`}
-            {mode === 'forgot' && 'Enter your registered email address'}
-            {mode === 'verify-reset-otp' && `Enter the OTP code sent to ${email}`}
-            {mode === 'reset-password' && 'Create a strong new password for your account'}
-          </p>
+        {/* ANIMATED BADGE */}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200/80 text-emerald-800 rounded-full text-[10px] font-extrabold shadow-2xs transition-all hover:border-emerald-400">
+          <Sparkles className="w-3 h-3 text-emerald-600 animate-spin" style={{ animationDuration: '6s' }} />
+          <span>Kelola Keuangan Pribadi Lebih Rapi</span>
         </div>
 
-        {/* Alerts */}
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-xs rounded-xl font-medium">
-            {error}
-          </div>
-        )}
-        {message && (
-          <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs rounded-xl font-medium">
-            {message}
-          </div>
-        )}
+        {/* HEADLINE */}
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-snug">
+          Arus Kas Terkontrol, Finansial Makin <span className="text-emerald-600 underline decoration-emerald-300 decoration-wavy decoration-2">Tenang</span>
+        </h1>
 
-        {/* 1. LOGIN */}
-        {mode === 'login' && (
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Email</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition"
-                placeholder="name@example.com"
-              />
-            </div>
-            <div>
-              <div className="flex justify-between items-center mb-1">
-                <label className="text-xs font-semibold text-slate-700">Password</label>
-                <button
-                  type="button"
-                  onClick={() => { setMode('forgot'); clearAlerts(); }}
-                  className="text-xs font-medium text-slate-500 hover:text-slate-900 hover:underline"
-                >
-                  Forgot?
-                </button>
-              </div>
-              <div className="relative">
-                <input
-                  type={showPass ? 'text' : 'password'}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-3.5 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition"
-                  placeholder="••••••••"
-                />
-                <EyeIcon show={showPass} toggle={() => setShowPass(!showPass)} />
-              </div>
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm rounded-xl transition disabled:opacity-50 flex items-center justify-center"
-            >
-              {loading && <Spinner />}
-              {loading ? 'Signing in...' : 'Sign In'}
-            </button>
-          </form>
-        )}
+        {/* SUBTITLE */}
+        <p className="text-[11px] font-medium text-slate-500 max-w-xs mx-auto leading-relaxed">
+          Catat pemasukan & pengeluaran harian dari bank, e-wallet, hingga uang tunai dalam satu dasbor yang ringkas.
+        </p>
 
-        {/* 2. REGISTER */}
-        {mode === 'register' && (
-          <form onSubmit={handleRegister} className="space-y-3.5">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition"
-                placeholder="John Doe"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Email</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition"
-                placeholder="name@example.com"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Password</label>
-              <div className="relative">
-                <input
-                  type={showPass ? 'text' : 'password'}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-3.5 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition"
-                  placeholder="••••••••"
-                />
-                <EyeIcon show={showPass} toggle={() => setShowPass(!showPass)} />
-              </div>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Confirm Password</label>
-              <div className="relative">
-                <input
-                  type={showConfirmPass ? 'text' : 'password'}
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-3.5 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition"
-                  placeholder="••••••••"
-                />
-                <EyeIcon show={showConfirmPass} toggle={() => setShowConfirmPass(!showConfirmPass)} />
-              </div>
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm rounded-xl transition disabled:opacity-50 flex items-center justify-center"
-            >
-              {loading && <Spinner />}
-              {loading ? 'Registering...' : 'Register Account'}
-            </button>
-          </form>
-        )}
-
-        {/* 3. VERIFY REGISTRATION OTP */}
-        {mode === 'otp' && (
-          <form onSubmit={handleVerifyOTP} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1 text-center">OTP Code</label>
-              <input
-                type="text"
-                required
-                maxLength={6}
-                value={otpCode}
-                onChange={(e) => setOtpCode(e.target.value)}
-                className="w-full px-3 py-3 bg-slate-50 border border-slate-300 rounded-xl text-center text-xl tracking-[0.4em] font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition"
-                placeholder="000000"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm rounded-xl transition disabled:opacity-50 flex items-center justify-center"
-            >
-              {loading && <Spinner />}
-              {loading ? 'Verifying...' : 'Verify Email'}
-            </button>
-          </form>
-        )}
-
-        {/* 4. FORGOT PASSWORD STEP 1: EMAIL */}
-        {mode === 'forgot' && (
-          <form onSubmit={handleSendResetOTP} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition"
-                placeholder="name@example.com"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm rounded-xl transition disabled:opacity-50 flex items-center justify-center"
-            >
-              {loading && <Spinner />}
-              {loading ? 'Sending code...' : 'Send Verification Code'}
-            </button>
-          </form>
-        )}
-
-        {/* 5. FORGOT PASSWORD STEP 2: VERIFY RESET OTP */}
-        {mode === 'verify-reset-otp' && (
-          <form onSubmit={handleVerifyResetOTP} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1 text-center">Enter 6-Digit OTP</label>
-              <input
-                type="text"
-                required
-                maxLength={6}
-                value={otpCode}
-                onChange={(e) => setOtpCode(e.target.value)}
-                className="w-full px-3 py-3 bg-slate-50 border border-slate-300 rounded-xl text-center text-xl tracking-[0.4em] font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition"
-                placeholder="000000"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm rounded-xl transition disabled:opacity-50 flex items-center justify-center"
-            >
-              {loading && <Spinner />}
-              {loading ? 'Validating...' : 'Continue'}
-            </button>
-          </form>
-        )}
-
-        {/* 6. FORGOT PASSWORD STEP 3: NEW PASSWORD */}
-        {mode === 'reset-password' && (
-          <form onSubmit={handleResetPassword} className="space-y-3.5">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">New Password</label>
-              <div className="relative">
-                <input
-                  type={showPass ? 'text' : 'password'}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-3.5 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition"
-                  placeholder="••••••••"
-                />
-                <EyeIcon show={showPass} toggle={() => setShowPass(!showPass)} />
-              </div>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Confirm New Password</label>
-              <div className="relative">
-                <input
-                  type={showConfirmPass ? 'text' : 'password'}
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-3.5 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition"
-                  placeholder="••••••••"
-                />
-                <EyeIcon show={showConfirmPass} toggle={() => setShowConfirmPass(!showConfirmPass)} />
-              </div>
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm rounded-xl transition disabled:opacity-50 flex items-center justify-center"
-            >
-              {loading && <Spinner />}
-              {loading ? 'Saving...' : 'Save New Password'}
-            </button>
-          </form>
-        )}
-
-        {/* GOOGLE OAUTH */}
-        {(mode === 'login' || mode === 'register') && (
-          <>
-            <div className="relative my-5">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200"></div>
-              </div>
-              <div className="relative flex justify-center text-[10px] uppercase tracking-wider font-semibold">
-                <span className="bg-white px-3 text-slate-400">Or</span>
-              </div>
-            </div>
-
-            <div className="flex justify-center">
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={() => setError('Google Sign-In failed')}
-                shape="rectangular"
-                theme="outline"
-              />
-            </div>
-          </>
-        )}
-
-        {/* FOOTER SWITCHER */}
-        <div className="mt-6 text-center text-xs text-slate-500">
-          {mode === 'login' && (
-            <p>
-              Don't have an account?{' '}
-              <button onClick={() => { setMode('register'); clearAlerts(); }} className="text-slate-900 font-semibold hover:underline">
-                Sign Up
-              </button>
-            </p>
-          )}
-          {mode !== 'login' && (
-            <p>
-              Back to{' '}
-              <button onClick={() => { setMode('login'); clearAlerts(); }} className="text-slate-900 font-semibold hover:underline">
-                Sign In
-              </button>
-            </p>
-          )}
+        {/* ACTION BUTTONS WITH HOVER ANIMATION */}
+        <div className="pt-1 flex flex-col gap-2">
+          <Link
+            href="/auth"
+            className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-600/25 transition-all transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 group"
+          >
+            <span>Mulai Catat Keuangan</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+          <a
+            href="#features"
+            className="w-full py-2.5 bg-white/80 hover:bg-white border border-slate-200 text-slate-700 font-extrabold text-xs rounded-xl transition shadow-2xs hover:shadow-xs"
+          >
+            Pelajari Fitur
+          </a>
         </div>
 
-      </div>
-    </main>
+        {/* INTERACTIVE PREVIEW CARD */}
+        <div className="pt-3">
+          <div className="p-1.5 bg-white/80 border border-slate-200/90 rounded-3xl shadow-xl backdrop-blur-md hover:shadow-2xl hover:border-emerald-300 transition-all duration-300">
+            <div className="bg-white border border-slate-100 rounded-2xl p-4 space-y-3 text-left">
+              
+              <div className="flex justify-between items-center pb-2 border-b border-slate-100">
+                <div>
+                  <p className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">Total Saldo Bersih</p>
+                  <p className="text-lg font-black text-slate-900 mt-0.5">Rp 14.250.000</p>
+                </div>
+                <div className="p-2.5 bg-gradient-to-br from-emerald-50 to-teal-100 text-emerald-600 rounded-2xl border border-emerald-200/80 shadow-2xs">
+                  <Wallet className="w-5 h-5" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className="p-2 bg-emerald-50/70 border border-emerald-100 rounded-xl transition-transform hover:scale-[1.02]">
+                  <p className="text-[9px] font-extrabold text-emerald-800">Pemasukan</p>
+                  <p className="text-[11px] font-black text-emerald-700 mt-0.5">+Rp 8.500.000</p>
+                </div>
+                <div className="p-2 bg-rose-50/70 border border-rose-100 rounded-xl transition-transform hover:scale-[1.02]">
+                  <p className="text-[9px] font-extrabold text-rose-800">Pengeluaran</p>
+                  <p className="text-[11px] font-black text-rose-700 mt-0.5">-Rp 2.150.000</p>
+                </div>
+              </div>
+
+              <div className="space-y-1.5 pt-1">
+                <p className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Transaksi Terbaru</p>
+                
+                <div className="p-2 bg-slate-50 border border-slate-100 rounded-xl flex justify-between items-center text-[11px] hover:bg-slate-100/80 transition">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                    <div>
+                      <p className="font-bold text-slate-900">Gaji Bulanan</p>
+                      <p className="text-[9px] text-slate-400 font-medium">BCA • Hari ini</p>
+                    </div>
+                  </div>
+                  <span className="font-black text-emerald-600">+Rp 8.500.000</span>
+                </div>
+
+                <div className="p-2 bg-slate-50 border border-slate-100 rounded-xl flex justify-between items-center text-[11px] hover:bg-slate-100/80 transition">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-rose-500" />
+                    <div>
+                      <p className="font-bold text-slate-900">Beli Kopi & Jajan</p>
+                      <p className="text-[9px] text-slate-400 font-medium">SeaBank • Kemarin</p>
+                    </div>
+                  </div>
+                  <span className="font-black text-slate-900">-Rp 45.000</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      {/* 3. FEATURES SECTION */}
+      <section id="features" className="relative z-10 py-8 px-4 bg-white border-t border-slate-200/80">
+        <div className="max-w-md mx-auto space-y-5">
+          
+          <div className="text-center space-y-1">
+            <h2 className="text-lg font-black text-slate-900">Kenapa Menggunakan Moneta?</h2>
+            <p className="text-[11px] text-slate-500 font-medium">Fitur simpel untuk kontrol penuh dana pribadi kamu.</p>
+          </div>
+
+          <div className="space-y-3">
+            <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80 hover:border-emerald-300 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
+              <div className="p-2.5 bg-sky-100 text-sky-700 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
+                <CreditCard className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-xs font-black text-slate-900">Multi Rekening & Dompet</h3>
+                <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
+                  Kelola dompet tunai, rekening bank, hingga e-wallet dalam satu tampilan terpadu.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80 hover:border-emerald-300 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
+              <div className="p-2.5 bg-purple-100 text-purple-700 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
+                <TrendingUp className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-xs font-black text-slate-900">Kategori Warna Kustom</h3>
+                <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
+                  Kelompokkan transaksi dengan indikator warna visual yang mudah dipahami.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80 hover:border-emerald-300 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
+              <div className="p-2.5 bg-emerald-100 text-emerald-700 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
+                <PieChart className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-xs font-black text-slate-900">Ringkasan Grafik Instan</h3>
+                <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
+                  Visualisasi statistik arus kas otomatis untuk membantu perencanaan anggaran.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. FOOTER */}
+      <footer className="relative z-10 py-6 px-4 text-center border-t border-slate-200/80 bg-slate-50 space-y-2">
+        <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold text-slate-500">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+          <span>Keamanan & Data Terenkripsi</span>
+        </div>
+        <p className="text-[10px] text-slate-400 font-medium">
+          Moneta &copy; {new Date().getFullYear()} • Kelola Keuangan Pribadi Lebih Mudah
+        </p>
+      </footer>
+
+      {/* 5. FLOATING SCROLL-TO-TOP BUTTON */}
+      {showScrollTop && (
+        <button
+          type="button"
+          onClick={scrollToTop}
+          className="fixed bottom-5 right-5 z-50 p-3 bg-slate-900/90 hover:bg-slate-900 text-white rounded-full shadow-xl border border-slate-700/50 backdrop-blur-md transition-all transform active:scale-90 animate-in fade-in zoom-in duration-200"
+          title="Kembali ke Atas"
+        >
+          <ArrowUp className="w-4 h-4" />
+        </button>
+      )}
+
+    </div>
   );
 }
