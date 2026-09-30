@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
@@ -11,13 +12,20 @@ import {
   ArrowRight, 
   Sparkles, 
   CreditCard,
-  ArrowUp,
-  Zap,
-  CheckCircle2
+  ArrowUp
 } from 'lucide-react';
 
 export default function LandingPage() {
+  const router = useRouter();
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // 1. AUTO REDIRECT JIKA SUDAH LOGIN
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      router.replace('/dashboard');
+    }
+  }, [router]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,7 +46,7 @@ export default function LandingPage() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[550px] h-[320px] bg-emerald-300/30 blur-[110px] pointer-events-none rounded-full animate-pulse" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f080_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f080_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
 
-      {/* 1. FIXED NAVBAR HEADER */}
+      {/* FIXED NAVBAR HEADER */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/80 px-4 py-2.5 transition-all">
         <div className="max-w-md mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2 group cursor-pointer">
@@ -75,26 +83,21 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* 2. HERO SECTION */}
+      {/* HERO SECTION */}
       <section className="relative max-w-md w-full mx-auto px-4 pt-20 pb-8 text-center space-y-4 z-10">
-        
-        {/* ANIMATED BADGE */}
         <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200/80 text-emerald-800 rounded-full text-[10px] font-extrabold shadow-2xs transition-all hover:border-emerald-400">
           <Sparkles className="w-3 h-3 text-emerald-600 animate-spin" style={{ animationDuration: '6s' }} />
           <span>Kelola Keuangan Pribadi Lebih Rapi</span>
         </div>
 
-        {/* HEADLINE */}
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-snug">
           Arus Kas Terkontrol, Finansial Makin <span className="text-emerald-600 underline decoration-emerald-300 decoration-wavy decoration-2">Tenang</span>
         </h1>
 
-        {/* SUBTITLE */}
         <p className="text-[11px] font-medium text-slate-500 max-w-xs mx-auto leading-relaxed">
           Catat pemasukan & pengeluaran harian dari bank, e-wallet, hingga uang tunai dalam satu dasbor yang ringkas.
         </p>
 
-        {/* ACTION BUTTONS WITH HOVER ANIMATION */}
         <div className="pt-1 flex flex-col gap-2">
           <Link
             href="/auth"
@@ -111,11 +114,10 @@ export default function LandingPage() {
           </a>
         </div>
 
-        {/* INTERACTIVE PREVIEW CARD */}
+        {/* PREVIEW CARD */}
         <div className="pt-3">
           <div className="p-1.5 bg-white/80 border border-slate-200/90 rounded-3xl shadow-xl backdrop-blur-md hover:shadow-2xl hover:border-emerald-300 transition-all duration-300">
             <div className="bg-white border border-slate-100 rounded-2xl p-4 space-y-3 text-left">
-              
               <div className="flex justify-between items-center pb-2 border-b border-slate-100">
                 <div>
                   <p className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">Total Saldo Bersih</p>
@@ -139,7 +141,6 @@ export default function LandingPage() {
 
               <div className="space-y-1.5 pt-1">
                 <p className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Transaksi Terbaru</p>
-                
                 <div className="p-2 bg-slate-50 border border-slate-100 rounded-xl flex justify-between items-center text-[11px] hover:bg-slate-100/80 transition">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
@@ -162,17 +163,14 @@ export default function LandingPage() {
                   <span className="font-black text-slate-900">-Rp 45.000</span>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
-
       </section>
 
-      {/* 3. FEATURES SECTION */}
+      {/* FEATURES SECTION */}
       <section id="features" className="relative z-10 py-8 px-4 bg-white border-t border-slate-200/80">
         <div className="max-w-md mx-auto space-y-5">
-          
           <div className="text-center space-y-1">
             <h2 className="text-lg font-black text-slate-900">Kenapa Menggunakan Moneta?</h2>
             <p className="text-[11px] text-slate-500 font-medium">Fitur simpel untuk kontrol penuh dana pribadi kamu.</p>
@@ -215,11 +213,10 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-
         </div>
       </section>
 
-      {/* 4. FOOTER */}
+      {/* FOOTER */}
       <footer className="relative z-10 py-6 px-4 text-center border-t border-slate-200/80 bg-slate-50 space-y-2">
         <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold text-slate-500">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
@@ -230,7 +227,7 @@ export default function LandingPage() {
         </p>
       </footer>
 
-      {/* 5. FLOATING SCROLL-TO-TOP BUTTON */}
+      {/* FLOATING SCROLL-TO-TOP BUTTON */}
       {showScrollTop && (
         <button
           type="button"

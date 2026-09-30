@@ -19,7 +19,7 @@ export default function Header() {
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.href = '/';
+    window.location.href = '/auth';
   };
 
   const avatarUrl = user?.avatar || user?.picture;
