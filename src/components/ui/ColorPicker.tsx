@@ -1,6 +1,7 @@
 'use client';
 
-import { Palette } from 'lucide-react';
+import { useState } from 'react';
+import { Palette, Check, SlidersHorizontal, X } from 'lucide-react';
 
 const PRESET_COLORS = [
   '#0f172a', // Slate / Dark
@@ -18,48 +19,120 @@ const PRESET_COLORS = [
 ];
 
 interface ColorPickerProps {
+  label?: string;
   selectedColor: string;
   onChange: (color: string) => void;
 }
 
-export default function ColorPicker({ selectedColor, onChange }: ColorPickerProps) {
-  return (
-    <div className="space-y-1.5">
-      <label className="text-xs font-bold text-slate-700 block">Warna Tema</label>
+export default function ColorPicker({ label = 'Warna Tema', selectedColor, onChange }: ColorPickerProps) {
+  const [isCustomOpen, setIsCustomOpen] = useState(false);
+  const normalizedSelected = (selectedColor || '#0f172a').toLowerCase();
+  const isCustomColor = !PRESET_COLORS.some((c) => c.toLowerCase() === normalizedSelected);
 
-      <div className="flex items-center gap-2 overflow-x-auto py-1.5 px-0.5 no-scrollbar scroll-smooth">
+  return (
+    <div className="space-y-1.5 font-sans relative">
+      <div className="flex justify-between items-center">
+        <label className="text-xs font-extrabold text-slate-700">{label}</label>
+        <span className="text-[10px] font-mono font-bold text-slate-500 uppercase px-1.5 py-0.5 bg-slate-100 rounded-md">
+          {selectedColor}
+        </span>
+      </div>
+
+      <div className="flex items-center gap-2 overflow-x-auto py-2 px-1 no-scrollbar scroll-smooth">
         {PRESET_COLORS.map((color) => {
-          const isSelected = selectedColor.toLowerCase() === color.toLowerCase();
+          const isSelected = normalizedSelected === color.toLowerCase();
           return (
             <button
               key={color}
               type="button"
-              onClick={() => onChange(color)}
-              className={`w-7 h-7 rounded-full shrink-0 transition-transform ${
-                isSelected ? 'scale-125 ring-2 ring-slate-900 ring-offset-2' : 'hover:scale-110 opacity-90'
+              onClick={() => {
+                onChange(color);
+                setIsCustomOpen(false);
+              }}
+              className={`w-7 h-7 rounded-full shrink-0 transition-all flex items-center justify-center cursor-pointer relative ${
+                isSelected
+                  ? 'scale-110 ring-2 ring-slate-900 ring-offset-2 shadow-xs'
+                  : 'hover:scale-105 opacity-90'
               }`}
               style={{ backgroundColor: color }}
-            />
+              title={color}
+            >
+              {isSelected && <Check className="w-3.5 h-3.5 text-white drop-shadow-xs stroke-3" />}
+            </button>
           );
         })}
 
-        <label
-          className={`w-7 h-7 rounded-full shrink-0 flex items-center justify-center cursor-pointer transition-transform relative overflow-hidden bg-linear-to-tr from-indigo-500 via-rose-500 to-amber-400 ${
-            !PRESET_COLORS.includes(selectedColor.toLowerCase())
-              ? 'scale-125 ring-2 ring-slate-900 ring-offset-2'
-              : 'hover:scale-110 opacity-90'
+        {/* CUSTOM COLOR BUTTON TRIGGER */}
+        <button
+          type="button"
+          onClick={() => setIsCustomOpen(!isCustomOpen)}
+          className={`w-7 h-7 rounded-full shrink-0 flex items-center justify-center cursor-pointer transition-all relative overflow-hidden ${
+            isCustomColor
+              ? 'scale-110 ring-2 ring-slate-900 ring-offset-2 shadow-xs'
+              : 'hover:scale-105 opacity-90 bg-linear-to-tr from-indigo-500 via-rose-500 to-amber-400'
           }`}
-          title="Pilih Warna Custom"
+          style={isCustomColor ? { backgroundColor: selectedColor } : undefined}
+          title="Pilih Warna Kustom"
         >
-          <Palette className="w-3.5 h-3.5 text-white drop-shadow-xs" />
-          <input
-            type="color"
-            value={selectedColor || '#0f172a'}
-            onChange={(e) => onChange(e.target.value)}
-            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-          />
-        </label>
+          {isCustomColor ? (
+            <Check className="w-3.5 h-3.5 text-white drop-shadow-xs stroke-3" />
+          ) : (
+            <Palette className="w-3.5 h-3.5 text-white drop-shadow-xs" />
+          )}
+        </button>
       </div>
+
+      {/* FLOATING CUSTOM COLOR PICKER POPOVER */}
+      {isCustomOpen && (
+        <div className="absolute right-0 top-full mt-1.5 w-60 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 p-3 space-y-3 animate-in fade-in zoom-in-95 duration-150">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+            <div className="flex items-center gap-1.5 text-xs font-black text-slate-900">
+              <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Warna Kustom</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsCustomOpen(false)}
+              className="p-1 text-slate-400 hover:text-slate-600 rounded-lg transition cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {/* COLOR PREVIEW & INPUTS */}
+          <div className="flex items-center gap-2.5">
+            {/* Native Color Circle Wrapper */}
+            <div
+              className="w-10 h-10 rounded-xl shrink-0 border border-slate-200/80 shadow-xs relative overflow-hidden flex items-center justify-center cursor-pointer"
+              style={{ backgroundColor: selectedColor || '#0f172a' }}
+            >
+              <input
+                type="color"
+                value={selectedColor || '#0f172a'}
+                onChange={(e) => onChange(e.target.value)}
+                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full scale-150"
+              />
+            </div>
+
+            {/* Hex Input Text */}
+            <div className="flex-1 space-y-0.5">
+              <label className="text-[10px] font-bold text-slate-400">Kode Hex</label>
+              <input
+                type="text"
+                value={selectedColor}
+                onChange={(e) => onChange(e.target.value)}
+                placeholder="#0f172a"
+                maxLength={7}
+                className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono font-extrabold text-slate-900 focus:outline-hidden focus:border-slate-400 uppercase"
+              />
+            </div>
+          </div>
+
+          <p className="text-[10px] text-slate-400 font-medium leading-tight">
+            Klik lingkaran warna di atas untuk memilih dari spektrum warna.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

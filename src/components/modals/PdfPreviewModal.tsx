@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { X, Download, FileText, Calendar, Loader2, AlertCircle, Mail, CheckCircle2, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
 import api from '@/lib/api';
 import { generateTransactionsPdf } from '@/lib/exportPdf';
 import { formatRupiah } from '@/lib/utils';
+import CustomDropdown from '@/components/ui/CustomDropdown';
 
 interface PdfPreviewModalProps {
   isOpen: boolean;
@@ -18,9 +19,17 @@ const MONTH_NAMES = [
 ];
 
 export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewModalProps) {
+  const currentYear = new Date().getFullYear();
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+
+  // States Dropdown Floating
+  const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false);
+  const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
+
+  // State untuk menyimpan semua transaksi guna deteksi Tahun Dinamis
+  const [allUserTransactions, setAllUserTransactions] = useState<any[]>([]);
+
   const [loading, setLoading] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailSentSuccess, setEmailSentSuccess] = useState(false);
@@ -30,16 +39,68 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
   const [summary, setSummary] = useState({ income: 0, expense: 0, net: 0 });
   const [error, setError] = useState('');
 
+  // 1. Dapatkan Seluruh Transaksi User untuk Ekstrak Opsi Tahun Secara Real-Time
+  useEffect(() => {
+    if (isOpen) {
+      api.get('/transactions', { params: { limit: 1000 } }) // Ambil histori untuk mendeteksi tahun unik
+        .then((res) => {
+          setAllUserTransactions(res.data.data || []);
+        })
+        .catch((err) => console.error('Gagal mengambil histori tahun:', err));
+    }
+  }, [isOpen]);
+
+  // 2. Ekstrak Tahun Unik dari Transaksi + Tahun Berjalan (2026)
+  const dynamicYears = useMemo(() => {
+    const yearsSet = new Set<number>();
+    yearsSet.add(2026); // Tahun awal aplikasi / berjalan
+    yearsSet.add(currentYear);
+
+    allUserTransactions.forEach((tx) => {
+      if (tx.date || tx.createdAt) {
+        const y = new Date(tx.date || tx.createdAt).getFullYear();
+        if (!isNaN(y)) yearsSet.add(y);
+      }
+    });
+
+    return Array.from(yearsSet).sort((a, b) => a - b);
+  }, [allUserTransactions, currentYear]);
+
+  // Options Dropdown Tahun
+  const yearOptions = useMemo(() => {
+    return dynamicYears.map((year) => ({
+      id: String(year),
+      name: String(year),
+    }));
+  }, [dynamicYears]);
+
+  const selectedYearOption = yearOptions.find(
+    (opt) => String(opt.id) === String(selectedYear)
+  );
+
+  // Options Dropdown Bulan (Fix 12 Bulan)
+  const monthOptions = useMemo(() => {
+    return MONTH_NAMES.map((name, idx) => ({
+      id: String(idx + 1),
+      name,
+    }));
+  }, []);
+
+  const selectedMonthOption = monthOptions.find(
+    (opt) => String(opt.id) === String(selectedMonth)
+  );
+
+  // 3. Ambil Transaksi Spesifik Bulan & Tahun yang Dipilih
   const loadPdfData = async () => {
     setLoading(true);
     setError('');
     setEmailSentSuccess(false);
-    
+
     try {
       const res = await api.get('/transactions', {
-        params: { month: selectedMonth, year: selectedYear },
+        params: { month: selectedMonth, year: selectedYear, limit: 500 },
       });
-      
+
       const txData = res.data.data || [];
       setTransactions(txData);
 
@@ -154,33 +215,44 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
           </button>
         </div>
 
-        {/* FILTER PERIODE BULAN & TAHUN */}
-        <div className="p-3 bg-white border-b border-slate-100 flex items-center justify-between gap-2 shrink-0">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-slate-500" />
-            <span className="text-xs font-extrabold text-slate-700">Periode:</span>
+        {/* FILTER PERIODE BULAN & TAHUN (CUSTOM DROPDOWNS) */}
+        <div className="p-3 bg-white border-b border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2 shrink-0">
+          <div>
+            <CustomDropdown
+              label="Pilih Bulan"
+              isOpen={isMonthDropdownOpen}
+              onToggle={() => {
+                setIsMonthDropdownOpen(!isMonthDropdownOpen);
+                setIsYearDropdownOpen(false);
+              }}
+              selectedOption={selectedMonthOption}
+              options={monthOptions}
+              onSelect={(id) => {
+                setSelectedMonth(Number(id));
+                setIsMonthDropdownOpen(false);
+              }}
+              placeholder="Pilih Bulan"
+              defaultIcon={Calendar}
+            />
           </div>
 
-          <div className="flex gap-2">
-            <select
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(Number(e.target.value))}
-              className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-extrabold text-slate-900 focus:outline-hidden"
-            >
-              {MONTH_NAMES.map((m, idx) => (
-                <option key={m} value={idx + 1}>{m}</option>
-              ))}
-            </select>
-
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(Number(e.target.value))}
-              className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-extrabold text-slate-900 focus:outline-hidden"
-            >
-              {[2025, 2026, 2027].map((y) => (
-                <option key={y} value={y}>{y}</option>
-              ))}
-            </select>
+          <div>
+            <CustomDropdown
+              label="Pilih Tahun"
+              isOpen={isYearDropdownOpen}
+              onToggle={() => {
+                setIsYearDropdownOpen(!isYearDropdownOpen);
+                setIsMonthDropdownOpen(false);
+              }}
+              selectedOption={selectedYearOption || { id: String(selectedYear), name: String(selectedYear) }}
+              options={yearOptions}
+              onSelect={(id) => {
+                setSelectedYear(Number(id));
+                setIsYearDropdownOpen(false);
+              }}
+              placeholder="Pilih Tahun"
+              defaultIcon={Calendar}
+            />
           </div>
         </div>
 
@@ -192,7 +264,7 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
           </div>
         )}
 
-        {/* BODY AREA (RESPONSIVE NATIVE PREVIEW CARD FOR MOBILE & PC) */}
+        {/* BODY AREA */}
         <div className="flex-1 bg-slate-100 overflow-y-auto p-3 space-y-3">
           {loading ? (
             <div className="py-16 flex flex-col items-center justify-center gap-2 text-slate-500">

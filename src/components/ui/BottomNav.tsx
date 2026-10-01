@@ -2,16 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, History, Plus, Wallet, User } from 'lucide-react';
+import { LayoutDashboard, History, Plus, Wallet, LayoutGrid } from 'lucide-react';
 
 export default function BottomNav({ onOpenTxModal }: { onOpenTxModal?: () => void }) {
   const pathname = usePathname();
 
   return (
-    // Z-INDEX UBAH MENJADI z-30
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-slate-200 z-30 px-2 py-2 shadow-lg">
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-slate-200 z-30 px-2 py-2 shadow-lg font-sans">
       <div className="grid grid-cols-5 items-center justify-items-center">
-        {/* 1. Overview */}
+        {/* 1. Dasbor */}
         <Link
           href="/dashboard"
           className={`flex flex-col items-center space-y-1 ${
@@ -37,7 +36,7 @@ export default function BottomNav({ onOpenTxModal }: { onOpenTxModal?: () => voi
         <div className="relative flex justify-center">
           <button
             onClick={onOpenTxModal}
-            className="relative -top-5 bg-emerald-600 hover:bg-emerald-700 text-white p-3.5 rounded-full shadow-lg border-4 border-slate-50 transition transform active:scale-95 flex items-center justify-center shrink-0"
+            className="relative -top-5 bg-emerald-600 hover:bg-emerald-700 text-white p-3.5 rounded-full shadow-lg border-4 border-slate-50 transition transform active:scale-95 flex items-center justify-center shrink-0 cursor-pointer"
             title="Catat Transaksi Baru"
           >
             <Plus className="w-6 h-6 stroke-3" />
@@ -55,15 +54,17 @@ export default function BottomNav({ onOpenTxModal }: { onOpenTxModal?: () => voi
           <span className="text-[10px]">Dompet</span>
         </Link>
 
-        {/* 5. Profil */}
+        {/* 5. Fitur (Menu Hub) */}
         <Link
-          href="/dashboard/profile"
+          href="/dashboard/menu"
           className={`flex flex-col items-center space-y-1 ${
-            pathname === '/dashboard/profile' ? 'text-emerald-700 font-black' : 'text-slate-400 font-semibold'
+            pathname.startsWith('/dashboard/menu')
+              ? 'text-emerald-700 font-black'
+              : 'text-slate-400 font-semibold'
           }`}
         >
-          <User className="w-5 h-5" />
-          <span className="text-[10px]">Profil</span>
+          <LayoutGrid className="w-5 h-5" />
+          <span className="text-[10px]">Fitur</span>
         </Link>
       </div>
     </nav>

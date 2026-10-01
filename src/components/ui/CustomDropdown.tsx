@@ -37,7 +37,8 @@ export default function CustomDropdown({
 }: CustomDropdownProps) {
   return (
     <div className="relative">
-      <label className="block text-slate-700 font-bold mb-1">
+      {/* LABEL DIUBAH KE text-xs font-extrabold SAMAKAN SEPERTI FILTER LAIN */}
+      <label className="block text-slate-700 font-extrabold text-xs mb-1">
         {label} {required && <span className="text-rose-500">*</span>}
       </label>
 
@@ -45,7 +46,7 @@ export default function CustomDropdown({
       <button
         type="button"
         onClick={onToggle}
-        className={`w-full px-3.5 py-2.5 rounded-xl font-bold text-left flex justify-between items-center transition ${
+        className={`w-full px-3 py-2 rounded-xl text-xs font-bold text-left flex justify-between items-center transition cursor-pointer ${
           error
             ? 'bg-rose-50/60 border border-rose-500 ring-1 ring-rose-500'
             : 'bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-slate-900'
@@ -65,17 +66,17 @@ export default function CustomDropdown({
                   style={{ backgroundColor: selectedOption.color }}
                 />
               )}
-              <span className="text-slate-900 font-extrabold">{selectedOption.name}</span>
+              <span className="text-slate-900 font-bold text-xs truncate">{selectedOption.name}</span>
             </>
           ) : (
             <>
-              {DefaultIcon && <DefaultIcon className="w-4 h-4 text-slate-400 shrink-0" />}
-              <span className="text-slate-400 font-medium">{placeholder}</span>
+              {DefaultIcon && <DefaultIcon className="w-3.5 h-3.5 text-slate-400 shrink-0" />}
+              <span className="text-slate-400 font-medium text-xs">{placeholder}</span>
             </>
           )}
         </span>
         <ChevronDown
-          className={`w-4 h-4 text-slate-400 shrink-0 transition-transform ${
+          className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform ${
             isOpen ? 'rotate-180' : ''
           }`}
         />
@@ -85,7 +86,7 @@ export default function CustomDropdown({
       {isOpen && (
         <div className="absolute left-0 right-0 top-full mt-1.5 bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl z-50 max-h-44 overflow-y-auto p-1.5 animate-in fade-in zoom-in-95 duration-100 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent">
           {options.length === 0 ? (
-            <div className="p-3 text-center text-slate-400 font-medium text-xs">
+            <div className="p-2.5 text-center text-slate-400 font-medium text-xs">
               Pilihan tidak tersedia
             </div>
           ) : (
@@ -94,9 +95,9 @@ export default function CustomDropdown({
                 key={opt.id}
                 type="button"
                 onClick={() => onSelect(String(opt.id))}
-                className="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-700/80 text-slate-200 flex justify-between items-center transition"
+                className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-slate-700/80 text-slate-200 flex justify-between items-center transition cursor-pointer"
               >
-                <span className="flex items-center gap-2.5 truncate">
+                <span className="flex items-center gap-2 truncate">
                   {opt.icon && (
                     <span className={`p-1 rounded-lg ${opt.iconBg} shrink-0`}>
                       <opt.icon className="w-3.5 h-3.5" />
@@ -108,10 +109,10 @@ export default function CustomDropdown({
                       style={{ backgroundColor: opt.color }}
                     />
                   )}
-                  <span className="font-extrabold text-xs text-white">{opt.name}</span>
+                  <span className="font-bold text-xs text-white truncate">{opt.name}</span>
                 </span>
                 {String(selectedOption?.id) === String(opt.id) && (
-                  <Check className="w-4 h-4 text-emerald-400 shrink-0 ml-2" />
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-2" />
                 )}
               </button>
             ))

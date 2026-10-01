@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import UserCard from '@/components/profile/UserCard';
-import MenuNavigation from '@/components/profile/MenuNavigation';
 import ProfileForm from '@/components/profile/ProfileForm';
 import PasswordForm from '@/components/profile/PasswordForm';
 import DangerZone from '@/components/profile/DangerZone';
@@ -45,14 +44,11 @@ export default function ProfilePage() {
   const isGoogleUser = Boolean(user?.avatar || user?.googleId);
 
   return (
-    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 pb-24">
+    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 pb-28">
       {/* 1. KARTU IDENTITAS USER */}
       <UserCard user={user} isGoogleUser={isGoogleUser} />
 
-      {/* 2. MENU NAVIGASI (ANGGARAN, KATEGORI, DLL) */}
-      <MenuNavigation user={user} />
-
-      {/* 3. FORM PROFIL */}
+      {/* 2. FORM PROFIL */}
       <ProfileForm
         user={user}
         isGoogleUser={isGoogleUser}
@@ -66,13 +62,13 @@ export default function ProfilePage() {
         }}
       />
 
-      {/* 4. FORM KATA SANDI / INFO GOOGLE */}
+      {/* 3. FORM KATA SANDI / INFO GOOGLE */}
       <PasswordForm isGoogleUser={isGoogleUser} />
 
-      {/* 5. DANGER ZONE */}
+      {/* 4. DANGER ZONE */}
       <DangerZone />
 
-      {/* 6. MODAL VERIFIKASI EMAIL */}
+      {/* 5. MODAL VERIFIKASI EMAIL */}
       <EmailOtpModal
         isOpen={showEmailOtpModal}
         onClose={() => setShowEmailOtpModal(false)}
