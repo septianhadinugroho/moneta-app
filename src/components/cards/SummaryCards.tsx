@@ -4,23 +4,41 @@ import { useState } from 'react';
 import { formatRupiah } from '@/lib/utils';
 import { Eye, EyeOff, Wallet, TrendingUp, TrendingDown } from 'lucide-react';
 
+const MONTH_NAMES = [
+  'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+  'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+];
+
+interface SummaryCardsProps {
+  totalNetWorth?: number;
+  monthlySummary?: { income: number; expense: number };
+  period?: { month: number; year: number };
+  monthName?: string;
+}
+
 export default function SummaryCards({
   totalNetWorth = 0,
   monthlySummary,
-  monthName = 'September 2026',
-}: {
-  totalNetWorth?: number;
-  monthlySummary?: { income: number; expense: number };
-  monthName?: string;
-}) {
-  // Default: Tersembunyi (false)
+  period,
+  monthName,
+}: SummaryCardsProps) {
   const [showBalance, setShowBalance] = useState(false);
 
   const income = monthlySummary?.income || 0;
   const expense = monthlySummary?.expense || 0;
 
+  // Otoritas penentuan label bulan:
+  // 1. Dari prop `monthName` (jika ada)
+  // 2. Dari prop `period` ({ month, year }) dari backend
+  // 3. Fallback ke Waktu Lokal HP/Device User saat ini
+  const localDate = new Date();
+  const activeMonthIndex = period?.month ? period.month - 1 : localDate.getMonth();
+  const activeYear = period?.year || localDate.getFullYear();
+
+  const activePeriodLabel = monthName || `${MONTH_NAMES[activeMonthIndex]} ${activeYear}`;
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 font-sans">
       {/* TOTAL NET WORTH CARD */}
       <div className="bg-slate-900 text-white p-5 rounded-3xl shadow-lg relative overflow-hidden space-y-2">
         <div className="flex justify-between items-center relative z-10">
@@ -29,11 +47,9 @@ export default function SummaryCards({
             <button
               type="button"
               onClick={() => setShowBalance(!showBalance)}
-              className="text-slate-400 hover:text-white transition p-1 rounded-lg"
+              className="text-slate-400 hover:text-white transition p-1 rounded-lg cursor-pointer"
               title={showBalance ? 'Sembunyikan Saldo' : 'Tampilkan Saldo'}
             >
-              {/* STATUS KELIATAN -> TAMPILKAN EYE (MATA TERBUKA) */}
-              {/* STATUS KETUTUP -> TAMPILKAN EYEOFF (MATA CORET) */}
               {showBalance ? (
                 <Eye className="w-4 h-4 text-emerald-400" />
               ) : (
@@ -59,7 +75,7 @@ export default function SummaryCards({
         <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex justify-between items-center">
           <div className="space-y-0.5 min-w-0">
             <span className="text-[10px] font-extrabold text-slate-400 block">
-              Pemasukan ({monthName})
+              Pemasukan ({activePeriodLabel})
             </span>
             <p className="text-lg font-black text-slate-900 truncate">
               {showBalance ? formatRupiah(income) : '••••••••'}
@@ -77,7 +93,7 @@ export default function SummaryCards({
         <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex justify-between items-center">
           <div className="space-y-0.5 min-w-0">
             <span className="text-[10px] font-extrabold text-slate-400 block">
-              Pengeluaran ({monthName})
+              Pengeluaran ({activePeriodLabel})
             </span>
             <p className="text-lg font-black text-slate-900 truncate">
               {showBalance ? formatRupiah(expense) : '••••••••'}

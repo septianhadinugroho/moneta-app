@@ -12,8 +12,19 @@ export default function DashboardPage() {
 
   const fetchDashboardData = async () => {
     try {
-      // 👈 Pakai endpoint /dashboard/summary sesuai router backend
-      const res = await api.get('/dashboard/summary');
+      // Ambil bulan & tahun berdasarkan lokal HP pengguna (WIB)
+      const now = new Date();
+      const currentMonth = now.getMonth() + 1;
+      const currentYear = now.getFullYear();
+
+      // Kirim month & year dinamis ke backend
+      const res = await api.get('/dashboard/summary', {
+        params: {
+          month: currentMonth,
+          year: currentYear,
+        },
+      });
+
       setData(res.data.data || res.data || {});
     } catch (err) {
       console.error('Gagal mengambil data dashboard:', err);
@@ -44,6 +55,7 @@ export default function DashboardPage() {
       <SummaryCards
         totalNetWorth={totalNetWorth}
         monthlySummary={monthlySummary}
+        period={data?.period}
       />
 
       {/* TRANSAKSI TERAKHIR */}
