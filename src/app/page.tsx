@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { 
   Wallet, 
-  TrendingUp, 
   ShieldCheck, 
   ArrowRight, 
   Sparkles, 
@@ -14,7 +13,9 @@ import {
   ArrowUp,
   Target,
   FileText,
-  ArrowRightLeft
+  ArrowRightLeft,
+  PieChart,
+  AlertTriangle
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -87,7 +88,7 @@ export default function LandingPage() {
 
       {/* HERO SECTION */}
       <section className="relative max-w-md w-full mx-auto px-4 pt-20 pb-8 text-center space-y-4 z-10">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200/80 text-emerald-800 rounded-full text-[10px] font-extrabold shadow-2xs transition-all hover:border-emerald-400">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200/80 text-emerald-800 rounded-full text-[10px] font-extrabold shadow-xs transition-all hover:border-emerald-400">
           <Sparkles className="w-3 h-3 text-emerald-600 animate-spin" style={{ animationDuration: '6s' }} />
           <span>Kelola Keuangan Pribadi Lebih Rapi</span>
         </div>
@@ -97,7 +98,7 @@ export default function LandingPage() {
         </h1>
 
         <p className="text-[11px] font-medium text-slate-500 max-w-xs mx-auto leading-relaxed">
-          Pantau dompet, atur anggaran bulanan, catat transfer antar akun, hingga ekspor laporan PDF resmi dalam satu aplikasi.
+          Pantau dompet, atur limit anggaran, wujudkan target impian, hingga ekspor laporan PDF resmi dalam satu aplikasi.
         </p>
 
         <div className="pt-1 flex flex-col gap-2">
@@ -110,7 +111,7 @@ export default function LandingPage() {
           </Link>
           <a
             href="#features"
-            className="w-full py-2.5 bg-white/80 hover:bg-white border border-slate-200 text-slate-700 font-extrabold text-xs rounded-xl transition shadow-2xs hover:shadow-xs"
+            className="w-full py-2.5 bg-white/80 hover:bg-white border border-slate-200 text-slate-700 font-extrabold text-xs rounded-xl transition shadow-xs hover:shadow-sm"
           >
             Pelajari Fitur
           </a>
@@ -120,12 +121,22 @@ export default function LandingPage() {
         <div className="pt-3">
           <div className="p-1.5 bg-white/80 border border-slate-200/90 rounded-3xl shadow-xl backdrop-blur-md hover:shadow-2xl hover:border-emerald-300 transition-all duration-300">
             <div className="bg-white border border-slate-100 rounded-2xl p-4 space-y-3 text-left">
+              
+              {/* WARNING BUDGET PREVIEW */}
+              <div className="p-2 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between text-[10px] text-amber-900">
+                <div className="flex items-center gap-1.5 font-bold">
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                  <span className="truncate">Jajan terpakai 80% dari limit</span>
+                </div>
+                <span className="font-extrabold text-amber-700 shrink-0 text-[9px] bg-amber-100 px-1.5 py-0.5 rounded-md">Peringatan</span>
+              </div>
+
               <div className="flex justify-between items-center pb-2 border-b border-slate-100">
                 <div>
                   <p className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">Total Saldo Bersih</p>
                   <p className="text-lg font-black text-slate-900 mt-0.5">Rp 14.250.000</p>
                 </div>
-                <div className="p-2.5 bg-linear-to-br from-emerald-50 to-teal-100 text-emerald-600 rounded-2xl border border-emerald-200/80 shadow-2xs">
+                <div className="p-2.5 bg-linear-to-br from-emerald-50 to-teal-100 text-emerald-600 rounded-2xl border border-emerald-200/80 shadow-xs">
                   <Wallet className="w-5 h-5" />
                 </div>
               </div>
@@ -149,10 +160,10 @@ export default function LandingPage() {
                     <Target className="w-3 h-3 text-emerald-600" />
                     <span>Anggaran Jajan & Hiburan</span>
                   </span>
-                  <span className="font-black text-emerald-600">35%</span>
+                  <span className="font-black text-amber-600">80%</span>
                 </div>
                 <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                  <div className="bg-emerald-500 h-full rounded-full w-[35%]" />
+                  <div className="bg-amber-500 h-full rounded-full w-[80%]" />
                 </div>
               </div>
 
@@ -225,17 +236,30 @@ export default function LandingPage() {
             {/* FEATURE 3 */}
             <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80 hover:border-emerald-300 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
               <div className="p-2.5 bg-emerald-100 text-emerald-700 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-                <Target className="w-4 h-4" />
+                <Sparkles className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-xs font-black text-slate-900">Anggaran Bulanan (Budgeting)</h3>
+                <h3 className="text-xs font-black text-slate-900">Target Tabungan & Impian</h3>
                 <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
-                  Tetapkan batas maksimal belanja per kategori dan cegah pengeluaran berlebih (*overbudget*).
+                  Tetapkan target finansial seperti liburan, gadget, atau dana darurat dan pantau progresnya.
                 </p>
               </div>
             </div>
 
             {/* FEATURE 4 */}
+            <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80 hover:border-emerald-300 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
+              <div className="p-2.5 bg-amber-100 text-amber-700 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
+                <Target className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-xs font-black text-slate-900">Anggaran Bulanan & Peringatan Limit</h3>
+                <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
+                  Tetapkan batas maksimal belanja per kategori dan dapatkan notifikasi saat mendekati limit.
+                </p>
+              </div>
+            </div>
+
+            {/* FEATURE 5 */}
             <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80 hover:border-emerald-300 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
               <div className="p-2.5 bg-purple-100 text-purple-700 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                 <FileText className="w-4 h-4" />
