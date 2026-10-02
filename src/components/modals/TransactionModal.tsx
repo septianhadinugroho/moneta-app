@@ -215,7 +215,7 @@ export default function TransactionModal({
               type="date"
               value={date}
               onChange={(e) => { setDate(e.target.value); setFormErrors((p) => ({ ...p, date: '' })); }}
-              className={`w-full px-3.5 py-2.5 rounded-xl font-bold text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition [color-scheme:light] dark:[color-scheme:dark] ${
+              className={`w-full px-3.5 py-2.5 rounded-xl font-bold text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition scheme-light dark:scheme-dark ${
                 formErrors.date
                   ? 'bg-rose-50/60 dark:bg-rose-950/40 border border-rose-500 ring-1 ring-rose-500'
                   : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80'

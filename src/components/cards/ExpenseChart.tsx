@@ -15,16 +15,19 @@ const generateUniqueColors = (count: number, isIncome: boolean) => {
   });
 };
 
-// RENDER IKON PAS DI TENGAH BUSUR SLICE DONUT
+// RENDER IKON DI DALAM SLICE DONUT (AMBIL DARI BERBAGAI KEMUNGKINAN PROPERTI)
 const renderCustomizedLabel = (props: any) => {
   const { cx, cy, midAngle, innerRadius, outerRadius, payload, percent } = props;
   
-  if (percent < 0.05) return null;
+  if (percent < 0.04) return null;
 
   const RADIAN = Math.PI / 180;
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  // DETEKSI IKON DARI PAYLOAD SECARA FLEKSIBEL
+  const iconName = payload.icon || payload.categoryIcon || payload.category?.icon || 'Tag';
 
   return (
     <foreignObject
@@ -35,7 +38,7 @@ const renderCustomizedLabel = (props: any) => {
       className="overflow-visible pointer-events-none"
     >
       <div className="w-5 h-5 flex items-center justify-center text-white drop-shadow-xs">
-        <CategoryIcon name={payload.icon || 'Tag'} className="w-3.5 h-3.5" />
+        <CategoryIcon name={iconName} className="w-3.5 h-3.5" />
       </div>
     </foreignObject>
   );
@@ -52,10 +55,20 @@ export default function ExpenseChart({
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
 
-  const currentData = activeTab === 'EXPENSE' ? expenseCategories : incomeCategories;
+  const rawData = activeTab === 'EXPENSE' ? expenseCategories : incomeCategories;
   const isIncome = activeTab === 'INCOME';
 
-  const dynamicColors = generateUniqueColors(currentData?.length || 0, isIncome);
+  const dynamicColors = generateUniqueColors(rawData?.length || 0, isIncome);
+
+  // SANITASI DATA: NORMALIZE PROPERTI AGAR SEMUA FIELD PASTI ADA
+  const currentData = (rawData || []).map((item, idx) => ({
+    ...item,
+    categoryId: item.categoryId || item.id || `cat-${idx}`,
+    categoryName: item.categoryName || item.name || item.category?.name || 'Lainnya',
+    totalAmount: Number(item.totalAmount || item.total || item.amount || 0),
+    color: item.color || item.categoryColor || item.category?.color || dynamicColors[idx],
+    icon: item.icon || item.categoryIcon || item.category?.icon || 'Tag',
+  }));
 
   return (
     <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4 font-sans text-slate-900 dark:text-slate-100 transition-colors">
@@ -92,7 +105,7 @@ export default function ExpenseChart({
         </div>
       </div>
 
-      {(!currentData || currentData.length === 0) ? (
+      {currentData.length === 0 ? (
         <p className="text-xs text-slate-400 dark:text-slate-500 text-center py-10 font-medium">
           Belum ada data {activeTab === 'EXPENSE' ? 'pengeluaran' : 'pemasukan'} bulan ini.
         </p>
@@ -115,8 +128,8 @@ export default function ExpenseChart({
                 >
                   {currentData.map((item, index) => (
                     <Cell
-                      key={`cell-${index}`}
-                      fill={item.color || dynamicColors[index]}
+                      key={`cell-${item.categoryId}-${index}`}
+                      fill={item.color}
                     />
                   ))}
                 </Pie>
@@ -135,21 +148,19 @@ export default function ExpenseChart({
             </ResponsiveContainer>
           </div>
 
-          {/* LIST LEGEND BREAKDOWN */}
+          {/* LIST LEGEND BREAKDOWN DENGAN IKON REAL */}
           <div className="space-y-1.5 divide-y divide-slate-100 dark:divide-slate-800/60 max-h-48 overflow-y-auto pr-1">
-            {currentData.map((item, idx) => (
+            {currentData.map((item) => (
               <div
-                key={item.categoryId || idx}
+                key={item.categoryId}
                 className="pt-1.5 flex justify-between items-center text-xs"
               >
                 <div className="flex items-center space-x-2.5 min-w-0">
                   <div
                     className="w-5 h-5 rounded-md flex items-center justify-center text-white shrink-0 shadow-2xs"
-                    style={{
-                      backgroundColor: item.color || dynamicColors[idx],
-                    }}
+                    style={{ backgroundColor: item.color }}
                   >
-                    <CategoryIcon name={item.icon || 'Tag'} className="w-3 h-3" />
+                    <CategoryIcon name={item.icon} className="w-3 h-3" />
                   </div>
                   <span className="text-slate-700 dark:text-slate-300 font-bold truncate max-w-32">
                     {item.categoryName}

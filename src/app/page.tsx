@@ -163,7 +163,7 @@ export default function LandingPage() {
                   <p className="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Total Saldo Bersih</p>
                   <p className="text-lg font-black text-slate-900 dark:text-white mt-0.5">Rp 14.250.000</p>
                 </div>
-                <div className="p-2.5 bg-gradient-to-br from-emerald-50 to-teal-100 dark:from-emerald-950 dark:to-teal-900/50 text-emerald-600 dark:text-emerald-400 rounded-2xl border border-emerald-200/80 dark:border-emerald-800/80 shadow-xs">
+                <div className="p-2.5 bg-linear-to-br from-emerald-50 to-teal-100 dark:from-emerald-950 dark:to-teal-900/50 text-emerald-600 dark:text-emerald-400 rounded-2xl border border-emerald-200/80 dark:border-emerald-800/80 shadow-xs">
                   <Wallet className="w-5 h-5" />
                 </div>
               </div>
