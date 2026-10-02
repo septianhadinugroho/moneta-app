@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
+import PwaInstallModal from '@/components/ui/PwaInstallModal';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -32,6 +33,7 @@ export default function RootLayout({
           {/* MOBILE FRAME CONTAINER DI DESKTOP */}
           <div className="w-full max-w-md min-h-screen bg-slate-50 dark:bg-slate-950 relative shadow-2xl border-x border-slate-200/80 dark:border-slate-800/80 overflow-x-hidden transition-colors duration-200">
             {children}
+            <PwaInstallModal />
           </div>
         </Providers>
       </body>
