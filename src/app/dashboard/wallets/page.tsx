@@ -104,16 +104,16 @@ export default function WalletsPage() {
 
   if (loading) {
     return (
-      <div className="py-12 flex justify-center items-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
+      <div className="py-12 flex justify-center items-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 dark:border-emerald-400"></div>
       </div>
     );
   }
 
   return (
-    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 pb-24">
+    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 dark:text-slate-100 pb-24 transition-colors">
       {/* HEADER NET WORTH */}
-      <div className="bg-slate-900 text-white p-5 rounded-3xl shadow-lg relative overflow-hidden space-y-3">
+      <div className="bg-slate-900 dark:bg-slate-900/90 text-white p-5 rounded-3xl shadow-lg relative overflow-hidden space-y-3 border border-slate-800 transition-colors">
         <div className="flex justify-between items-center gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider truncate">
@@ -163,25 +163,25 @@ export default function WalletsPage() {
       {/* DAFTAR REKENING */}
       <div className="space-y-3 pt-1">
         <div className="flex justify-between items-center px-0.5">
-          <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
-            <Wallet className="w-4 h-4 text-slate-700" />
+          <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <Wallet className="w-4 h-4 text-slate-700 dark:text-slate-300" />
             <span>Daftar Rekening</span>
           </h3>
-          <span className="text-[11px] font-extrabold text-slate-400">
+          <span className="text-[11px] font-extrabold text-slate-400 dark:text-slate-500">
             {wallets.length} Akun Terhubung
           </span>
         </div>
 
         {wallets.length === 0 ? (
-          <div className="bg-white p-8 rounded-2xl border border-slate-200/80 text-center space-y-2">
-            <p className="text-xs text-slate-400 font-medium">Belum ada dompet atau akun terhubung.</p>
+          <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center space-y-2 transition-colors">
+            <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">Belum ada dompet atau akun terhubung.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-2.5">
             {wallets.map((w) => (
               <div
                 key={w.id}
-                className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs flex justify-between items-center hover:border-slate-300 transition group"
+                className="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs flex justify-between items-center hover:border-slate-300 dark:hover:border-slate-700 transition group"
               >
                 <div className="flex items-center space-x-3.5 min-w-0 pr-2">
                   <div
@@ -192,12 +192,12 @@ export default function WalletsPage() {
                   </div>
                   <div className="truncate space-y-0.5">
                     <div className="flex items-center gap-2 min-w-0">
-                      <p className="text-xs font-black text-slate-900 truncate">{w.name}</p>
-                      <span className="text-[9px] font-extrabold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md uppercase tracking-wider border border-slate-200/60 shrink-0">
+                      <p className="text-xs font-black text-slate-900 dark:text-slate-100 truncate">{w.name}</p>
+                      <span className="text-[9px] font-extrabold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-slate-200/60 dark:border-slate-700/60 shrink-0">
                         {w.type || 'CASH'}
                       </span>
                     </div>
-                    <p className="text-xs sm:text-sm font-black text-slate-900 tracking-tight">
+                    <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-slate-100 tracking-tight">
                       {showBalance ? formatRupiah(w.balance) : '••••••••'}
                     </p>
                   </div>
@@ -207,7 +207,7 @@ export default function WalletsPage() {
                   <button
                     type="button"
                     onClick={() => handleOpenEdit(w)}
-                    className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition active:scale-95 cursor-pointer"
+                    className="p-2 text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition active:scale-95 cursor-pointer"
                     title="Edit Dompet"
                   >
                     <Edit2 className="w-4 h-4" />
@@ -215,7 +215,7 @@ export default function WalletsPage() {
                   <button
                     type="button"
                     onClick={() => handleInitiateDelete(w)}
-                    className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition active:scale-95 cursor-pointer"
+                    className="p-2 text-slate-400 hover:text-rose-600 dark:text-slate-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-xl transition active:scale-95 cursor-pointer"
                     title="Hapus Dompet"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -245,50 +245,50 @@ export default function WalletsPage() {
 
       {/* MODAL KONFIRMASI HAPUS DOMPET */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-slate-100 space-y-4 animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200 font-sans">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-slate-100 dark:border-slate-800 space-y-4 animate-in zoom-in-95 duration-200 text-slate-900 dark:text-slate-100 transition-colors">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-rose-100 text-rose-600 rounded-2xl shrink-0">
+              <div className="p-2.5 bg-rose-100 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 rounded-2xl shrink-0">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-sm font-black text-slate-900">Hapus Dompet "{deleteTarget.name}"?</h3>
-                <p className="text-[11px] text-slate-500 font-medium leading-tight mt-0.5">
-                  Menghapus dompet ini akan membuang dompet dan <span className="font-bold text-rose-600">seluruh transaksi di dalamnya secara permanen</span>.
+                <h3 className="text-sm font-black text-slate-900 dark:text-white">Hapus Dompet "{deleteTarget.name}"?</h3>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-tight mt-0.5">
+                  Menghapus dompet ini akan membuang dompet dan <span className="font-bold text-rose-600 dark:text-rose-400">seluruh transaksi di dalamnya secara permanen</span>.
                 </p>
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <div className="flex justify-between items-center text-[11px] font-extrabold text-slate-500">
+              <div className="flex justify-between items-center text-[11px] font-extrabold text-slate-500 dark:text-slate-400">
                 <span>Transaksi Terdampak:</span>
-                <span className="bg-slate-100 px-2 py-0.5 rounded-full">{relatedTransactions.length} Transaksi</span>
+                <span className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-full">{relatedTransactions.length} Transaksi</span>
               </div>
 
               {fetchingTx ? (
-                <div className="p-4 bg-slate-50 rounded-2xl text-center text-xs text-slate-400 font-medium animate-pulse">
+                <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-center text-xs text-slate-400 dark:text-slate-500 font-medium animate-pulse">
                   Memuat transaksi terkait...
                 </div>
               ) : relatedTransactions.length === 0 ? (
-                <div className="p-3 bg-slate-50 border border-slate-100 rounded-2xl text-center text-xs text-slate-400 font-medium">
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl text-center text-xs text-slate-400 dark:text-slate-500 font-medium">
                   Tidak ada transaksi di dompet ini. Aman dihapus.
                 </div>
               ) : (
-                <div className="max-h-36 overflow-y-auto space-y-1.5 pr-1 border border-slate-100 rounded-2xl p-2 bg-slate-50/50">
+                <div className="max-h-36 overflow-y-auto space-y-1.5 pr-1 border border-slate-100 dark:border-slate-800 rounded-2xl p-2 bg-slate-50/50 dark:bg-slate-800/30">
                   {relatedTransactions.map((tx) => (
-                    <div key={tx.id} className="p-2 bg-white rounded-xl border border-slate-100 flex justify-between items-center text-xs">
+                    <div key={tx.id} className="p-2 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-100 dark:border-slate-700/60 flex justify-between items-center text-xs">
                       <div className="flex items-center gap-2 min-w-0">
                         {tx.type === 'INCOME' ? (
-                          <ArrowUpRight className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <ArrowUpRight className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                         ) : (
-                          <ArrowDownLeft className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+                          <ArrowDownLeft className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400 shrink-0" />
                         )}
                         <div className="truncate">
-                          <p className="font-bold text-slate-900 truncate">{tx.description || 'Tanpa Catatan'}</p>
-                          <p className="text-[9px] text-slate-400">{tx.category?.name || 'Lain-lain'}</p>
+                          <p className="font-bold text-slate-900 dark:text-slate-100 truncate">{tx.description || 'Tanpa Catatan'}</p>
+                          <p className="text-[9px] text-slate-400 dark:text-slate-500">{tx.category?.name || 'Lain-lain'}</p>
                         </div>
                       </div>
-                      <span className={`font-black text-xs shrink-0 ${tx.type === 'INCOME' ? 'text-emerald-600' : 'text-slate-900'}`}>
+                      <span className={`font-black text-xs shrink-0 ${tx.type === 'INCOME' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-900 dark:text-slate-100'}`}>
                         {tx.type === 'INCOME' ? '+' : '-'}{formatRupiah(tx.amount)}
                       </span>
                     </div>
@@ -301,7 +301,7 @@ export default function WalletsPage() {
               <button
                 type="button"
                 onClick={() => { setDeleteTarget(null); setRelatedTransactions([]); }}
-                className="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition active:scale-95 cursor-pointer"
+                className="py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition active:scale-95 cursor-pointer border border-slate-200/60 dark:border-slate-700/60"
               >
                 Batal
               </button>

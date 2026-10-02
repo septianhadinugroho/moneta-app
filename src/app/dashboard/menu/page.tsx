@@ -2,13 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Target, Tag, FileText, ChevronRight, PieChart, Sparkles, Settings } from 'lucide-react';
+import { Settings, ChevronRight, LogOut } from 'lucide-react';
 import UserCard from '@/components/profile/UserCard';
-import PdfPreviewModal from '@/components/modals/PdfPreviewModal';
+import MenuNavigation from '@/components/profile/MenuNavigation';
 
 export default function MenuHubPage() {
   const [user, setUser] = useState<any>(null);
-  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
 
   useEffect(() => {
     const localUser = localStorage.getItem('user');
@@ -17,129 +16,69 @@ export default function MenuHubPage() {
     }
   }, []);
 
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = '/auth';
+  };
+
   const isGoogleUser = Boolean(user?.avatar || user?.googleId);
 
   return (
-    <>
-      <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 pb-28">
-        {/* CARD USER IDENTIK DENGAN PROFILE PAGE */}
-        <UserCard user={user} isGoogleUser={isGoogleUser} />
+    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 dark:text-slate-100 pb-28 transition-colors">
+      {/* CARD USER */}
+      <UserCard user={user} isGoogleUser={isGoogleUser} />
 
-        {/* FITUR FINANSIAL */}
+      {/* FITUR FINANSIAL (MENU NAVIGATION COMPONENT) */}
+      <div className="space-y-2">
+        <p className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider px-1">
+          Fitur Finansial
+        </p>
+        <MenuNavigation user={user} />
+      </div>
+
+      {/* PENGATURAN AKUN & LOGOUT */}
+      <div className="space-y-2 pt-2">
+        <p className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider px-1">
+          Pengaturan & Keamanan
+        </p>
+
         <div className="space-y-2">
-          <p className="text-xs font-black text-slate-400 uppercase tracking-wider px-1">Fitur Finansial</p>
-          
-          <Link
-            href="/dashboard/stats"
-            className="flex items-center justify-between p-3.5 bg-white border border-slate-200/80 rounded-2xl hover:bg-slate-50 transition shadow-2xs group"
-          >
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
-                <PieChart className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-xs font-extrabold text-slate-900">Analistik & Grafik</p>
-                <p className="text-[10px] text-slate-400 font-medium">Visualisasi arus kas & pengeluaran</p>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-
-          <Link
-            href="/dashboard/goals"
-            className="flex items-center justify-between p-3.5 bg-white border border-slate-200/80 rounded-2xl hover:bg-slate-50 transition shadow-2xs group"
-          >
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
-                <Sparkles className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-xs font-extrabold text-slate-900">Target Tabungan & Impian</p>
-                <p className="text-[10px] text-slate-400 font-medium">Atur goal finansial masa depan</p>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-
-          <Link
-            href="/dashboard/budgets"
-            className="flex items-center justify-between p-3.5 bg-white border border-slate-200/80 rounded-2xl hover:bg-slate-50 transition shadow-2xs group"
-          >
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-amber-50 text-amber-600 rounded-xl">
-                <Target className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-xs font-extrabold text-slate-900">Anggaran Bulanan</p>
-                <p className="text-[10px] text-slate-400 font-medium">Limit pengeluaran per kategori</p>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-
-          <Link
-            href="/dashboard/categories"
-            className="flex items-center justify-between p-3.5 bg-white border border-slate-200/80 rounded-2xl hover:bg-slate-50 transition shadow-2xs group"
-          >
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-purple-50 text-purple-600 rounded-xl">
-                <Tag className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-xs font-extrabold text-slate-900">Kelola Kategori</p>
-                <p className="text-[10px] text-slate-400 font-medium">Kategori kustom transaksi</p>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-
-          {/* EKSPOR PDF */}
-          <button
-            type="button"
-            onClick={() => setIsPdfModalOpen(true)}
-            className="w-full flex items-center justify-between p-3.5 bg-white border border-slate-200/80 rounded-2xl hover:bg-slate-50 transition shadow-2xs group cursor-pointer text-left"
-          >
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-blue-50 text-blue-600 rounded-xl">
-                <FileText className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-xs font-extrabold text-slate-900">Ekspor Laporan PDF</p>
-                <p className="text-[10px] text-slate-400 font-medium">Pratinjau & cetak ringkasan transaksi</p>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-          </button>
-        </div>
-
-        {/* PENGATURAN AKUN */}
-        <div className="space-y-2 pt-2">
-          <p className="text-xs font-black text-slate-400 uppercase tracking-wider px-1">Pengaturan & Keamanan</p>
-
+          {/* EDIT PROFIL & KATA SANDI */}
           <Link
             href="/dashboard/profile"
-            className="flex items-center justify-between p-3.5 bg-white border border-slate-200/80 rounded-2xl hover:bg-slate-50 transition shadow-2xs group"
+            className="flex items-center justify-between p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition shadow-2xs group"
           >
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-slate-100 text-slate-700 rounded-xl">
+              <div className="p-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl">
                 <Settings className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-xs font-extrabold text-slate-900">Edit Profil & Kata Sandi</p>
-                <p className="text-[10px] text-slate-400 font-medium">Ubah nama, email, dan password</p>
+                <p className="text-xs font-extrabold text-slate-900 dark:text-white">Edit Profil & Kata Sandi</p>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Ubah nama, email, dan password</p>
               </div>
             </div>
-            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+            <ChevronRight className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:translate-x-0.5 transition-transform" />
           </Link>
+
+          {/* TOMBOL LOGOUT / KELUAR AKUN */}
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="w-full flex items-center justify-between p-3.5 bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/60 dark:border-rose-900/40 rounded-2xl hover:bg-rose-100/60 dark:hover:bg-rose-950/40 transition text-left group cursor-pointer"
+          >
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400 rounded-xl">
+                <LogOut className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-extrabold text-rose-600 dark:text-rose-400">Keluar Akun</p>
+                <p className="text-[10px] text-rose-400 dark:text-rose-500/80 font-medium">Selesaikan sesi dan keluar dari aplikasi</p>
+              </div>
+            </div>
+            <ChevronRight className="w-4 h-4 text-rose-400 dark:text-rose-500 group-hover:translate-x-0.5 transition-transform" />
+          </button>
         </div>
       </div>
-
-      {/* MODAL PREVIEW PDF */}
-      <PdfPreviewModal
-        isOpen={isPdfModalOpen}
-        onClose={() => setIsPdfModalOpen(false)}
-        user={user}
-      />
-    </>
+    </div>
   );
 }

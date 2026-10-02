@@ -44,8 +44,9 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="py-12 flex justify-center items-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
+      <div className="min-h-[70vh] flex flex-col justify-center items-center gap-3">
+        <div className="animate-spin rounded-full h-9 w-9 border-b-2 border-emerald-600 dark:border-emerald-400"></div>
+        <span className="text-xs font-extrabold text-slate-400 dark:text-slate-500">Memuat data dasbor...</span>
       </div>
     );
   }
@@ -55,7 +56,7 @@ export default function DashboardPage() {
   const recentTransactions = data?.recentTransactions || [];
 
   return (
-    <div className="p-4 sm:p-5 space-y-4 pb-20 font-sans text-slate-900">
+    <div className="p-4 sm:p-5 space-y-4 pb-20 font-sans text-slate-900 dark:text-slate-100 transition-colors duration-200">
       {/* 1. DANGER ZONE / BUDGET WARNING BANNER */}
       <BudgetWarningBanner budgets={budgets} />
 

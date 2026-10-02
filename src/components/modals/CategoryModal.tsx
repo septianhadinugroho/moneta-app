@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { X, Tag } from 'lucide-react';
 import api from '@/lib/api';
-import ColorPicker from '@/components/ui/ColorPicker'; // 1. IMPORT COLOR PICKER KUSTOM
+import ColorPicker from '@/components/ui/ColorPicker';
+import CategoryIcon, { ICON_GROUPS } from '@/components/ui/CategoryIcon';
 
 interface CategoryModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export default function CategoryModal({
   const [name, setName] = useState('');
   const [type, setType] = useState<'EXPENSE' | 'INCOME'>('EXPENSE');
   const [color, setColor] = useState('#ef4444');
+  const [icon, setIcon] = useState('Tag');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -28,10 +30,12 @@ export default function CategoryModal({
       setName(categoryToEdit.name || '');
       setType(categoryToEdit.type || 'EXPENSE');
       setColor(categoryToEdit.color || '#ef4444');
+      setIcon(categoryToEdit.icon || 'Tag');
     } else {
       setName('');
       setType('EXPENSE');
       setColor('#ef4444');
+      setIcon('Tag');
     }
   }, [categoryToEdit, isOpen]);
 
@@ -44,9 +48,9 @@ export default function CategoryModal({
     setLoading(true);
     try {
       if (categoryToEdit) {
-        await api.put(`/categories/${categoryToEdit.id}`, { name, type, color });
+        await api.put(`/categories/${categoryToEdit.id}`, { name, type, color, icon });
       } else {
-        await api.post('/categories', { name, type, color });
+        await api.post('/categories', { name, type, color, icon });
       }
       onSuccess();
       onClose();
@@ -58,27 +62,35 @@ export default function CategoryModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-3xl max-w-sm w-full p-5 space-y-4 border border-slate-100 shadow-2xl relative animate-in fade-in zoom-in duration-150">
-        <div className="flex justify-between items-center">
-          <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
-            <Tag className="w-4 h-4 text-purple-600" />
+    <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 z-100 font-sans text-slate-900 dark:text-slate-100">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-5 space-y-4 border border-slate-100 dark:border-slate-800 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150 max-h-[85vh] flex flex-col transition-colors">
+        
+        {/* HEADER */}
+        <div className="flex justify-between items-center shrink-0 border-b border-slate-100 dark:border-slate-800 pb-3">
+          <h3 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <Tag className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             {categoryToEdit ? 'Edit Kategori' : 'Tambah Kategori Baru'}
           </h3>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-slate-600 rounded-lg cursor-pointer">
-            <X className="w-5 h-5" />
+          <button 
+            type="button"
+            onClick={onClose} 
+            className="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition active:scale-95 cursor-pointer"
+          >
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
+        {/* FORM BODY */}
+        <form onSubmit={handleSubmit} className="space-y-3.5 text-xs overflow-y-auto pr-1 flex-1">
+          {/* TIPE KATEGORI */}
           <div>
-            <label className="block text-slate-600 font-bold mb-1">Tipe Kategori</label>
-            <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl">
+            <label className="block text-slate-600 dark:text-slate-300 font-bold mb-1">Tipe Kategori</label>
+            <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl transition-colors">
               <button
                 type="button"
                 onClick={() => setType('EXPENSE')}
-                className={`py-1.5 rounded-lg font-extrabold transition cursor-pointer ${
-                  type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-500'
+                className={`py-1.5 rounded-lg font-extrabold transition cursor-pointer active:scale-95 ${
+                  type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
                 Pengeluaran
@@ -86,8 +98,8 @@ export default function CategoryModal({
               <button
                 type="button"
                 onClick={() => setType('INCOME')}
-                className={`py-1.5 rounded-lg font-extrabold transition cursor-pointer ${
-                  type === 'INCOME' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-500'
+                className={`py-1.5 rounded-lg font-extrabold transition cursor-pointer active:scale-95 ${
+                  type === 'INCOME' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
                 Pemasukan
@@ -95,31 +107,73 @@ export default function CategoryModal({
             </div>
           </div>
 
+          {/* INPUT NAMA & LIVE PREVIEW IKON */}
           <div>
-            <label className="block text-slate-600 font-bold mb-1">Nama Kategori</label>
-            <input
-              type="text"
-              placeholder="Misal: Servis Motor, Skincare, Bonus"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900"
-            />
+            <label className="block text-slate-600 dark:text-slate-300 font-bold mb-1">Nama Kategori</label>
+            <div className="flex items-center gap-2">
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0 shadow-xs transition-transform transform scale-105"
+                style={{ backgroundColor: color }}
+              >
+                <CategoryIcon name={icon} className="w-5 h-5" />
+              </div>
+              <input
+                type="text"
+                placeholder="Misal: Jajan, Servis Motor, Bonus"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-extrabold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-xs focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
+              />
+            </div>
           </div>
 
-          {/* 2. PAKAI KOMPONEN COLOR PICKER REUSABLE DI SINI */}
+          {/* COLOR PICKER */}
           <ColorPicker
             label="Warna Label"
             selectedColor={color}
             onChange={(newColor) => setColor(newColor)}
           />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-extrabold rounded-xl transition text-xs shadow-xs cursor-pointer active:scale-95 disabled:opacity-50"
-          >
-            {loading ? 'Menyimpan...' : categoryToEdit ? 'Perbarui Kategori' : 'Simpan Kategori'}
-          </button>
+          {/* ICON PICKER GRID DARI CATEGORYICON */}
+          <div className="space-y-2.5 pt-1">
+            <label className="block text-slate-600 dark:text-slate-300 font-bold">Pilih Ikon</label>
+            {ICON_GROUPS.map((group) => (
+              <div key={group.category} className="space-y-1">
+                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500">{group.category}</p>
+                <div className="grid grid-cols-6 gap-1.5">
+                  {group.icons.map((iconName) => {
+                    const isSelected = icon === iconName;
+                    return (
+                      <button
+                        key={iconName}
+                        type="button"
+                        onClick={() => setIcon(iconName)}
+                        className={`p-2 rounded-xl flex items-center justify-center transition cursor-pointer active:scale-95 ${
+                          isSelected
+                            ? 'text-white shadow-xs'
+                            : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-100 dark:border-slate-700/60'
+                        }`}
+                        style={{ backgroundColor: isSelected ? color : undefined }}
+                      >
+                        <CategoryIcon name={iconName} className="w-4 h-4" />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* SUBMIT BUTTON */}
+          <div className="pt-2 sticky bottom-0 bg-white dark:bg-slate-900 pb-1 transition-colors">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 font-extrabold rounded-xl transition text-xs shadow-xs cursor-pointer active:scale-95 disabled:opacity-50"
+            >
+              {loading ? 'Menyimpan...' : categoryToEdit ? 'Perbarui Kategori' : 'Simpan Kategori'}
+            </button>
+          </div>
         </form>
       </div>
     </div>

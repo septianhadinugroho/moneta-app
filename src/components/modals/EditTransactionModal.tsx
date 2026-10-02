@@ -133,23 +133,23 @@ export default function EditTransactionModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-100 font-sans text-slate-900">
-      <div className="bg-white rounded-3xl max-w-sm w-full p-5 space-y-4 border border-slate-100 shadow-2xl relative animate-in fade-in zoom-in duration-150">
+    <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 z-100 font-sans text-slate-900 dark:text-slate-100">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-5 space-y-4 border border-slate-100 dark:border-slate-800 shadow-2xl relative animate-in fade-in zoom-in duration-150 transition-colors">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             {type === 'TRANSFER' ? (
-              <ArrowRightLeft className="w-4 h-4 text-slate-700" />
+              <ArrowRightLeft className="w-4 h-4 text-slate-700 dark:text-slate-300" />
             ) : (
-              <DollarSign className="w-4 h-4 text-emerald-600" />
+              <DollarSign className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             )}
-            <h3 className="text-sm font-extrabold text-slate-900">
+            <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">
               {type === 'TRANSFER' ? 'Edit Transfer' : 'Edit Transaksi'}
             </h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 p-1 rounded-lg transition"
+            className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg transition cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -157,15 +157,15 @@ export default function EditTransactionModal({
 
         {/* TIPE SWITCHER (JIKA BUKAN TRANSFER) */}
         {type !== 'TRANSFER' ? (
-          <div className="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-xl text-xs font-extrabold">
+          <div className="grid grid-cols-2 gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-extrabold">
             <button
               type="button"
               onClick={() => {
                 setType('EXPENSE');
                 setCategoryId('');
               }}
-              className={`py-1.5 rounded-lg transition ${
-                type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-500'
+              className={`py-1.5 rounded-lg transition cursor-pointer ${
+                type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Pengeluaran
@@ -176,35 +176,35 @@ export default function EditTransactionModal({
                 setType('INCOME');
                 setCategoryId('');
               }}
-              className={`py-1.5 rounded-lg transition ${
-                type === 'INCOME' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-500'
+              className={`py-1.5 rounded-lg transition cursor-pointer ${
+                type === 'INCOME' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Pemasukan
             </button>
           </div>
         ) : (
-          <div className="p-2 bg-slate-100 rounded-xl text-xs font-bold text-slate-600 text-center">
+          <div className="p-2 bg-slate-100 dark:bg-slate-800/60 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 text-center border dark:border-slate-800">
             Transfer Antar Dompet
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-3 text-xs">
           <div>
-            <label className="block text-slate-700 font-bold mb-1">Nominal (Rp)</label>
+            <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Nominal (Rp)</label>
             <input
               type="number"
               required
               placeholder="0"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-black text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-black text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
             />
           </div>
 
           <div>
-            <label className="text-slate-700 font-bold mb-1 flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-slate-500" />
+            <label className="text-slate-700 dark:text-slate-300 font-bold mb-1 flex items-center gap-1">
+              <Calendar className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
               Tanggal Transaksi
             </label>
             <input
@@ -212,7 +212,7 @@ export default function EditTransactionModal({
               required
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-bold text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition [color-scheme:light] dark:[color-scheme:dark]"
             />
           </div>
 
@@ -278,13 +278,13 @@ export default function EditTransactionModal({
           )}
 
           <div>
-            <label className="block text-slate-700 font-bold mb-1">Catatan (Opsional)</label>
+            <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Catatan (Opsional)</label>
             <input
               type="text"
               placeholder="Contoh: Beli Kopi / Top Up E-Wallet"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-900"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
             />
           </div>
 
@@ -292,14 +292,14 @@ export default function EditTransactionModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition"
+              className="flex-1 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition cursor-pointer border border-slate-200/60 dark:border-slate-700/60"
             >
               Batal
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold rounded-xl transition disabled:opacity-50"
+              className="flex-1 py-3 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 text-xs font-extrabold rounded-xl transition disabled:opacity-50 cursor-pointer active:scale-95 shadow-xs"
             >
               {loading ? 'Menyimpan...' : 'Perbarui'}
             </button>

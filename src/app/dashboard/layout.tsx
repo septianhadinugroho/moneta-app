@@ -24,24 +24,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-100 flex justify-center">
-      <div className="w-full max-w-md bg-slate-50 min-h-screen shadow-2xl relative border-x border-slate-200 pb-20">
-        <Header />
+    <div className="min-h-screen pb-20 relative">
+      <Header />
 
-        <main>{children}</main>
+      <main>{children}</main>
 
-        <TransactionModal
-          isOpen={showTxModal}
-          onClose={() => setShowTxModal(false)}
-          onSuccess={() => {
-            fetchWallets();
-            window.location.reload();
-          }}
-          wallets={wallets}
-        />
+      <TransactionModal
+        isOpen={showTxModal}
+        onClose={() => setShowTxModal(false)}
+        onSuccess={() => {
+          fetchWallets();
+          window.location.reload();
+        }}
+        wallets={wallets}
+      />
 
-        <BottomNav onOpenTxModal={() => setShowTxModal(true)} />
-      </div>
+      <BottomNav onOpenTxModal={() => setShowTxModal(true)} />
     </div>
   );
 }

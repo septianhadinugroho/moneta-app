@@ -78,32 +78,36 @@ export default function WalletModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-3xl max-w-sm w-full p-5 space-y-4 border border-slate-100 shadow-2xl relative animate-in fade-in zoom-in duration-150">
+    <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 z-50 font-sans text-slate-900 dark:text-slate-100">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-5 space-y-4 border border-slate-100 dark:border-slate-800 shadow-2xl relative animate-in fade-in zoom-in duration-150 transition-colors">
         <div className="flex justify-between items-center">
-          <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
-            <Wallet className="w-4 h-4 text-emerald-600" />
+          <h3 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <Wallet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             {walletToEdit ? 'Edit Dompet' : 'Tambah Dompet Baru'}
           </h3>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-slate-600 rounded-lg">
+          <button 
+            type="button"
+            onClick={onClose} 
+            className="p-1 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg transition cursor-pointer"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
           <div>
-            <label className="block text-slate-600 font-bold mb-1">Nama Dompet / Rekening</label>
+            <label className="block text-slate-600 dark:text-slate-300 font-bold mb-1">Nama Dompet / Rekening</label>
             <input
               type="text"
               placeholder="Misal: BCA Utama, SeaBank, Flazz"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
             />
           </div>
 
           <div>
-            <label className="block text-slate-600 font-bold mb-1">Tipe Dompet</label>
+            <label className="block text-slate-600 dark:text-slate-300 font-bold mb-1">Tipe Dompet</label>
             <div className="grid grid-cols-4 gap-1.5">
               {WALLET_TYPES.map((t) => {
                 const IconComponent = t.icon;
@@ -113,10 +117,10 @@ export default function WalletModal({
                     key={t.value}
                     type="button"
                     onClick={() => setType(t.value)}
-                    className={`py-2 px-1 rounded-xl border font-bold flex flex-col items-center gap-1 transition ${
+                    className={`py-2 px-1 rounded-xl border font-bold flex flex-col items-center gap-1 transition cursor-pointer active:scale-95 ${
                       isSelected
-                        ? 'bg-slate-900 text-white border-slate-900'
-                        : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                        ? 'bg-slate-900 text-white border-slate-900 dark:bg-slate-100 dark:text-slate-900 dark:border-slate-100'
+                        : 'bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700/80 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                   >
                     <IconComponent className="w-4 h-4" />
@@ -128,7 +132,7 @@ export default function WalletModal({
           </div>
 
           <div>
-            <label className="block text-slate-600 font-bold mb-1">
+            <label className="block text-slate-600 dark:text-slate-300 font-bold mb-1">
               {walletToEdit ? 'Saldo Saat Ini' : 'Saldo Awal'}
             </label>
             <input
@@ -136,7 +140,7 @@ export default function WalletModal({
               placeholder="0"
               value={balance}
               onChange={(e) => setBalance(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-black text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-black text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
             />
           </div>
 
@@ -148,7 +152,7 @@ export default function WalletModal({
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-extrabold rounded-xl transition text-xs shadow-xs"
+            className="w-full py-3 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 font-extrabold rounded-xl transition text-xs shadow-xs disabled:opacity-50 cursor-pointer active:scale-95"
           >
             {loading ? 'Menyimpan...' : walletToEdit ? 'Perbarui Dompet' : 'Simpan Dompet'}
           </button>

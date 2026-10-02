@@ -144,36 +144,83 @@ export default function TransactionModal({
   };
 
   return (
-    // Z-INDEX DIGANTI MENJADI z-[100] AGAR MENUTUPI BOTTOM NAV
-    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-100">
-      <div className="bg-white rounded-3xl max-w-sm w-full p-5 space-y-4 border border-slate-100 shadow-2xl relative animate-in fade-in zoom-in duration-150">
+    <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 z-100 font-sans text-slate-900 dark:text-slate-100">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-5 space-y-4 border border-slate-100 dark:border-slate-800 shadow-2xl relative animate-in fade-in zoom-in duration-150 transition-colors">
         <div className="flex justify-between items-center">
-          <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
-            <DollarSign className="w-4 h-4 text-emerald-600" />
+          <h3 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <DollarSign className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             {transactionToEdit ? 'Edit Transaksi' : 'Tambah Transaksi'}
           </h3>
-          <button type="button" onClick={onClose} className="p-1 text-slate-400 hover:text-slate-600 rounded-lg">
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg transition cursor-pointer"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {serverError && <div className="p-3 bg-rose-50 text-rose-700 text-xs font-bold rounded-xl">{serverError}</div>}
+        {serverError && (
+          <div className="p-3 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 text-xs font-bold rounded-xl border border-rose-200 dark:border-rose-900/60">
+            {serverError}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-3 text-xs">
-          <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl">
-            <button type="button" onClick={() => { setType('EXPENSE'); setCategoryId(''); }} className={`py-1.5 rounded-lg font-extrabold transition ${type === 'EXPENSE' ? 'bg-rose-600 text-white' : 'text-slate-500'}`}>Pengeluaran</button>
-            <button type="button" onClick={() => { setType('INCOME'); setCategoryId(''); }} className={`py-1.5 rounded-lg font-extrabold transition ${type === 'INCOME' ? 'bg-emerald-600 text-white' : 'text-slate-500'}`}>Pemasukan</button>
+          <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+            <button
+              type="button"
+              onClick={() => { setType('EXPENSE'); setCategoryId(''); }}
+              className={`py-1.5 rounded-lg font-extrabold transition cursor-pointer ${
+                type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              Pengeluaran
+            </button>
+            <button
+              type="button"
+              onClick={() => { setType('INCOME'); setCategoryId(''); }}
+              className={`py-1.5 rounded-lg font-extrabold transition cursor-pointer ${
+                type === 'INCOME' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              Pemasukan
+            </button>
           </div>
 
           <div>
-            <label className="text-slate-700 font-bold mb-1">Nominal (Rp) <span className="text-rose-500">*</span></label>
-            <input type="number" placeholder="0" value={amount} onChange={(e) => { setAmount(e.target.value); setFormErrors((p) => ({ ...p, amount: '' })); }} className={`w-full px-3.5 py-2.5 rounded-xl font-black text-slate-900 ${formErrors.amount ? 'bg-rose-50/60 border-rose-500 ring-1 ring-rose-500' : 'bg-slate-50 border-slate-200'}`} />
-            {formErrors.amount && <p className="text-[11px] text-rose-600 font-extrabold mt-1">{formErrors.amount}</p>}
+            <label className="text-slate-700 dark:text-slate-300 font-bold mb-1 block">
+              Nominal (Rp) <span className="text-rose-500">*</span>
+            </label>
+            <input
+              type="number"
+              placeholder="0"
+              value={amount}
+              onChange={(e) => { setAmount(e.target.value); setFormErrors((p) => ({ ...p, amount: '' })); }}
+              className={`w-full px-3.5 py-2.5 rounded-xl font-black text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition ${
+                formErrors.amount
+                  ? 'bg-rose-50/60 dark:bg-rose-950/40 border border-rose-500 ring-1 ring-rose-500'
+                  : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80'
+              }`}
+            />
+            {formErrors.amount && <p className="text-[11px] text-rose-600 dark:text-rose-400 font-extrabold mt-1">{formErrors.amount}</p>}
           </div>
 
           <div>
-            <label className="text-slate-700 font-bold mb-1 flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-slate-500" /><span>Tanggal Transaksi <span className="text-rose-500">*</span></span></label>
-            <input type="date" value={date} onChange={(e) => { setDate(e.target.value); setFormErrors((p) => ({ ...p, date: '' })); }} className={`w-full px-3.5 py-2.5 rounded-xl font-bold text-slate-900 ${formErrors.date ? 'bg-rose-50/60 border-rose-500 ring-1 ring-rose-500' : 'bg-slate-50 border-slate-200'}`} />
+            <label className="text-slate-700 dark:text-slate-300 font-bold mb-1 flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+              <span>Tanggal Transaksi <span className="text-rose-500">*</span></span>
+            </label>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => { setDate(e.target.value); setFormErrors((p) => ({ ...p, date: '' })); }}
+              className={`w-full px-3.5 py-2.5 rounded-xl font-bold text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition [color-scheme:light] dark:[color-scheme:dark] ${
+                formErrors.date
+                  ? 'bg-rose-50/60 dark:bg-rose-950/40 border border-rose-500 ring-1 ring-rose-500'
+                  : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80'
+              }`}
+            />
           </div>
 
           <CustomDropdown
@@ -203,11 +250,21 @@ export default function TransactionModal({
           />
 
           <div>
-            <label className="block text-slate-700 font-bold mb-1">Catatan (Opsional)</label>
-            <input type="text" placeholder="Misal: Beli Kopi" value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-900" />
+            <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Catatan (Opsional)</label>
+            <input
+              type="text"
+              placeholder="Misal: Beli Kopi"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
+            />
           </div>
 
-          <button type="submit" disabled={loading} className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-extrabold rounded-xl transition text-xs shadow-xs disabled:opacity-50 mt-2">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 font-extrabold rounded-xl transition text-xs shadow-xs disabled:opacity-50 mt-2 cursor-pointer active:scale-95"
+          >
             {loading ? 'Menyimpan...' : transactionToEdit ? 'Perbarui Transaksi' : 'Simpan Transaksi'}
           </button>
         </form>

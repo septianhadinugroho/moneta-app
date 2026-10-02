@@ -72,13 +72,13 @@ export default function LoginForm({ onForgotPassword, onError }: LoginFormProps)
   };
 
   return (
-    <form onSubmit={handleLogin} noValidate className="space-y-4 text-xs">
+    <form onSubmit={handleLogin} noValidate className="space-y-4 text-xs font-sans">
       
       {/* EMAIL FIELD */}
       <div>
-        <label className="block font-bold text-slate-700 mb-1">Email</label>
+        <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Email</label>
         <div className="relative group">
-          <Mail className="w-4 h-4 text-slate-400 group-focus-within:text-emerald-600 absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors" />
+          <Mail className="w-4 h-4 text-slate-400 group-focus-within:text-emerald-600 dark:group-focus-within:text-emerald-400 absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors" />
           <input
             type="email"
             placeholder="nama@email.com"
@@ -87,15 +87,15 @@ export default function LoginForm({ onForgotPassword, onError }: LoginFormProps)
               setEmail(e.target.value);
               if (errors.email) setErrors((p) => ({ ...p, email: '' }));
             }}
-            className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl font-medium text-slate-900 transition-all ${
+            className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all ${
               errors.email
-                ? 'bg-rose-50/60 border border-rose-500 ring-1 ring-rose-500'
-                : 'bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:bg-white'
+                ? 'bg-rose-50/60 dark:bg-rose-950/40 border border-rose-500 ring-1 ring-rose-500'
+                : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 focus:bg-white dark:focus:bg-slate-800'
             }`}
           />
         </div>
         {errors.email && (
-          <p className="text-[11px] text-rose-600 font-extrabold mt-1 animate-in fade-in">
+          <p className="text-[11px] text-rose-600 dark:text-rose-400 font-extrabold mt-1 animate-in fade-in">
             {errors.email}
           </p>
         )}
@@ -104,17 +104,17 @@ export default function LoginForm({ onForgotPassword, onError }: LoginFormProps)
       {/* PASSWORD FIELD */}
       <div>
         <div className="flex justify-between items-center mb-1">
-          <label className="font-bold text-slate-700">Kata Sandi</label>
+          <label className="font-bold text-slate-700 dark:text-slate-300">Kata Sandi</label>
           <button
             type="button"
             onClick={onForgotPassword}
-            className="text-[11px] font-bold text-emerald-600 hover:underline"
+            className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer"
           >
             Lupa kata sandi?
           </button>
         </div>
         <div className="relative group">
-          <Lock className="w-4 h-4 text-slate-400 group-focus-within:text-emerald-600 absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors" />
+          <Lock className="w-4 h-4 text-slate-400 group-focus-within:text-emerald-600 dark:group-focus-within:text-emerald-400 absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors" />
           <input
             type={showPass ? 'text' : 'password'}
             placeholder="••••••••"
@@ -123,22 +123,22 @@ export default function LoginForm({ onForgotPassword, onError }: LoginFormProps)
               setPassword(e.target.value);
               if (errors.password) setErrors((p) => ({ ...p, password: '' }));
             }}
-            className={`w-full pl-10 pr-10 py-2.5 rounded-xl font-medium text-slate-900 transition-all ${
+            className={`w-full pl-10 pr-10 py-2.5 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all ${
               errors.password
-                ? 'bg-rose-50/60 border border-rose-500 ring-1 ring-rose-500'
-                : 'bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:bg-white'
+                ? 'bg-rose-50/60 dark:bg-rose-950/40 border border-rose-500 ring-1 ring-rose-500'
+                : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 focus:bg-white dark:focus:bg-slate-800'
             }`}
           />
           <button
             type="button"
             onClick={() => setShowPass(!showPass)}
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 transition"
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 transition cursor-pointer"
           >
-            {showPass ? <Eye className="w-4 h-4 text-emerald-600" /> : <EyeOff className="w-4 h-4" />}
+            {showPass ? <Eye className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <EyeOff className="w-4 h-4" />}
           </button>
         </div>
         {errors.password && (
-          <p className="text-[11px] text-rose-600 font-extrabold mt-1 animate-in fade-in">
+          <p className="text-[11px] text-rose-600 dark:text-rose-400 font-extrabold mt-1 animate-in fade-in">
             {errors.password}
           </p>
         )}
@@ -148,7 +148,7 @@ export default function LoginForm({ onForgotPassword, onError }: LoginFormProps)
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3 bg-slate-900 hover:bg-slate-800 active:scale-98 text-white font-extrabold text-xs rounded-xl transition-all shadow-md shadow-slate-900/10 disabled:opacity-50 flex items-center justify-center gap-2 mt-2 group"
+        className="w-full py-3 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 font-extrabold text-xs rounded-xl transition-all shadow-md shadow-slate-900/10 active:scale-98 disabled:opacity-50 flex items-center justify-center gap-2 mt-2 group cursor-pointer"
       >
         {loading ? 'Memproses...' : 'Masuk ke Moneta'}
         {!loading && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
@@ -157,10 +157,10 @@ export default function LoginForm({ onForgotPassword, onError }: LoginFormProps)
       {/* DIVIDER */}
       <div className="relative my-4">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-slate-200"></div>
+          <div className="w-full border-t border-slate-200 dark:border-slate-800"></div>
         </div>
         <div className="relative flex justify-center text-[10px] uppercase font-extrabold">
-          <span className="bg-white/90 px-3 text-slate-400">Atau masuk dengan</span>
+          <span className="bg-white/90 dark:bg-slate-900/90 px-3 text-slate-400 dark:text-slate-500">Atau masuk dengan</span>
         </div>
       </div>
 
@@ -175,8 +175,8 @@ export default function LoginForm({ onForgotPassword, onError }: LoginFormProps)
       </div>
 
       {/* TRUST BADGE */}
-      <div className="pt-2 flex items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-400">
-        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+      <div className="pt-2 flex items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
         <span>Koneksi & Data Terenkripsi Aman</span>
       </div>
     </form>

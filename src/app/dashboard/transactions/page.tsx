@@ -47,7 +47,6 @@ export default function TransactionsPage() {
   const [selectedTx, setSelectedTx] = useState<any>(null);
   const [editingTx, setEditingTx] = useState<any>(null);
 
-  // Hitung filter aktif untuk badge
   const activeFilterCount = 
     (selectedWallet ? 1 : 0) + 
     (startDate && endDate ? 1 : 0) + 
@@ -119,26 +118,26 @@ export default function TransactionsPage() {
   };
 
   return (
-    <div className="p-4 sm:p-5 space-y-3.5 font-sans text-slate-900 pb-28">
+    <div className="p-4 sm:p-5 space-y-3.5 font-sans text-slate-900 dark:text-slate-100 pb-28 transition-colors">
       {/* HEADER PAGE */}
-      <div className="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
+      <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs transition-colors">
         <div>
-          <h1 className="text-base sm:text-lg font-black text-slate-900">Riwayat Transaksi</h1>
-          <p className="text-[10px] text-slate-400 font-bold mt-0.5">
+          <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">Riwayat Transaksi</h1>
+          <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold mt-0.5">
             Total {paginationMeta.totalItems} Transaksi
           </p>
         </div>
-        <span className="px-2.5 py-1 bg-slate-900 text-white text-[11px] font-black rounded-xl">
+        <span className="px-2.5 py-1 bg-slate-900 dark:bg-slate-800 text-white dark:text-slate-200 text-[11px] font-black rounded-xl border dark:border-slate-700">
           Hal {currentPage} / {paginationMeta.totalPages || 1}
         </span>
       </div>
 
       {/* COMPACT SEARCH & FILTER BAR */}
-      <div className="bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-2xs space-y-2">
+      <div className="bg-white dark:bg-slate-900 p-2.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-2 transition-colors">
         <div className="flex items-center gap-2">
           {/* SEARCH INPUT */}
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Cari transaksi..."
@@ -147,13 +146,13 @@ export default function TransactionsPage() {
                 setSearch(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full pl-8 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-slate-400 transition"
+              className="w-full pl-8 pr-8 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:border-slate-400 dark:focus:border-slate-500 transition"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -164,8 +163,8 @@ export default function TransactionsPage() {
           <button
             type="button"
             onClick={() => setIsFilterOpen(true)}
-            className={`p-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl transition flex items-center justify-center gap-1.5 relative cursor-pointer active:scale-95 ${
-              activeFilterCount > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : ''
+            className={`p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl transition flex items-center justify-center gap-1.5 relative cursor-pointer active:scale-95 border border-slate-200/60 dark:border-slate-700/60 ${
+              activeFilterCount > 0 ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800' : ''
             }`}
           >
             <SlidersHorizontal className="w-4 h-4" />
@@ -181,19 +180,19 @@ export default function TransactionsPage() {
         {(selectedWallet || (startDate && endDate) || typeFilter !== 'ALL') && (
           <div className="flex flex-wrap items-center gap-1.5 pt-1 text-[10px] font-bold">
             {selectedWalletObj && (
-              <span className="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-lg flex items-center gap-1">
+              <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center gap-1">
                 Dompet: {selectedWalletObj.name}
                 <X className="w-3 h-3 cursor-pointer" onClick={() => setSelectedWallet('')} />
               </span>
             )}
             {startDate && endDate && (
-              <span className="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-lg flex items-center gap-1">
+              <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center gap-1">
                 {startDate} - {endDate}
                 <X className="w-3 h-3 cursor-pointer" onClick={() => { setStartDate(''); setEndDate(''); }} />
               </span>
             )}
             {typeFilter !== 'ALL' && (
-              <span className="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-lg flex items-center gap-1">
+              <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center gap-1">
                 {typeFilter === 'EXPENSE' ? 'Pengeluaran' : 'Pemasukan'}
                 <X className="w-3 h-3 cursor-pointer" onClick={() => setTypeFilter('ALL')} />
               </span>
@@ -201,7 +200,7 @@ export default function TransactionsPage() {
             <button
               type="button"
               onClick={handleResetFilter}
-              className="text-rose-600 underline text-[10px] ml-auto font-extrabold cursor-pointer"
+              className="text-rose-600 dark:text-rose-400 underline text-[10px] ml-auto font-extrabold cursor-pointer"
             >
               Reset All
             </button>
@@ -210,16 +209,16 @@ export default function TransactionsPage() {
       </div>
 
       {/* LIST TRANSAKSI */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs divide-y divide-slate-100 overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs divide-y divide-slate-100 dark:divide-slate-800/60 overflow-hidden transition-colors">
         {loading ? (
-          <div className="py-12 flex flex-col justify-center items-center gap-2 text-slate-400 text-xs font-bold">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-slate-900"></div>
+          <div className="py-12 flex flex-col justify-center items-center gap-2 text-slate-400 dark:text-slate-500 text-xs font-bold">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-emerald-600 dark:border-emerald-400"></div>
             <span>Memuat transaksi...</span>
           </div>
         ) : filteredTx.length === 0 ? (
           <div className="py-12 text-center space-y-1 px-4">
-            <p className="text-xs font-extrabold text-slate-700">Tidak ada transaksi</p>
-            <p className="text-[11px] text-slate-400 font-medium">
+            <p className="text-xs font-extrabold text-slate-700 dark:text-slate-300">Tidak ada transaksi</p>
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
               Coba gunakan kata kunci pencarian lain atau ubah filter.
             </p>
           </div>
@@ -232,16 +231,16 @@ export default function TransactionsPage() {
               <div
                 key={tx.id}
                 onClick={() => setSelectedTx(tx)}
-                className="p-3 sm:p-3.5 flex justify-between items-center cursor-pointer hover:bg-slate-50/80 transition group active:bg-slate-100/50"
+                className="p-3 sm:p-3.5 flex justify-between items-center cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition group active:bg-slate-100/50 dark:active:bg-slate-800"
               >
                 <div className="flex items-center space-x-3 min-w-0 pr-2">
                   <div
                     className={`p-2.5 rounded-xl shrink-0 ${
                       isTransfer
-                        ? 'bg-blue-50 text-blue-600'
+                        ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400'
                         : isIncome
-                        ? 'bg-emerald-50 text-emerald-600'
-                        : 'bg-rose-50 text-rose-600'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400'
+                        : 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400'
                     }`}
                   >
                     {isTransfer ? (
@@ -253,10 +252,10 @@ export default function TransactionsPage() {
                     )}
                   </div>
                   <div className="truncate">
-                    <p className="text-xs font-bold text-slate-900 truncate">
+                    <p className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
                       {tx.description || tx.notes || (isTransfer ? 'Transfer Antar Dompet' : 'Transaksi')}
                     </p>
-                    <p className="text-[10px] text-slate-400 font-medium truncate mt-0.5">
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate mt-0.5">
                       {isTransfer
                         ? `${tx.wallet?.name} ➔ ${tx.destinationWallet?.name}`
                         : tx.wallet?.name || 'Dompet'}{' '}
@@ -269,15 +268,15 @@ export default function TransactionsPage() {
                   <span
                     className={`text-xs font-black whitespace-nowrap ${
                       isTransfer
-                        ? 'text-slate-700'
+                        ? 'text-slate-700 dark:text-slate-300'
                         : isIncome
-                        ? 'text-emerald-600'
-                        : 'text-rose-600'
+                        ? 'text-emerald-600 dark:text-emerald-400'
+                        : 'text-rose-600 dark:text-rose-400'
                     }`}
                   >
                     {isTransfer ? '' : isIncome ? '+' : '-'}{formatRupiah(tx.amount)}
                   </span>
-                  <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-600 transition" />
+                  <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition" />
                 </div>
               </div>
             );
@@ -287,8 +286,8 @@ export default function TransactionsPage() {
 
       {/* PAGINATION CONTROLLER */}
       {!loading && paginationMeta.totalPages > 1 && (
-        <div className="bg-white p-3 rounded-2xl border border-slate-200/80 shadow-2xs flex items-center justify-between text-xs font-extrabold">
-          <span className="text-[10px] text-slate-400 font-bold">
+        <div className="bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs flex items-center justify-between text-xs font-extrabold transition-colors">
+          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold">
             {(currentPage - 1) * paginationMeta.limit + 1} - {Math.min(currentPage * paginationMeta.limit, paginationMeta.totalItems)} dari {paginationMeta.totalItems}
           </span>
 
@@ -297,12 +296,12 @@ export default function TransactionsPage() {
               type="button"
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer active:scale-95"
+              className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer active:scale-95 border border-slate-200/50 dark:border-slate-700/50"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
 
-            <span className="px-2.5 py-1 bg-slate-900 text-white rounded-lg text-[11px]">
+            <span className="px-2.5 py-1 bg-slate-900 dark:bg-slate-800 text-white dark:text-slate-200 rounded-lg text-[11px] border dark:border-slate-700">
               {currentPage}
             </span>
 
@@ -310,7 +309,7 @@ export default function TransactionsPage() {
               type="button"
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, paginationMeta.totalPages))}
               disabled={currentPage === paginationMeta.totalPages}
-              className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer active:scale-95"
+              className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer active:scale-95 border border-slate-200/50 dark:border-slate-700/50"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
