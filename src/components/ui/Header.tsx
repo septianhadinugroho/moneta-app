@@ -35,7 +35,7 @@ export default function Header() {
         <div className="flex items-center space-x-2">
           <ThemeToggle />
 
-          <Link href="/dashboard/menu" className="flex items-center">
+          <Link href="/dashboard/profile" className="flex items-center">
             {avatarUrl && !imgError ? (
               <img
                 src={avatarUrl}
