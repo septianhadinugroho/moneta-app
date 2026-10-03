@@ -15,6 +15,7 @@ export default function DashboardPage() {
 
   const fetchDashboardData = async () => {
     try {
+      setLoading(true);
       const now = new Date();
       const currentMonth = now.getMonth() + 1;
       const currentYear = now.getFullYear();
