@@ -30,8 +30,8 @@ export default function RootLayout({
     <html lang="id" suppressHydrationWarning>
       <body className={`${inter.className} bg-slate-900 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased min-h-screen flex justify-center items-center font-sans`}>
         <Providers>
-          {/* MOBILE FRAME CONTAINER DI DESKTOP */}
-          <div className="w-full max-w-md min-h-screen bg-slate-50 dark:bg-slate-950 relative shadow-2xl border-x border-slate-200/80 dark:border-slate-800/80 overflow-x-hidden transition-colors duration-200">
+          {/* MOBILE FRAME CONTAINER */}
+          <div className="w-full max-w-md min-h-screen bg-slate-50 dark:bg-slate-950 relative shadow-2xl border-x border-slate-200/80 dark:border-slate-800/80 transition-colors duration-200 flex flex-col">
             {children}
             <PwaInstallModal />
           </div>

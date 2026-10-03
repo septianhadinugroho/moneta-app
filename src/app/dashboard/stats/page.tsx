@@ -168,7 +168,7 @@ export default function StatsPage() {
   }, [txData, selectedYear]);
 
   return (
-    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 dark:text-slate-100 pb-28 transition-colors">
+    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 dark:text-slate-100 transition-colors">
       {/* HEADER PAGE */}
       <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
         <div>

@@ -107,7 +107,7 @@ export default function RecentTx({
                     </div>
                   </div>
 
-                  {/* NOMINAL */}
+                  {/* NOMINAL (SEKARANG EXPENSE WARNA MERAH) */}
                   <div className="flex items-center space-x-1.5 shrink-0 pl-2">
                     <span
                       className={`text-xs font-black whitespace-nowrap ${
@@ -115,7 +115,7 @@ export default function RecentTx({
                           ? 'text-slate-600 dark:text-slate-400'
                           : isIncome
                           ? 'text-emerald-600 dark:text-emerald-400'
-                          : 'text-slate-900 dark:text-slate-100'
+                          : 'text-rose-600 dark:text-rose-400' // 👈 UBAH WARNA DI SINI JADI MERAH
                       }`}
                     >
                       {isTransfer ? '' : isIncome ? '+' : '-'}{formatRupiah(tx.amount)}

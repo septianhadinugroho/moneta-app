@@ -77,7 +77,7 @@ export default function BudgetsPage() {
   const overallPercentage = totalBudgetLimit > 0 ? Math.min(Math.round((totalSpent / totalBudgetLimit) * 100), 100) : 0;
 
   return (
-    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 dark:text-slate-100 pb-28 transition-colors">
+    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 dark:text-slate-100 transition-colors">
       {/* HEADER PERIODE & NAVIGASI BULAN */}
       <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs transition-colors">
         <div className="flex items-center gap-2">

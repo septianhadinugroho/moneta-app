@@ -44,7 +44,7 @@ export default function ProfilePage() {
   const isGoogleUser = Boolean(user?.avatar || user?.googleId);
 
   return (
-    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 pb-28">
+    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 ">
       {/* 1. KARTU IDENTITAS USER */}
       <UserCard user={user} isGoogleUser={isGoogleUser} />
 

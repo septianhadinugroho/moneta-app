@@ -65,41 +65,45 @@ export default function SummaryCards({
         <p className="text-[10px] text-slate-400 font-medium">Total akumulasi seluruh akun</p>
       </div>
 
-      {/* CARDS PEMASUKAN & PENGELUARAN */}
-      <div className="grid grid-cols-1 gap-3">
+      {/* CARDS PEMASUKAN & PENGELUARAN (GRID 2 KOLOM COMPACT) */}
+      <div className="grid grid-cols-2 gap-3">
         {/* PEMASUKAN */}
-        <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex justify-between items-center transition-colors">
-          <div className="space-y-0.5 min-w-0">
-            <span className="text-[10px] font-extrabold text-slate-400 dark:text-slate-400 block">
-              Pemasukan ({activePeriodLabel})
+        <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-2 transition-colors">
+          <div className="flex justify-between items-center">
+            <span className="text-[10px] font-extrabold text-slate-400 dark:text-slate-400 truncate">
+              Pemasukan
             </span>
-            <p className="text-lg font-black text-slate-900 dark:text-slate-100 truncate">
+            <div className="p-1.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-xl shrink-0">
+              <TrendingUp className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div>
+            <p className="text-sm sm:text-base font-black text-emerald-600 dark:text-emerald-400 truncate">
               {showBalance ? formatRupiah(income) : '••••••••'}
             </p>
-            <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              <TrendingUp className="w-3 h-3" /> Akumulasi Bulan Ini
+            <p className="text-[9px] text-slate-400 dark:text-slate-500 font-bold truncate mt-0.5">
+              {activePeriodLabel}
             </p>
-          </div>
-          <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-2xl shrink-0">
-            <TrendingUp className="w-5 h-5" />
           </div>
         </div>
 
         {/* PENGELUARAN */}
-        <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex justify-between items-center transition-colors">
-          <div className="space-y-0.5 min-w-0">
-            <span className="text-[10px] font-extrabold text-slate-400 dark:text-slate-400 block">
-              Pengeluaran ({activePeriodLabel})
+        <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-2 transition-colors">
+          <div className="flex justify-between items-center">
+            <span className="text-[10px] font-extrabold text-slate-400 dark:text-slate-400 truncate">
+              Pengeluaran
             </span>
-            <p className="text-lg font-black text-slate-900 dark:text-slate-100 truncate">
+            <div className="p-1.5 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 rounded-xl shrink-0">
+              <TrendingDown className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div>
+            <p className="text-sm sm:text-base font-black text-rose-600 dark:text-rose-400 truncate">
               {showBalance ? formatRupiah(expense) : '••••••••'}
             </p>
-            <p className="text-[10px] font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1">
-              <TrendingDown className="w-3 h-3" /> Akumulasi Bulan Ini
+            <p className="text-[9px] text-slate-400 dark:text-slate-500 font-bold truncate mt-0.5">
+              {activePeriodLabel}
             </p>
-          </div>
-          <div className="p-3 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 rounded-2xl shrink-0">
-            <TrendingDown className="w-5 h-5" />
           </div>
         </div>
       </div>

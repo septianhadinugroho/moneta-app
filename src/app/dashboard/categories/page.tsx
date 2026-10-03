@@ -96,7 +96,7 @@ export default function CategoriesPage() {
   }
 
   return (
-    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 dark:text-slate-100 pb-28 transition-colors">
+    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 dark:text-slate-100 transition-colors">
       {/* HEADER */}
       <div className="flex justify-between items-start gap-2">
         <div className="space-y-0.5">

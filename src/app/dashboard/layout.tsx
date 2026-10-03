@@ -24,10 +24,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, []);
 
   return (
-    <div className="min-h-screen pb-20 relative">
+    <div className="flex-1 flex flex-col relative pb-24">
       <Header />
 
-      <main>{children}</main>
+      <main className="flex-1">{children}</main>
 
       <TransactionModal
         isOpen={showTxModal}

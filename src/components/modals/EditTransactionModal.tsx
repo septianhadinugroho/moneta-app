@@ -20,7 +20,6 @@ const formatDateString = (dateInput?: string | Date) => {
   return `${year}-${month}-${day}`;
 };
 
-// HELPER GABUNGAN TANGGAL + JAM SEKARANG (REAL-TIME WIB)
 const getCombinedDateTime = (selectedDateStr: string) => {
   const now = new Date();
   if (!selectedDateStr) return now.toISOString();
@@ -73,14 +72,14 @@ export default function EditTransactionModal({
 
   useEffect(() => {
     if (isOpen && transaction) {
-      const txType = String(transaction.type).toUpperCase() as 'EXPENSE' | 'INCOME' | 'TRANSFER';
+      const txType = String(transaction.type || '').toUpperCase() as 'EXPENSE' | 'INCOME' | 'TRANSFER';
       setType(txType);
       setWalletId(String(transaction.walletId || transaction.wallet?.id || ''));
       setDestinationWalletId(String(transaction.destinationWalletId || transaction.destinationWallet?.id || ''));
       setCategoryId(String(transaction.categoryId || transaction.category?.id || ''));
       setAmount(String(transaction.amount || ''));
-      setDescription(transaction.description || '');
-      setDate(formatDateString(transaction.date));
+      setDescription(transaction.description || transaction.notes || '');
+      setDate(formatDateString(transaction.date || transaction.createdAt));
 
       Promise.all([api.get('/wallets'), api.get('/categories')])
         .then(([wRes, cRes]) => {
