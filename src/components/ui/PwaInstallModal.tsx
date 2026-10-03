@@ -11,7 +11,7 @@ export default function PwaInstallModal() {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    // 1. Tangkap prompt jika sudah pernah tertangkap secara global di window
+    // Tangkap prompt jika sudah pernah tertangkap di window
     if ((window as any).deferredPwaPrompt) {
       setDeferredPrompt((window as any).deferredPwaPrompt);
       checkAndShowModal();
@@ -19,7 +19,6 @@ export default function PwaInstallModal() {
 
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
-      // Simpan event secara global & di state
       (window as any).deferredPwaPrompt = e;
       setDeferredPrompt(e);
       checkAndShowModal();
@@ -33,17 +32,15 @@ export default function PwaInstallModal() {
   }, [pathname]);
 
   const checkAndShowModal = () => {
-    // Batasi hanya di Landing Page ( / )
+    // Tampilkan hanya jika di halaman landing page /
     if (pathname !== '/') return;
 
-    // Cek jika sudah pernah ditutup dalam 7 hari terakhir
     const lastDismissed = localStorage.getItem('pwa_install_dismissed_at');
     if (lastDismissed) {
       const daysPassed = (Date.now() - Number(lastDismissed)) / (1000 * 60 * 60 * 24);
       if (daysPassed < 7) return;
     }
 
-    // Tampilkan modal
     setShowModal(true);
   };
 
@@ -51,6 +48,10 @@ export default function PwaInstallModal() {
     const promptEvent = deferredPrompt || (window as any).deferredPwaPrompt;
     if (!promptEvent) return;
 
+    // Sembunyikan modal buatan kita dulu agar pengguna fokus ke dialog browser
+    setShowModal(false);
+
+    // Picu dialog bawaan Chrome/Android
     promptEvent.prompt();
     const { outcome } = await promptEvent.userChoice;
 
@@ -58,9 +59,6 @@ export default function PwaInstallModal() {
       localStorage.removeItem('pwa_install_dismissed_at');
       (window as any).deferredPwaPrompt = null;
     }
-
-    setDeferredPrompt(null);
-    setShowModal(false);
   };
 
   const handleDismiss = () => {
