@@ -13,7 +13,7 @@ export default function DashboardPage() {
   const [budgets, setBudgets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // State User & Device Time
+  // State User & Time
   const [userName, setUserName] = useState('');
   const [greeting, setGreeting] = useState('Selamat Datang');
   const [formattedToday, setFormattedToday] = useState('');
@@ -34,8 +34,14 @@ export default function DashboardPage() {
         }),
       ]);
 
-      setData(summaryRes.data.data || summaryRes.data || {});
+      const summaryData = summaryRes.data.data || summaryRes.data || {};
+      setData(summaryData);
       setBudgets(budgetRes.data.data || []);
+
+      // Jika Backend mereturn data user, utamakan nama dari backend
+      if (summaryData?.user?.name) {
+        setUserName(summaryData.user.name);
+      }
     } catch (err) {
       console.error('Gagal mengambil data dashboard:', err);
     } finally {
@@ -44,21 +50,18 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    fetchDashboardData();
-
-    // 1. AMBIL NAMA USER (Gunakan fallback ke LocalStorage jika backend tidak mengembalikan user)
+    // 1. Inisialisasi Nama dari LocalStorage
     const storedUser = localStorage.getItem('user');
-    let nameFromStorage = '';
     if (storedUser) {
       try {
         const parsed = JSON.parse(storedUser);
-        nameFromStorage = parsed?.name || '';
+        if (parsed?.name) setUserName(parsed.name);
       } catch (e) {
         console.error(e);
       }
     }
 
-    // 2. SET TIME & GREETING DARI ZONA WAKTU DEVICE USER
+    // 2. Waktu & Sapaan Presisi Device
     const now = new Date();
     const hour = now.getHours();
 
@@ -76,15 +79,9 @@ export default function DashboardPage() {
       })
     );
 
-    setUserName(nameFromStorage);
+    // 3. Fetch Data API
+    fetchDashboardData();
   }, []);
-
-  // Update userName jika data dari API backend memiliki nama user
-  useEffect(() => {
-    if (data?.user?.name) {
-      setUserName(data.user.name);
-    }
-  }, [data]);
 
   if (loading) {
     return (
@@ -98,8 +95,8 @@ export default function DashboardPage() {
   const totalNetWorth = data?.totalNetWorth || 0;
   const monthlySummary = data?.monthlySummary || { income: 0, expense: 0 };
   const recentTransactions = data?.recentTransactions || [];
-  
-  // Ambil kata pertama dari nama user
+
+  // Ambil kata pertama dari nama (contoh: "Septian")
   const firstName = userName ? userName.trim().split(' ')[0] : '';
 
   return (
@@ -143,11 +140,17 @@ export default function DashboardPage() {
 
       {/* 6. CHART KATEGORI */}
       {(data?.expenseCategoryBreakdown || data?.incomeCategoryBreakdown) && (
-        <ExpenseChart
-          expenseCategories={data.expenseCategoryBreakdown || []}
-          incomeCategories={data.incomeCategoryBreakdown || []}
-        />
-      )}
+      <ExpenseChart
+        expenseCategories={data.expenseCategoryBreakdown || []}
+        incomeCategories={data.incomeCategoryBreakdown || []}
+        period={data?.period}
+        onPeriodChange={(month, year) => {
+          api.get('/dashboard/summary', { params: { month, year } })
+            .then((res) => setData(res.data.data || res.data || {}))
+            .catch((err) => console.error(err));
+        }}
+      />
+    )}
     </div>
   );
 }
