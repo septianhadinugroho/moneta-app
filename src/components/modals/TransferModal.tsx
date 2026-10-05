@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, ArrowRightLeft, Wallet as WalletIcon, Calendar, FileText, AlertCircle, Check, Building2, Smartphone, Radio, Banknote } from 'lucide-react';
+import { X, ArrowRightLeft, Wallet as WalletIcon, Calendar, FileText, AlertCircle, Check, Building2, Smartphone, Radio, Banknote, ArrowRight } from 'lucide-react';
 import api from '@/lib/api';
 import { formatRupiah } from '@/lib/utils';
 import CustomDropdown from '@/components/ui/CustomDropdown';
@@ -54,6 +54,7 @@ export default function TransferModal({ isOpen, onClose, wallets, onSuccess }: T
   }));
 
   const selectedSourceWallet = wallets.find((w) => String(w.id) === String(sourceWalletId));
+  const selectedDestWallet = wallets.find((w) => String(w.id) === String(destinationWalletId));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,6 +136,27 @@ export default function TransferModal({ isOpen, onClose, wallets, onSuccess }: T
           </button>
         </div>
 
+        {/* ALUR TRANSFER VISUAL (DOMPET ASAL -> DOMPET TUJUAN) */}
+        <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between text-xs font-bold">
+          <div className="text-center truncate flex-1 px-1">
+            <span className="text-[9px] text-slate-400 uppercase font-black block">Dari</span>
+            <span className="text-slate-800 dark:text-slate-200 truncate block">
+              {selectedSourceWallet ? selectedSourceWallet.name : 'Pilih Asal'}
+            </span>
+          </div>
+
+          <div className="p-2 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 rounded-full shrink-0 shadow-2xs">
+            <ArrowRight className="w-4 h-4" />
+          </div>
+
+          <div className="text-center truncate flex-1 px-1">
+            <span className="text-[9px] text-slate-400 uppercase font-black block">Ke</span>
+            <span className="text-slate-800 dark:text-slate-200 truncate block">
+              {selectedDestWallet ? selectedDestWallet.name : 'Pilih Tujuan'}
+            </span>
+          </div>
+        </div>
+
         {error && (
           <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-rose-700 dark:text-rose-400 text-xs rounded-xl font-bold flex items-center gap-2 animate-in fade-in duration-200">
             <AlertCircle className="w-4 h-4 shrink-0" />
@@ -156,6 +178,7 @@ export default function TransferModal({ isOpen, onClose, wallets, onSuccess }: T
             onSelect={(id) => {
               setSourceWalletId(id);
               setIsSourceOpen(false);
+              if (error) setError('');
             }}
             placeholder="-- Pilih Dompet Asal --"
             defaultIcon={WalletIcon}
@@ -174,6 +197,7 @@ export default function TransferModal({ isOpen, onClose, wallets, onSuccess }: T
             onSelect={(id) => {
               setDestinationWalletId(id);
               setIsDestOpen(false);
+              if (error) setError('');
             }}
             placeholder="-- Pilih Dompet Tujuan --"
             defaultIcon={WalletIcon}

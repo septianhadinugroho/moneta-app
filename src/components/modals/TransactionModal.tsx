@@ -1,9 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Calendar, DollarSign, Wallet, Tag, Building2, Smartphone, Radio, Banknote } from 'lucide-react';
+import { X, DollarSign, Wallet, Building2, Smartphone, Radio, Banknote } from 'lucide-react';
 import api from '@/lib/api';
 import CustomDropdown from '@/components/ui/CustomDropdown';
+import QuickAmountChips from './transaction-fields/QuickAmountChips';
+import CategoryGridSelector from './transaction-fields/CategoryGridSelector';
+import QuickDatePicker from './transaction-fields/QuickDatePicker';
 
 interface TransactionModalProps {
   isOpen: boolean;
@@ -16,6 +19,12 @@ interface TransactionModalProps {
 const getTodayString = () => {
   const today = new Date();
   return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+};
+
+const getYesterdayString = () => {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  return `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
 };
 
 const getCombinedDateTime = (selectedDateStr: string) => {
@@ -46,11 +55,12 @@ export default function TransactionModal({
   const [amount, setAmount] = useState('');
   const [walletId, setWalletId] = useState('');
   const [categoryId, setCategoryId] = useState('');
+  const [categorySearch, setCategorySearch] = useState('');
   const [notes, setNotes] = useState('');
   const [date, setDate] = useState(getTodayString());
+  const [dateType, setDateType] = useState<'today' | 'yesterday' | 'custom'>('today');
 
   const [isWalletOpen, setIsWalletOpen] = useState(false);
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -58,23 +68,17 @@ export default function TransactionModal({
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // KUNCI SCROLL BODY SAAT MODAL TERBUKA
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
+    if (isOpen) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = 'unset';
+    return () => { document.body.style.overflow = 'unset'; };
   }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
     setFormErrors({});
     setServerError(null);
+    setCategorySearch('');
 
     Promise.all([api.get('/wallets'), api.get('/categories')])
       .then(([wRes, cRes]) => {
@@ -89,9 +93,15 @@ export default function TransactionModal({
       setWalletId(transactionToEdit.walletId?.toString() || '');
       setCategoryId(transactionToEdit.categoryId?.toString() || '');
       setNotes(transactionToEdit.notes || transactionToEdit.description || '');
-      setDate(transactionToEdit.date ? transactionToEdit.date.split('T')[0] : getTodayString());
+      
+      const txDateStr = transactionToEdit.date ? transactionToEdit.date.split('T')[0] : getTodayString();
+      setDate(txDateStr);
+      if (txDateStr === getTodayString()) setDateType('today');
+      else if (txDateStr === getYesterdayString()) setDateType('yesterday');
+      else setDateType('custom');
     } else {
-      setType('EXPENSE'); setAmount(''); setWalletId(''); setCategoryId(''); setNotes(''); setDate(getTodayString());
+      setType('EXPENSE'); setAmount(''); setWalletId(''); setCategoryId(''); setNotes('');
+      setDate(getTodayString()); setDateType('today');
     }
   }, [transactionToEdit, isOpen]);
 
@@ -103,9 +113,9 @@ export default function TransactionModal({
     ...getWalletTypeBadge(w.type),
   }));
 
-  const categoryOptions = categories
-    .filter((c) => String(c.type).toUpperCase() === type)
-    .map((c) => ({ id: c.id, name: c.name, color: c.color || '#64748b' }));
+  const filteredCategories = categories.filter(
+    (c) => String(c.type).toUpperCase() === type
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,8 +155,10 @@ export default function TransactionModal({
 
   return (
     <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 z-100 font-sans text-slate-900 dark:text-slate-100">
-      <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-5 space-y-4 border border-slate-100 dark:border-slate-800 shadow-2xl relative animate-in fade-in zoom-in duration-150 transition-colors">
-        <div className="flex justify-between items-center">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-5 space-y-3.5 border border-slate-100 dark:border-slate-800 shadow-2xl relative max-h-[92vh] overflow-y-auto custom-scrollbar transition-colors">
+        
+        {/* HEADER MODAL */}
+        <div className="flex justify-between items-center sticky top-0 bg-white dark:bg-slate-900 pt-0.5 pb-2 z-10 border-b border-slate-100 dark:border-slate-800">
           <h3 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
             <DollarSign className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             {transactionToEdit ? 'Edit Transaksi' : 'Tambah Transaksi'}
@@ -166,12 +178,13 @@ export default function TransactionModal({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-3 text-xs">
-          <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+        <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
+          {/* TYPE SWITCHER */}
+          <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
             <button
               type="button"
-              onClick={() => { setType('EXPENSE'); setCategoryId(''); }}
-              className={`py-1.5 rounded-lg font-extrabold transition cursor-pointer ${
+              onClick={() => { setType('EXPENSE'); setCategoryId(''); setCategorySearch(''); }}
+              className={`py-2 rounded-lg font-extrabold transition cursor-pointer ${
                 type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -179,8 +192,8 @@ export default function TransactionModal({
             </button>
             <button
               type="button"
-              onClick={() => { setType('INCOME'); setCategoryId(''); }}
-              className={`py-1.5 rounded-lg font-extrabold transition cursor-pointer ${
+              onClick={() => { setType('INCOME'); setCategoryId(''); setCategorySearch(''); }}
+              className={`py-2 rounded-lg font-extrabold transition cursor-pointer ${
                 type === 'INCOME' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -188,8 +201,9 @@ export default function TransactionModal({
             </button>
           </div>
 
-          <div>
-            <label className="text-slate-700 dark:text-slate-300 font-bold mb-1 block">
+          {/* INPUT NOMINAL + QUICK CHIPS */}
+          <div className="space-y-1.5">
+            <label className="text-slate-700 dark:text-slate-300 font-bold block">
               Nominal (Rp) <span className="text-rose-500">*</span>
             </label>
             <input
@@ -197,37 +211,43 @@ export default function TransactionModal({
               placeholder="0"
               value={amount}
               onChange={(e) => { setAmount(e.target.value); setFormErrors((p) => ({ ...p, amount: '' })); }}
-              className={`w-full px-3.5 py-2.5 rounded-xl font-black text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition ${
+              className={`w-full px-3.5 py-2.5 rounded-xl font-black text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition ${
                 formErrors.amount
                   ? 'bg-rose-50/60 dark:bg-rose-950/40 border border-rose-500 ring-1 ring-rose-500'
                   : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80'
               }`}
             />
-            {formErrors.amount && <p className="text-[11px] text-rose-600 dark:text-rose-400 font-extrabold mt-1">{formErrors.amount}</p>}
-          </div>
+            {formErrors.amount && <p className="text-[11px] text-rose-600 dark:text-rose-400 font-extrabold">{formErrors.amount}</p>}
 
-          <div>
-            <label className="text-slate-700 dark:text-slate-300 font-bold mb-1 flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-              <span>Tanggal Transaksi <span className="text-rose-500">*</span></span>
-            </label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => { setDate(e.target.value); setFormErrors((p) => ({ ...p, date: '' })); }}
-              className={`w-full px-3.5 py-2.5 rounded-xl font-bold text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition scheme-light dark:scheme-dark ${
-                formErrors.date
-                  ? 'bg-rose-50/60 dark:bg-rose-950/40 border border-rose-500 ring-1 ring-rose-500'
-                  : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80'
-              }`}
+            <QuickAmountChips
+              onAddAmount={(val) => {
+                const current = parseFloat(amount) || 0;
+                setAmount((current + val).toString());
+                setFormErrors((p) => ({ ...p, amount: '' }));
+              }}
+              onReset={() => setAmount('')}
             />
           </div>
 
+          {/* SELECTOR KATEGORI SUB-COMPONENT */}
+          <CategoryGridSelector
+            categories={filteredCategories}
+            selectedCategoryId={categoryId}
+            categorySearch={categorySearch}
+            onSearchChange={setCategorySearch}
+            onSelectCategory={(id) => {
+              setCategoryId(id);
+              setFormErrors((p) => ({ ...p, categoryId: '' }));
+            }}
+            error={formErrors.categoryId}
+          />
+
+          {/* DROPDOWN DOMPET */}
           <CustomDropdown
             label="Dompet / Rekening"
             required
             isOpen={isWalletOpen}
-            onToggle={() => { setIsWalletOpen(!isWalletOpen); setIsCategoryOpen(false); }}
+            onToggle={() => setIsWalletOpen(!isWalletOpen)}
             selectedOption={walletOptions.find((w) => String(w.id) === walletId)}
             options={walletOptions}
             onSelect={(id) => { setWalletId(id); setIsWalletOpen(false); setFormErrors((p) => ({ ...p, walletId: '' })); }}
@@ -236,30 +256,36 @@ export default function TransactionModal({
             defaultIcon={Wallet}
           />
 
-          <CustomDropdown
-            label="Kategori"
-            required
-            isOpen={isCategoryOpen}
-            onToggle={() => { setIsCategoryOpen(!isCategoryOpen); setIsWalletOpen(false); }}
-            selectedOption={categoryOptions.find((c) => String(c.id) === categoryId)}
-            options={categoryOptions}
-            onSelect={(id) => { setCategoryId(id); setIsCategoryOpen(false); setFormErrors((p) => ({ ...p, categoryId: '' })); }}
-            placeholder="-- Pilih Kategori --"
-            error={formErrors.categoryId}
-            defaultIcon={Tag}
+          {/* QUICK DATE PICKER SUB-COMPONENT */}
+          <QuickDatePicker
+            date={date}
+            dateType={dateType}
+            onQuickSelect={(mode) => {
+              setDateType(mode);
+              if (mode === 'today') setDate(getTodayString());
+              if (mode === 'yesterday') setDate(getYesterdayString());
+              setFormErrors((p) => ({ ...p, date: '' }));
+            }}
+            onCustomDateChange={(val) => {
+              setDate(val);
+              setFormErrors((p) => ({ ...p, date: '' }));
+            }}
+            error={formErrors.date}
           />
 
+          {/* CATATAN */}
           <div>
             <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Catatan (Opsional)</label>
             <input
               type="text"
-              placeholder="Misal: Beli Kopi"
+              placeholder="Misal: Kopi Kenangan"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
             />
           </div>
 
+          {/* SUBMIT BUTTON */}
           <button
             type="submit"
             disabled={loading}

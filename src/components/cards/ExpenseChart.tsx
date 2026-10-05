@@ -269,7 +269,7 @@ export default function ExpenseChart({
             </div>
 
             {hasMultipleCategories && (
-              <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white dark:from-slate-900 to-transparent opacity-80" />
+              <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-4 bg-linear-to-t from-white dark:from-slate-900 to-transparent opacity-80" />
             )}
           </div>
         </div>

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { X, Tag } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { X, Tag, Search } from 'lucide-react';
 import api from '@/lib/api';
 import ColorPicker from '@/components/ui/ColorPicker';
-import CategoryIcon, { ICON_GROUPS } from '@/components/ui/CategoryIcon';
+import CategoryIcon, { ICON_GROUPS, ICON_TAGS } from '@/components/ui/CategoryIcon';
 
 interface CategoryModalProps {
   isOpen: boolean;
@@ -23,6 +23,7 @@ export default function CategoryModal({
   const [type, setType] = useState<'EXPENSE' | 'INCOME'>('EXPENSE');
   const [color, setColor] = useState('#ef4444');
   const [icon, setIcon] = useState('Tag');
+  const [searchIcon, setSearchIcon] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -37,7 +38,38 @@ export default function CategoryModal({
       setColor('#ef4444');
       setIcon('Tag');
     }
+    setSearchIcon('');
   }, [categoryToEdit, isOpen]);
+
+  // AUTO-SET COLOR DEFAULT BERDASARKAN TIPE JIKA TAMBAH BARU
+  const handleTypeChange = (newType: 'EXPENSE' | 'INCOME') => {
+    setType(newType);
+    if (!categoryToEdit) {
+      setColor(newType === 'EXPENSE' ? '#ef4444' : '#10b981');
+      setIcon(newType === 'EXPENSE' ? 'ShoppingBag' : 'Briefcase');
+    }
+  };
+
+  // FILTER IKON BERDASARKAN QUERY PENCARIAN
+  const filteredIconGroups = useMemo(() => {
+    if (!searchIcon.trim()) return ICON_GROUPS;
+
+    const query = searchIcon.toLowerCase();
+
+    return ICON_GROUPS.map((group) => ({
+      ...group,
+      icons: group.icons.filter((iconName) => {
+        // 1. Cek nama ikon dalam bahasa Inggris
+        const matchesName = iconName.toLowerCase().includes(query);
+
+        // 2. Cek kata kunci Bahasa Indonesia dari ICON_TAGS
+        const tags = ICON_TAGS[iconName] || [];
+        const matchesTag = tags.some((tag) => tag.toLowerCase().includes(query));
+
+        return matchesName || matchesTag;
+      }),
+    })).filter((group) => group.icons.length > 0);
+  }, [searchIcon]);
 
   if (!isOpen) return null;
 
@@ -81,14 +113,14 @@ export default function CategoryModal({
         </div>
 
         {/* FORM BODY */}
-        <form onSubmit={handleSubmit} className="space-y-3.5 text-xs overflow-y-auto pr-1 flex-1">
+        <form onSubmit={handleSubmit} className="space-y-3.5 text-xs overflow-y-auto pr-1 flex-1 custom-scrollbar">
           {/* TIPE KATEGORI */}
           <div>
             <label className="block text-slate-600 dark:text-slate-300 font-bold mb-1">Tipe Kategori</label>
             <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl transition-colors">
               <button
                 type="button"
-                onClick={() => setType('EXPENSE')}
+                onClick={() => handleTypeChange('EXPENSE')}
                 className={`py-1.5 rounded-lg font-extrabold transition cursor-pointer active:scale-95 ${
                   type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
@@ -97,7 +129,7 @@ export default function CategoryModal({
               </button>
               <button
                 type="button"
-                onClick={() => setType('INCOME')}
+                onClick={() => handleTypeChange('INCOME')}
                 className={`py-1.5 rounded-lg font-extrabold transition cursor-pointer active:scale-95 ${
                   type === 'INCOME' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
@@ -112,7 +144,7 @@ export default function CategoryModal({
             <label className="block text-slate-600 dark:text-slate-300 font-bold mb-1">Nama Kategori</label>
             <div className="flex items-center gap-2">
               <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0 shadow-xs transition-transform transform scale-105"
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0 shadow-xs transition-all duration-200 transform scale-105"
                 style={{ backgroundColor: color }}
               >
                 <CategoryIcon name={icon} className="w-5 h-5" />
@@ -134,34 +166,58 @@ export default function CategoryModal({
             onChange={(newColor) => setColor(newColor)}
           />
 
-          {/* ICON PICKER GRID DARI CATEGORYICON */}
-          <div className="space-y-2.5 pt-1">
-            <label className="block text-slate-600 dark:text-slate-300 font-bold">Pilih Ikon</label>
-            {ICON_GROUPS.map((group) => (
-              <div key={group.category} className="space-y-1">
-                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500">{group.category}</p>
-                <div className="grid grid-cols-6 gap-1.5">
-                  {group.icons.map((iconName) => {
-                    const isSelected = icon === iconName;
-                    return (
-                      <button
-                        key={iconName}
-                        type="button"
-                        onClick={() => setIcon(iconName)}
-                        className={`p-2 rounded-xl flex items-center justify-center transition cursor-pointer active:scale-95 ${
-                          isSelected
-                            ? 'text-white shadow-xs'
-                            : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-100 dark:border-slate-700/60'
-                        }`}
-                        style={{ backgroundColor: isSelected ? color : undefined }}
-                      >
-                        <CategoryIcon name={iconName} className="w-4 h-4" />
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
+          {/* ICON PICKER GRID WITH SEARCH */}
+          <div className="space-y-2 pt-1">
+            <div className="flex justify-between items-center">
+              <label className="block text-slate-600 dark:text-slate-300 font-bold">Pilih Ikon</label>
+            </div>
+
+            {/* SEARCH INPUT UNTUK IKON */}
+            <div className="relative">
+              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Cari ikon (misal: coffee, car, cat)..."
+                value={searchIcon}
+                onChange={(e) => setSearchIcon(e.target.value)}
+                className="w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl text-[11px] font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
+              />
+            </div>
+
+            {/* GRID IKON */}
+            <div className="space-y-2.5 pt-1 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
+              {filteredIconGroups.length === 0 ? (
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 text-center py-3 font-medium">
+                  Ikon "{searchIcon}" tidak ditemukan.
+                </p>
+              ) : (
+                filteredIconGroups.map((group) => (
+                  <div key={group.category} className="space-y-1">
+                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500">{group.category}</p>
+                    <div className="grid grid-cols-6 gap-1.5">
+                      {group.icons.map((iconName) => {
+                        const isSelected = icon === iconName;
+                        return (
+                          <button
+                            key={iconName}
+                            type="button"
+                            onClick={() => setIcon(iconName)}
+                            className={`p-2 rounded-xl flex items-center justify-center transition cursor-pointer active:scale-95 ${
+                              isSelected
+                                ? 'text-white shadow-xs'
+                                : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-100 dark:border-slate-700/60'
+                            }`}
+                            style={{ backgroundColor: isSelected ? color : undefined }}
+                          >
+                            <CategoryIcon name={iconName} className="w-4 h-4" />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
 
           {/* SUBMIT BUTTON */}

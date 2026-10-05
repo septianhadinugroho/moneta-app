@@ -1,13 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { PieChart, Sparkles, Target, Tag, FileText } from 'lucide-react';
-import PdfPreviewModal from '@/components/modals/PdfPreviewModal';
 
 export default function QuickAccess({ user }: { user?: any }) {
-  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
-
   const shortcuts = [
     {
       title: 'Analistik',
@@ -36,45 +32,37 @@ export default function QuickAccess({ user }: { user?: any }) {
   ];
 
   return (
-    <>
-      <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs font-sans transition-colors">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xs font-black text-slate-900 dark:text-slate-100">Akses Cepat</h2>
-          <button
-            onClick={() => setIsPdfModalOpen(true)}
-            className="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-1 cursor-pointer bg-blue-50 dark:bg-blue-950/40 px-2 py-1 rounded-lg border border-blue-100 dark:border-blue-900/50 transition active:scale-95"
-          >
-            <FileText className="w-3 h-3" />
-            <span>Cetak PDF</span>
-          </button>
-        </div>
-
-        <div className="grid grid-cols-4 gap-2">
-          {shortcuts.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex flex-col items-center justify-center p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition group cursor-pointer active:scale-95"
-              >
-                <div className={`p-2.5 rounded-2xl border ${item.bg} group-hover:scale-105 transition-transform shadow-2xs`}>
-                  <Icon className="w-4 h-4" />
-                </div>
-                <span className="text-[10px] font-extrabold text-slate-700 dark:text-slate-300 mt-1.5 text-center truncate w-full">
-                  {item.title}
-                </span>
-              </Link>
-            );
-          })}
-        </div>
+    <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs font-sans transition-colors">
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-xs font-black text-slate-900 dark:text-slate-100">Akses Cepat</h2>
+        <Link
+          href="/dashboard/export"
+          className="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-1 cursor-pointer bg-blue-50 dark:bg-blue-950/40 px-2 py-1 rounded-lg border border-blue-100 dark:border-blue-900/50 transition active:scale-95"
+        >
+          <FileText className="w-3 h-3" />
+          <span>Cetak PDF</span>
+        </Link>
       </div>
 
-      <PdfPreviewModal
-        isOpen={isPdfModalOpen}
-        onClose={() => setIsPdfModalOpen(false)}
-        user={user}
-      />
-    </>
+      <div className="grid grid-cols-4 gap-2">
+        {shortcuts.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="flex flex-col items-center justify-center p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition group cursor-pointer active:scale-95"
+            >
+              <div className={`p-2.5 rounded-2xl border ${item.bg} group-hover:scale-105 transition-transform shadow-2xs`}>
+                <Icon className="w-4 h-4" />
+              </div>
+              <span className="text-[10px] font-extrabold text-slate-700 dark:text-slate-300 mt-1.5 text-center truncate w-full">
+                {item.title}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
   );
 }

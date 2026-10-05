@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import { formatRupiah } from '@/lib/utils';
 import { Target, Plus, Edit2, Trash2, AlertCircle, AlertTriangle, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
+import CategoryIcon from '@/components/ui/CategoryIcon';
 import BudgetModal from '@/components/modals/BudgetModal';
 import ConfirmModal from '@/components/modals/ConfirmModal';
 
@@ -77,7 +78,7 @@ export default function BudgetsPage() {
   const overallPercentage = totalBudgetLimit > 0 ? Math.min(Math.round((totalSpent / totalBudgetLimit) * 100), 100) : 0;
 
   return (
-    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 dark:text-slate-100 transition-colors">
+    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 dark:text-slate-100 transition-colors pb-24">
       {/* HEADER PERIODE & NAVIGASI BULAN */}
       <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs transition-colors">
         <div className="flex items-center gap-2">
@@ -127,11 +128,11 @@ export default function BudgetsPage() {
         <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800">
           <div>
             <p className="text-[10px] text-slate-400 font-bold">Total Limit</p>
-            <p className="text-lg sm:text-xl font-black text-white">{formatRupiah(totalBudgetLimit)}</p>
+            <p className="text-lg sm:text-xl font-black text-white font-mono">{formatRupiah(totalBudgetLimit)}</p>
           </div>
           <div>
             <p className="text-[10px] text-slate-400 font-bold">Terpakai</p>
-            <p className={`text-lg sm:text-xl font-black ${totalSpent > totalBudgetLimit && totalBudgetLimit > 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
+            <p className={`text-lg sm:text-xl font-black font-mono ${totalSpent > totalBudgetLimit && totalBudgetLimit > 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
               {formatRupiah(totalSpent)}
             </p>
           </div>
@@ -193,12 +194,13 @@ export default function BudgetsPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {budgets.map((b) => {
               const spent = Number(b.spentAmount || 0);
               const limit = Number(b.limitAmount || 0);
               const percentage = Number(b.percentage || 0);
               const isOver = b.isOverBudget || spent > limit;
+              const catColor = b.category?.color || '#3b82f6';
 
               let barColor = 'bg-emerald-500 dark:bg-emerald-400';
               let badgeBg = 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/60';
@@ -224,10 +226,14 @@ export default function BudgetsPage() {
                 >
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <span
-                        className="w-3 h-3 rounded-full shrink-0 shadow-xs"
-                        style={{ backgroundColor: b.category?.color || '#64748b' }}
-                      />
+                      {/* IKON KATEGORI DENGAN BACKGROUND TEMA */}
+                      <div
+                        className="w-8 h-8 rounded-xl flex items-center justify-center text-white shrink-0 shadow-xs"
+                        style={{ backgroundColor: catColor }}
+                      >
+                        <CategoryIcon name={b.category?.icon || 'Tag'} className="w-4 h-4" />
+                      </div>
+
                       <span className="text-xs font-black text-slate-900 dark:text-white truncate">
                         {b.category?.name || 'Kategori'}
                       </span>
@@ -252,7 +258,7 @@ export default function BudgetsPage() {
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
 
-                      {/* TOMBOL TRASH / HAPUS (DI SAMPING EDIT) */}
+                      {/* TOMBOL TRASH / HAPUS */}
                       <button
                         type="button"
                         onClick={() => openDeleteModal(b)}
@@ -265,7 +271,7 @@ export default function BudgetsPage() {
                   </div>
 
                   <div className="flex justify-between items-baseline text-xs font-extrabold">
-                    <span className="text-slate-900 dark:text-white font-black">
+                    <span className="text-slate-900 dark:text-white font-black font-mono">
                       {formatRupiah(spent)} <span className="text-[10px] text-slate-400 dark:text-slate-500 font-normal">/ {formatRupiah(limit)}</span>
                     </span>
                     <span className={isOver ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500 dark:text-slate-400'}>
@@ -286,7 +292,7 @@ export default function BudgetsPage() {
                         Over budget sebesar {formatRupiah(spent - limit)}
                       </span>
                     ) : (
-                      <span>Sisa anggaran: <strong className="text-slate-700 dark:text-slate-300">{formatRupiah(limit - spent)}</strong></span>
+                      <span>Sisa anggaran: <strong className="text-slate-700 dark:text-slate-300 font-mono">{formatRupiah(limit - spent)}</strong></span>
                     )}
                   </p>
                 </div>
