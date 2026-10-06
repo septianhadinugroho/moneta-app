@@ -6,6 +6,7 @@ import SummaryCards from '@/components/cards/SummaryCards';
 import RecentTx from '@/components/cards/RecentTx';
 import ExpenseChart from '@/components/cards/ExpenseChart';
 import BudgetWarningBanner from '@/components/ui/BudgetWarningBanner';
+import SubscriptionWarningBanner from '@/components/ui/SubscriptionWarningBanner';
 import QuickAccess from '@/components/ui/QuickAccess';
 
 export default function DashboardPage() {
@@ -119,26 +120,29 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* 2. DANGER ZONE / BUDGET WARNING BANNER */}
+      {/* 2. BANNER PENGINGAT TAGIHAN RUTIN (H-3 s/d H-0) */}
+      <SubscriptionWarningBanner onRefresh={fetchDashboardData} /> {/* <-- 2. PASANG BANNER DI SINI */}
+
+      {/* 3. DANGER ZONE / BUDGET WARNING BANNER */}
       <BudgetWarningBanner budgets={budgets} />
 
-      {/* 3. SUMMARY CARDS */}
+      {/* 4. SUMMARY CARDS */}
       <SummaryCards
         totalNetWorth={totalNetWorth}
         monthlySummary={monthlySummary}
         period={data?.period}
       />
 
-      {/* 4. QUICK ACCESS FITUR */}
+      {/* 5. QUICK ACCESS FITUR */}
       <QuickAccess user={data?.user} />
 
-      {/* 5. TRANSAKSI TERAKHIR */}
+      {/* 6. TRANSAKSI TERAKHIR */}
       <RecentTx
         transactions={recentTransactions}
         onRefresh={fetchDashboardData}
       />
 
-      {/* 6. CHART KATEGORI */}
+      {/* 7. CHART KATEGORI */}
       {(data?.expenseCategoryBreakdown || data?.incomeCategoryBreakdown) && (
         <ExpenseChart
           expenseCategories={data.expenseCategoryBreakdown || []}

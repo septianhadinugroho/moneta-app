@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Target, Tag, FileText, ChevronRight, PieChart as PieIcon, Sparkles } from 'lucide-react';
+import { Target, Tag, FileText, ChevronRight, PieChart as PieIcon, Sparkles, CreditCard } from 'lucide-react';
 
 interface MenuNavigationProps {
   user?: any;
@@ -10,7 +10,7 @@ interface MenuNavigationProps {
 export default function MenuNavigation({ user }: MenuNavigationProps) {
   return (
     <div className="space-y-2 font-sans">
-      {/* TOMBOL ANALISTIK & GRAFIK */}
+      {/* TOMBOL ANALITIK & GRAFIK */}
       <Link
         href="/dashboard/stats"
         className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition shadow-2xs group"
@@ -20,8 +20,25 @@ export default function MenuNavigation({ user }: MenuNavigationProps) {
             <PieIcon className="w-4.5 h-4.5" />
           </div>
           <div>
-            <p className="text-xs font-extrabold text-slate-900 dark:text-white">Analistik & Grafik</p>
+            <p className="text-xs font-extrabold text-slate-900 dark:text-white">Analitik & Grafik</p>
             <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Visualisasi porsi pengeluaran & arus kas</p>
+          </div>
+        </div>
+        <ChevronRight className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:translate-x-0.5 transition-transform" />
+      </Link>
+
+      {/* TOMBOL TAGIHAN & LANGGANAN */}
+      <Link
+        href="/dashboard/subscriptions"
+        className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition shadow-2xs group"
+      >
+        <div className="flex items-center space-x-3">
+          <div className="p-2.5 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-xl group-hover:scale-105 transition-transform">
+            <CreditCard className="w-4.5 h-4.5" />
+          </div>
+          <div>
+            <p className="text-xs font-extrabold text-slate-900 dark:text-white">Tagihan & Langganan</p>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Kelola & pantau pengeluaran rutin bulanan</p>
           </div>
         </div>
         <ChevronRight className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:translate-x-0.5 transition-transform" />

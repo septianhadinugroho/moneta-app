@@ -1,15 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import { PieChart, Sparkles, Target, Tag, FileText } from 'lucide-react';
+import { PieChart, Sparkles, Target, Tag, CreditCard, FileText } from 'lucide-react';
 
 export default function QuickAccess({ user }: { user?: any }) {
   const shortcuts = [
     {
-      title: 'Analistik',
+      title: 'Analitik',
       href: '/dashboard/stats',
       icon: PieChart,
       bg: 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border-indigo-100 dark:border-indigo-900/50',
+    },
+    {
+      title: 'Tagihan',
+      href: '/dashboard/subscriptions',
+      icon: CreditCard,
+      bg: 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/50',
     },
     {
       title: 'Impian',
@@ -44,16 +50,16 @@ export default function QuickAccess({ user }: { user?: any }) {
         </Link>
       </div>
 
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
         {shortcuts.map((item) => {
           const Icon = item.icon;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className="flex flex-col items-center justify-center p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition group cursor-pointer active:scale-95"
+              className="flex flex-col items-center justify-center p-1.5 sm:p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition group cursor-pointer active:scale-95"
             >
-              <div className={`p-2.5 rounded-2xl border ${item.bg} group-hover:scale-105 transition-transform shadow-2xs`}>
+              <div className={`p-2 sm:p-2.5 rounded-2xl border ${item.bg} group-hover:scale-105 transition-transform shadow-2xs`}>
                 <Icon className="w-4 h-4" />
               </div>
               <span className="text-[10px] font-extrabold text-slate-700 dark:text-slate-300 mt-1.5 text-center truncate w-full">
