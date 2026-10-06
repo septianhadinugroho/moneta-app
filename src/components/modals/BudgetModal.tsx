@@ -33,15 +33,19 @@ export default function BudgetModal({
     if (!isOpen) return;
     setError('');
 
-    // Fetch kategori EXPENSE saja
-    api.get('/categories')
-      .then((res) => {
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get('/categories');
         const expenseCategories = (res.data.data || []).filter(
           (c: any) => String(c.type).toUpperCase() === 'EXPENSE'
         );
         setCategories(expenseCategories);
-      })
-      .catch((err) => console.error(err));
+      } catch (err) {
+        console.error('Gagal mengambil kategori:', err);
+      }
+    };
+
+    fetchCategories();
 
     if (budgetToEdit) {
       setCategoryId(String(budgetToEdit.category?.id || budgetToEdit.categoryId || ''));

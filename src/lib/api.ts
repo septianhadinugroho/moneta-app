@@ -18,18 +18,18 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// RESPONSE INTERCEPTOR: Tangani Token Expired (401)
+// RESPONSE INTERCEPTOR: Tangani Token Expired / Invalid (401)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Jika server merespons 401 (Unauthorized / Token Expired)
+    // Jika server merespons status 401 (Unauthorized / Token Expired)
     if (error.response && error.response.status === 401) {
       if (typeof window !== 'undefined') {
-        // Hapus token & session lama
+        // Clear seluruh session login
         localStorage.removeItem('token');
         localStorage.removeItem('user');
 
-        // Redirect otomatis ke login jika tidak sedang di /auth
+        // Cegah infinite redirect loop
         if (!window.location.pathname.startsWith('/auth')) {
           window.location.href = '/auth?session=expired';
         }

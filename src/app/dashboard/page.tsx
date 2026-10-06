@@ -140,17 +140,20 @@ export default function DashboardPage() {
 
       {/* 6. CHART KATEGORI */}
       {(data?.expenseCategoryBreakdown || data?.incomeCategoryBreakdown) && (
-      <ExpenseChart
-        expenseCategories={data.expenseCategoryBreakdown || []}
-        incomeCategories={data.incomeCategoryBreakdown || []}
-        period={data?.period}
-        onPeriodChange={(month, year) => {
-          api.get('/dashboard/summary', { params: { month, year } })
-            .then((res) => setData(res.data.data || res.data || {}))
-            .catch((err) => console.error(err));
-        }}
-      />
-    )}
+        <ExpenseChart
+          expenseCategories={data.expenseCategoryBreakdown || []}
+          incomeCategories={data.incomeCategoryBreakdown || []}
+          period={data?.period}
+          onPeriodChange={async (month, year) => {
+            try {
+              const res = await api.get('/dashboard/summary', { params: { month, year } });
+              setData(res.data.data || res.data || {});
+            } catch (err) {
+              console.error('Gagal mengubah periode grafik:', err);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

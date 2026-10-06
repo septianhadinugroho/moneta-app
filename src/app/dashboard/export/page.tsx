@@ -66,10 +66,11 @@ export default function ExportPage() {
     const fetchInitialData = async () => {
       try {
         const [userRes, walletRes, allTxRes] = await Promise.all([
-          api.get('/users/me').catch(() => null),
-          api.get('/wallets').catch(() => ({ data: { data: [] } })),
-          api.get('/transactions', { params: { limit: 1000 } }).catch(() => ({ data: { data: [] } })),
+          api.get('/users/me'),
+          api.get('/wallets'),
+          api.get('/transactions', { params: { limit: 1000 } }),
         ]);
+        
         if (userRes) setUser(userRes.data?.data || userRes.data);
         setWallets(walletRes.data?.data || []);
         setAllUserTransactions(allTxRes.data?.data || []);

@@ -39,18 +39,21 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
   const [summary, setSummary] = useState({ income: 0, expense: 0, net: 0 });
   const [error, setError] = useState('');
 
-  // 1. Dapatkan Seluruh Transaksi User untuk Ekstrak Opsi Tahun Secara Real-Time
   useEffect(() => {
     if (isOpen) {
-      api.get('/transactions', { params: { limit: 1000 } })
-        .then((res) => {
+      const fetchHistory = async () => {
+        try {
+          const res = await api.get('/transactions', { params: { limit: 1000 } });
           setAllUserTransactions(res.data.data || []);
-        })
-        .catch((err) => console.error('Gagal mengambil histori tahun:', err));
+        } catch (err) {
+          console.error('Gagal mengambil histori tahun:', err);
+        }
+      };
+      fetchHistory();
     }
   }, [isOpen]);
 
-  // 2. Ekstrak Tahun Unik dari Transaksi + Tahun Berjalan (2026)
+  // 2. Ekstrak Tahun Unik dari Transaksi + Tahun Berjalan
   const dynamicYears = useMemo(() => {
     const yearsSet = new Set<number>();
     yearsSet.add(2026);

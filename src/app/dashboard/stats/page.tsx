@@ -70,24 +70,31 @@ export default function StatsPage() {
   const [txData, setTxData] = useState<any[]>([]);
   const [allUserTransactions, setAllUserTransactions] = useState<any[]>([]);
 
-  // 1. Ambil Seluruh Transaksi User
   useEffect(() => {
-    api.get('/transactions', { params: { limit: 1000 } })
-      .then((res) => {
+    const fetchAllHistory = async () => {
+      try {
+        const res = await api.get('/transactions', { params: { limit: 1000 } });
         setAllUserTransactions(res.data.data || []);
-      })
-      .catch((err) => console.error('Gagal mengambil histori tahun:', err));
+      } catch (err) {
+        console.error('Gagal mengambil histori tahun:', err);
+      }
+    };
+    fetchAllHistory();
   }, []);
 
-  // 2. Ambil Transaksi Spesifik Tahun Dipilih
   useEffect(() => {
-    setLoading(true);
-    api.get('/transactions', { params: { limit: 1000, year: selectedYear } })
-      .then((res) => {
+    const fetchYearlyStats = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get('/transactions', { params: { limit: 1000, year: selectedYear } });
         setTxData(res.data.data || []);
-      })
-      .catch((err) => console.error('Gagal memuat data statistik:', err))
-      .finally(() => setLoading(false));
+      } catch (err) {
+        console.error('Gagal memuat data statistik:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchYearlyStats();
   }, [selectedYear]);
 
   // 3. Ekstrak Tahun Unik

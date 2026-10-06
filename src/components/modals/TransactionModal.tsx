@@ -80,12 +80,20 @@ export default function TransactionModal({
     setServerError(null);
     setCategorySearch('');
 
-    Promise.all([api.get('/wallets'), api.get('/categories')])
-      .then(([wRes, cRes]) => {
+    const fetchModalData = async () => {
+      try {
+        const [wRes, cRes] = await Promise.all([
+          api.get('/wallets'),
+          api.get('/categories')
+        ]);
         setWallets(wRes.data.data || []);
         setCategories(cRes.data.data || []);
-      })
-      .catch((err) => console.error(err));
+      } catch (err) {
+        console.error('Gagal mengambil data wallet/kategori:', err);
+      }
+    };
+
+    fetchModalData();
 
     if (transactionToEdit) {
       setType(transactionToEdit.type || 'EXPENSE');

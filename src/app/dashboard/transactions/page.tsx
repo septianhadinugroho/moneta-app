@@ -48,11 +48,16 @@ export default function TransactionsPage() {
     (startDate && endDate ? 1 : 0) + 
     (typeFilter !== 'ALL' ? 1 : 0);
 
-  // Fetch Daftar Wallet
   useEffect(() => {
-    api.get('/wallets')
-      .then((res) => setWallets(res.data.data || []))
-      .catch((err) => console.error('Gagal memuat wallet:', err));
+    const fetchWallets = async () => {
+      try {
+        const res = await api.get('/wallets');
+        setWallets(res.data.data || []);
+      } catch (err) {
+        console.error('Gagal memuat wallet:', err);
+      }
+    };
+    fetchWallets();
   }, []);
 
   // Fetch Transaksi Terfilter berdasarkan Month & Year
