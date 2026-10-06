@@ -88,14 +88,14 @@ export default function VirtualWalletCard({
 
       {/* FOOTER SALDO */}
       <div className="space-y-0.5 relative z-10">
-        <p className="text-[9px] font-mono tracking-widest text-white/70">
+        <p className="text-[9px] tracking-widest text-white/70">
           •••• •••• •••• {String(wallet.id).padStart(4, '0')}
         </p>
 
         <div className="flex justify-between items-end pt-0.5">
           <div>
             <span className="text-[8px] font-bold text-white/80 uppercase block">Saldo Aktif</span>
-            <p className="text-base sm:text-lg font-black font-mono tracking-tight">
+            <p className="text-base sm:text-lg font-black tracking-tight">
               {showBalance ? formatRupiah(wallet.balance) : '••••••••'}
             </p>
           </div>

@@ -128,7 +128,7 @@ export default function ForgotPasswordForm({ onSuccessReset, onError }: ForgotPa
               setOtpCode(e.target.value);
               if (errors.otpCode) setErrors({});
             }}
-            className={`w-full px-3 py-3 rounded-xl text-center text-xl tracking-[0.4em] font-mono text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600 transition-all ${
+            className={`w-full px-3 py-3 rounded-xl text-center text-xl tracking-[0.4em] text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600 transition-all ${
               errors.otpCode 
                 ? 'bg-rose-50/60 dark:bg-rose-950/40 border border-rose-500 ring-1 ring-rose-500' 
                 : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 focus:bg-white dark:focus:bg-slate-800'

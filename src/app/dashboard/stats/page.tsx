@@ -286,7 +286,7 @@ export default function StatsPage() {
                           <span className="text-slate-700 dark:text-slate-300 truncate">{item.name}</span>
                         </div>
                         <div className="flex items-center gap-3 shrink-0">
-                          <span className="text-slate-400 dark:text-slate-500 text-[10px] font-mono">{percentage}%</span>
+                          <span className="text-slate-400 dark:text-slate-500 text-[10px]">{percentage}%</span>
                           <span className="text-slate-900 dark:text-white font-extrabold">{formatRupiah(item.value)}</span>
                         </div>
                       </div>

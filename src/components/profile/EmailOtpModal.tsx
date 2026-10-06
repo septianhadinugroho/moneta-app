@@ -56,7 +56,7 @@ export default function EmailOtpModal({ isOpen, onClose, pendingEmail, onSuccess
             maxLength={6}
             value={otpCode}
             onChange={(e) => setOtpCode(e.target.value)}
-            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl text-center text-xl tracking-[0.4em] font-mono font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
+            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl text-center text-xl tracking-[0.4em] font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
             placeholder="000000"
           />
           <div className="flex space-x-2 pt-1">

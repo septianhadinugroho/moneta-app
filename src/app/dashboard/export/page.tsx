@@ -353,7 +353,7 @@ export default function ExportPage() {
               </div>
             </div>
 
-            <span className="text-[10px] px-2.5 py-1 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-mono font-bold rounded-lg border border-emerald-300 dark:border-emerald-800">
+            <span className="text-[10px] px-2.5 py-1 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-bold rounded-lg border border-emerald-300 dark:border-emerald-800">
               {loading ? 'MEMUAT...' : `${finalTransactions.length} MUTASI`}
             </span>
           </div>

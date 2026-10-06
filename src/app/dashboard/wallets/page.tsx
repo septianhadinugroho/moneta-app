@@ -162,7 +162,7 @@ export default function WalletsPage() {
           </span>
         </div>
 
-        <h2 className="text-2xl sm:text-3xl font-black tracking-tight font-mono">
+        <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
           {showBalance ? formatRupiah(totalBalance) : '••••••••'}
         </h2>
 
@@ -280,7 +280,7 @@ export default function WalletsPage() {
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
-                  <p className="text-xs font-black font-mono text-slate-900 dark:text-slate-100">
+                  <p className="text-xs font-black text-slate-900 dark:text-slate-100">
                     {showBalance ? formatRupiah(w.balance) : '••••••••'}
                   </p>
                   <button

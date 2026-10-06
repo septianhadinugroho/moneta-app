@@ -33,7 +33,7 @@ export default function ColorPicker({ label = 'Warna Tema', selectedColor, onCha
     <div className="space-y-1.5 font-sans relative">
       <div className="flex justify-between items-center">
         <label className="text-xs font-extrabold text-slate-700 dark:text-slate-300">{label}</label>
-        <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">
+        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">
           {selectedColor}
         </span>
       </div>
@@ -121,7 +121,7 @@ export default function ColorPicker({ label = 'Warna Tema', selectedColor, onCha
                 onChange={(e) => onChange(e.target.value)}
                 placeholder="#0f172a"
                 maxLength={7}
-                className="w-full px-2.5 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-mono font-extrabold text-slate-900 dark:text-white focus:outline-hidden focus:border-slate-400 dark:focus:border-slate-500 uppercase"
+                className="w-full px-2.5 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-extrabold text-slate-900 dark:text-white focus:outline-hidden focus:border-slate-400 dark:focus:border-slate-500 uppercase"
               />
             </div>
           </div>

@@ -1,7 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Calendar, Wallet, Tag, CreditCard, Bell, Check } from 'lucide-react';
+import {
+  X,
+  Calendar,
+  Wallet,
+  Tag,
+  CreditCard,
+  Bell,
+  Check,
+  Building2,
+  Smartphone,
+  Radio,
+  Banknote,
+} from 'lucide-react';
 import api from '@/lib/api';
 import CustomDropdown from '@/components/ui/CustomDropdown';
 
@@ -13,6 +25,22 @@ interface SubscriptionModalProps {
   wallets?: any[];
   categories?: any[];
 }
+
+// Helper untuk mengambil ikon dan warna badge sesuai tipe dompet
+const getWalletTypeBadge = (type?: string) => {
+  switch (String(type || '').toUpperCase()) {
+    case 'BANK':
+      return { icon: Building2, iconBg: 'bg-sky-500/20 text-sky-400' };
+    case 'E_WALLET':
+      return { icon: Smartphone, iconBg: 'bg-purple-500/20 text-purple-400' };
+    case 'E_MONEY':
+      return { icon: Radio, iconBg: 'bg-lime-500/20 text-lime-400' };
+    case 'CASH':
+      return { icon: Banknote, iconBg: 'bg-emerald-500/20 text-emerald-400' };
+    default:
+      return { icon: Wallet, iconBg: 'bg-slate-500/20 text-slate-400' };
+  }
+};
 
 export default function SubscriptionModal({
   isOpen,
@@ -57,7 +85,7 @@ export default function SubscriptionModal({
       try {
         const [wRes, cRes] = await Promise.all([
           api.get('/wallets'),
-          api.get('/categories')
+          api.get('/categories'),
         ]);
         setWallets(wRes.data.data || []);
         const expCats = (cRes.data.data || []).filter(
@@ -94,10 +122,11 @@ export default function SubscriptionModal({
 
   if (!isOpen) return null;
 
+  // Hapus properti `color` agar tidak memicu titik lingkaran warna bawaan CustomDropdown
   const walletOptions = wallets.map((w) => ({
     id: w.id,
     name: w.name,
-    color: w.color || '#0f172a',
+    ...getWalletTypeBadge(w.type),
   }));
 
   const categoryOptions = categories.map((c) => ({

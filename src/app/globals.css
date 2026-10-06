@@ -1,17 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
-/* 1. KASIH TAHU TAILWIND V4 UNTUK MEMBACA CLASS .dark DARI NEXT-THEMES */
+/* CONFIG FONT UTAMA DENGAN TAILWIND V4 @theme */
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'Inter', sans-serif;
+}
+
+/* KASIH TAHU TAILWIND V4 UNTUK MEMBACA CLASS .dark DARI NEXT-THEMES */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* 2. DUKUNG COLOR SCHEME TERANG DAN GELAP */
+/* DUKUNG COLOR SCHEME TERANG DAN GELAP */
 :root {
   color-scheme: light dark;
 }
 
-/* 3. SET BACKGROUND & TEXT DEFAULT MENGGUNAKAN CLASS/CSS VARIABLE AGAR BISA ADAPTIF */
+/* SET FONT DEFAULT PADA BODY */
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -26,7 +32,7 @@ input::-webkit-credentials-auto-fill-button {
   visibility: hidden;
 }
 
-/* 4. CUSTOM HORIZONTAL SCROLLBAR UNTUK CAROUSEL DESKTOP */
+/* CUSTOM HORIZONTAL SCROLLBAR UNTUK CAROUSEL DESKTOP */
 .custom-scrollbar::-webkit-scrollbar {
   height: 4px;
 }

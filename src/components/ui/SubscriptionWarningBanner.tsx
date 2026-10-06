@@ -53,7 +53,7 @@ export default function SubscriptionWarningBanner({ onRefresh }: { onRefresh?: (
 
   if (upcomingSubs.length === 0) return null;
 
-  // JIKA TAGIHAN ADA LEBIH DARI 1: Tampilkan 1 Banner Ringkasan (Biar tidak numpuk)
+  // JIKA TAGIHAN ADA LEBIH DARI 1: Tampilkan 1 Banner Ringkasan
   if (upcomingSubs.length > 1) {
     const totalAmount = upcomingSubs.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
 
@@ -68,7 +68,7 @@ export default function SubscriptionWarningBanner({ onRefresh }: { onRefresh?: (
               {upcomingSubs.length} Tagihan Jatuh Tempo Minggu Ini!
             </p>
             <p className="text-[10px] text-amber-800/80 dark:text-amber-300/80 font-bold mt-0.5">
-              Total tagihan: <span className="font-mono">{formatRupiah(totalAmount)}</span>
+              Total tagihan: <span className="font-black tracking-tight">{formatRupiah(totalAmount)}</span>
             </p>
           </div>
         </div>
@@ -97,10 +97,10 @@ export default function SubscriptionWarningBanner({ onRefresh }: { onRefresh?: (
         </div>
         <div className="truncate text-xs">
           <p className="font-black text-amber-950 dark:text-amber-100 truncate">
-            {sub.name} — <span className="font-mono">{formatRupiah(Number(sub.amount))}</span>
+            {sub.name} — <span className="font-black tracking-tight">{formatRupiah(Number(sub.amount))}</span>
           </p>
           <p className="text-[10px] text-amber-800/80 dark:text-amber-300/80 font-bold mt-0.5">
-            {daysLeft === 0 ? 'Jatuh tempo HARI INI!' : `Jatuh tempo dalam ${daysLeft} hari (Tgl ${sub.dueDate})`}
+            {daysLeft === 0 ? 'Jatuh tempo HARI INI!' : `Jatuh tempo dalam ${daysLeft} hari (Tanggal ${sub.dueDate})`}
           </p>
         </div>
       </div>

@@ -128,11 +128,11 @@ export default function BudgetsPage() {
         <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800">
           <div>
             <p className="text-[10px] text-slate-400 font-bold">Total Limit</p>
-            <p className="text-lg sm:text-xl font-black text-white font-mono">{formatRupiah(totalBudgetLimit)}</p>
+            <p className="text-lg sm:text-xl font-black text-white">{formatRupiah(totalBudgetLimit)}</p>
           </div>
           <div>
             <p className="text-[10px] text-slate-400 font-bold">Terpakai</p>
-            <p className={`text-lg sm:text-xl font-black font-mono ${totalSpent > totalBudgetLimit && totalBudgetLimit > 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
+            <p className={`text-lg sm:text-xl font-black ${totalSpent > totalBudgetLimit && totalBudgetLimit > 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
               {formatRupiah(totalSpent)}
             </p>
           </div>
@@ -271,7 +271,7 @@ export default function BudgetsPage() {
                   </div>
 
                   <div className="flex justify-between items-baseline text-xs font-extrabold">
-                    <span className="text-slate-900 dark:text-white font-black font-mono">
+                    <span className="text-slate-900 dark:text-white font-black">
                       {formatRupiah(spent)} <span className="text-[10px] text-slate-400 dark:text-slate-500 font-normal">/ {formatRupiah(limit)}</span>
                     </span>
                     <span className={isOver ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500 dark:text-slate-400'}>
@@ -292,7 +292,7 @@ export default function BudgetsPage() {
                         Over budget sebesar {formatRupiah(spent - limit)}
                       </span>
                     ) : (
-                      <span>Sisa anggaran: <strong className="text-slate-700 dark:text-slate-300 font-mono">{formatRupiah(limit - spent)}</strong></span>
+                      <span>Sisa anggaran: <strong className="text-slate-700 dark:text-slate-300">{formatRupiah(limit - spent)}</strong></span>
                     )}
                   </p>
                 </div>

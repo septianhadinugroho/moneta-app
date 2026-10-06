@@ -1,11 +1,48 @@
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
-import { CreditCard, Plus, Loader2, CheckCircle2, Trash2, Edit3, ShieldAlert, Check } from 'lucide-react';
+import {
+  CreditCard,
+  Plus,
+  Loader2,
+  CheckCircle2,
+  Trash2,
+  Edit3,
+  ShieldAlert,
+  Calendar,
+  AlertCircle,
+  Building2,
+  Smartphone,
+  Radio,
+  Banknote,
+  Wallet,
+} from 'lucide-react';
 import api from '@/lib/api';
 import { formatRupiah } from '@/lib/utils';
+import CategoryIcon from '@/components/ui/CategoryIcon';
 import SubscriptionModal from '@/components/modals/SubscriptionModal';
 import ConfirmModal from '@/components/modals/ConfirmModal';
+
+const MONTH_NAMES_INDONESIA = [
+  'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+  'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+];
+
+// Helper untuk mengambil ikon dan class warna latar ikon dompet
+const getWalletTypeBadge = (type?: string) => {
+  switch (String(type || '').toUpperCase()) {
+    case 'BANK':
+      return { icon: Building2, iconBg: 'bg-sky-500/20 text-sky-400' };
+    case 'E_WALLET':
+      return { icon: Smartphone, iconBg: 'bg-purple-500/20 text-purple-400' };
+    case 'E_MONEY':
+      return { icon: Radio, iconBg: 'bg-lime-500/20 text-lime-400' };
+    case 'CASH':
+      return { icon: Banknote, iconBg: 'bg-emerald-500/20 text-emerald-400' };
+    default:
+      return { icon: Wallet, iconBg: 'bg-slate-500/20 text-slate-400' };
+  }
+};
 
 export default function SubscriptionsPage() {
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
@@ -13,6 +50,12 @@ export default function SubscriptionsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [subToEdit, setSubToEdit] = useState<any>(null);
   const [payingId, setPayingId] = useState<number | null>(null);
+
+  // Dapatkan Nama Bulan Saat Ini Secara Dinamis (misal: Oktober, November)
+  const currentMonthName = useMemo(() => {
+    const currentMonthIndex = new Date().getMonth();
+    return MONTH_NAMES_INDONESIA[currentMonthIndex];
+  }, []);
 
   // ConfirmModal States
   const [confirmConfig, setConfirmConfig] = useState<{
@@ -119,8 +162,8 @@ export default function SubscriptionsPage() {
   };
 
   return (
-    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 dark:text-slate-100 transition-colors">
-      {/* HEADER */}
+    <div className="p-4 sm:p-5 space-y-4 font-sans text-slate-900 dark:text-slate-100 transition-colors pb-24">
+      {/* 1. HEADER HALAMAN */}
       <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
         <div>
           <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">Tagihan & Langganan</h1>
@@ -132,26 +175,39 @@ export default function SubscriptionsPage() {
           className="p-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95 transition"
         >
           <Plus className="w-4 h-4" />
-          <span className="hidden sm:inline">Tambah Tagihan</span>
+          <span className="hidden sm:inline">Tambah</span>
         </button>
       </div>
 
-      {/* SUMMARY CARD KOMITMEN */}
-      <div className="bg-linear-to-br from-indigo-900 via-slate-900 to-slate-950 p-4 rounded-2xl border border-indigo-900/50 shadow-md text-white space-y-1">
-        <div className="flex items-center gap-2 text-indigo-300 text-xs font-bold">
-          <CreditCard className="w-4 h-4" />
-          <span>Total Komitmen Tagihan Bulanan</span>
+      {/* 2. RINGKASAN KOMITMEN */}
+      <div className="bg-linear-to-br from-indigo-900 via-slate-900 to-slate-950 p-4.5 rounded-2xl border border-indigo-900/50 shadow-md text-white space-y-3">
+        <div className="flex justify-between items-start">
+          <div>
+            <div className="flex items-center gap-1.5 text-indigo-300 text-[11px] font-bold">
+              <CreditCard className="w-3.5 h-3.5" />
+              <span>Total Komitmen Bulanan</span>
+            </div>
+            <p className="text-2xl font-black text-white tracking-tight mt-1">
+              {formatRupiah(totalMonthlyCommitment)}
+            </p>
+          </div>
         </div>
-        <p className="text-xl sm:text-2xl font-black text-white font-mono tracking-tight pt-1">
-          {formatRupiah(totalMonthlyCommitment)}
-        </p>
-        <div className="flex justify-between items-center text-[10px] text-slate-400 font-medium pt-1">
-          <span>{subscriptions.filter((s) => s.status === 'ACTIVE').length} Tagihan Terdaftar</span>
-          <span className="text-emerald-400 font-bold">{paidCount} dari {subscriptions.length} Lunas Bulan Ini</span>
+
+        {/* STATS BAR DENGAN NAMA BULAN DINAMIS */}
+        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-indigo-800/40 text-[11px]">
+          <div className="bg-indigo-950/60 p-2 rounded-xl border border-indigo-800/30">
+            <span className="text-slate-400 text-[10px] block font-medium">Terdaftar</span>
+            <span className="font-extrabold text-white">{subscriptions.length} Tagihan</span>
+          </div>
+          <div className="bg-indigo-950/60 p-2 rounded-xl border border-indigo-800/30">
+            {/* Dinamis menunjukkan bulan berjalan */}
+            <span className="text-slate-400 text-[10px] block font-medium">Status {currentMonthName}</span>
+            <span className="font-extrabold text-emerald-400">{paidCount} / {subscriptions.length} Lunas</span>
+          </div>
         </div>
       </div>
 
-      {/* LIST TAGIHAN */}
+      {/* 3. LIST TAGIHAN CLEAN LAYOUT */}
       {loading ? (
         <div className="py-16 flex flex-col items-center justify-center gap-2 text-slate-400">
           <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
@@ -166,95 +222,135 @@ export default function SubscriptionsPage() {
           </p>
         </div>
       ) : (
-        <div className="space-y-2.5">
+        <div className="space-y-3">
           {subscriptions.map((sub) => {
             const todayDay = new Date().getDate();
             const daysLeft = sub.dueDate - todayDay;
             const isDueSoon = !sub.isPaidThisMonth && daysLeft >= 0 && daysLeft <= (sub.reminderDays || 3);
             const isPaid = sub.isPaidThisMonth;
+            const catColor = sub.category?.color || '#4f46e5';
+
+            const walletBadge = getWalletTypeBadge(sub.wallet?.type);
+            const WalletIcon = walletBadge.icon;
 
             return (
               <div
                 key={sub.id}
-                className={`p-3.5 bg-white dark:bg-slate-900 rounded-2xl border transition-all flex justify-between items-center gap-3 ${
+                className={`p-4 bg-white dark:bg-slate-900 rounded-2xl border transition-all space-y-3.5 ${
                   isPaid
-                    ? 'border-emerald-200/60 dark:border-emerald-900/40 bg-emerald-50/20 dark:bg-emerald-950/10 opacity-85'
+                    ? 'border-emerald-200/60 dark:border-emerald-900/40 bg-emerald-50/10 dark:bg-emerald-950/10'
                     : isDueSoon
-                    ? 'border-amber-300 dark:border-amber-800/80 bg-amber-50/30 dark:bg-amber-950/20'
+                    ? 'border-amber-300 dark:border-amber-800/80 bg-amber-50/20 dark:bg-amber-950/20'
                     : 'border-slate-200/80 dark:border-slate-800'
                 }`}
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 font-black text-xs ${
-                    isPaid 
-                      ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400' 
-                      : 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400'
-                  }`}>
-                    {isPaid ? <Check className="w-5 h-5" /> : `Tgl ${sub.dueDate}`}
+                {/* BARIS ATAS: IKON, NAMA, AKSI EDIT/HAPUS, NOMINAL & BADGE STATUS */}
+                <div className="flex justify-between items-start gap-2">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div
+                      className="w-10 h-10 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-xs"
+                      style={{ backgroundColor: catColor }}
+                    >
+                      <CategoryIcon name={sub.category?.icon || 'Tag'} className="w-5 h-5" />
+                    </div>
+
+                    <div className="truncate">
+                      <div className="flex items-center gap-1.5">
+                        <h3 className="font-black text-sm text-slate-900 dark:text-white truncate">{sub.name}</h3>
+                        
+                        {/* TOMBOL EDIT & HAPUS RINGKAS DI SEBELAH NAMA */}
+                        <button
+                          type="button"
+                          onClick={() => { setSubToEdit(sub); setIsModalOpen(true); }}
+                          className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition cursor-pointer"
+                          title="Edit Tagihan"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(sub)}
+                          className="p-1 text-rose-400 hover:text-rose-600 transition cursor-pointer"
+                          title="Hapus Tagihan"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 mt-0.5 text-[11px] text-slate-400 font-medium">
+                        <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        {/* Tulisan 'tanggal' diperjelas (tidak disingkat tgl) */}
+                        <span>Jatuh tempo tanggal {sub.dueDate}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="truncate text-xs">
-                    <div className="flex items-center gap-2">
-                      <p className="font-black text-slate-900 dark:text-white truncate">{sub.name}</p>
-                      {isPaid && (
-                        <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 rounded-md text-[9px] font-extrabold border border-emerald-200/50 dark:border-emerald-800/50">
-                          LUNAS
+
+                  {/* NOMINAL & BADGE STATUS DENGAN BULAN DINAMIS */}
+                  <div className="text-right shrink-0">
+                    <p className="text-sm font-black text-slate-900 dark:text-white">
+                      {formatRupiah(Number(sub.amount))}
+                    </p>
+
+                    <div className="mt-1 flex justify-end">
+                      {isPaid ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 rounded-md text-[9px] font-black border border-emerald-200/60 dark:border-emerald-800/60">
+                          <CheckCircle2 className="w-3 h-3" />
+                          <span>LUNAS {currentMonthName.toUpperCase()}</span>
+                        </span>
+                      ) : isDueSoon ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400 rounded-md text-[9px] font-black border border-amber-200/60 dark:border-amber-800/60">
+                          <AlertCircle className="w-3 h-3" />
+                          <span>{daysLeft === 0 ? 'Hari ini' : `${daysLeft} hari lagi`}</span>
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-extrabold text-slate-400">
+                          {daysLeft < 0 ? 'Belum dibayar' : `${daysLeft} hari lagi`}
                         </span>
                       )}
                     </div>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5 truncate">
-                      {sub.wallet?.name ? `Dompet: ${sub.wallet.name}` : 'Belum atur dompet'} • {sub.category?.name || 'Umum'}
-                    </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2.5 shrink-0">
-                  <div className="text-right">
-                    <p className="text-xs font-black font-mono text-slate-900 dark:text-white">
-                      {formatRupiah(Number(sub.amount))}
-                    </p>
-                    <span className={`text-[9px] font-extrabold ${
-                      isPaid 
-                        ? 'text-emerald-600 dark:text-emerald-400' 
-                        : isDueSoon 
-                        ? 'text-amber-600 dark:text-amber-400' 
-                        : 'text-slate-400'
-                    }`}>
-                      {isPaid ? 'Sudah Dibayar' : daysLeft === 0 ? 'Hari Ini' : daysLeft > 0 ? `${daysLeft} hari lagi` : 'Jatuh Tempo'}
+                {/* BARIS BAWAH: METADATA PILLS BERDAMPINGAN 1 BARIS & TOMBOL BAYAR */}
+                <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 dark:border-slate-800/80 gap-2">
+                  {/* BADGES BERDAMPINGAN SEJAJAR HORIZONTAL */}
+                  <div className="flex items-center gap-1.5 min-w-0 overflow-x-auto no-scrollbar">
+                    {/* BADGE DOMPET */}
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 rounded-xl text-[10px] font-extrabold border border-slate-200/50 dark:border-slate-700/50 shrink-0">
+                      <div className={`p-0.5 rounded-md flex items-center justify-center shrink-0 ${walletBadge.iconBg}`}>
+                        <WalletIcon className="w-3 h-3" />
+                      </div>
+                      <span className="truncate max-w-22.5">{sub.wallet?.name || 'Belum Atur'}</span>
+                    </span>
+
+                    {/* BADGE KATEGORI */}
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 rounded-xl text-[10px] font-extrabold border border-slate-200/50 dark:border-slate-700/50 shrink-0">
+                      <div
+                        className="p-0.5 rounded-md flex items-center justify-center text-white shrink-0"
+                        style={{ backgroundColor: catColor }}
+                      >
+                        <CategoryIcon name={sub.category?.icon || 'Tag'} className="w-3 h-3" />
+                      </div>
+                      <span className="truncate max-w-22.5">{sub.category?.name || 'Umum'}</span>
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-1">
-                    {isPaid ? (
-                      <div className="p-2 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-xl cursor-not-allowed border border-emerald-200/40 dark:border-emerald-900/40" title="Sudah Dibayar Bulan Ini">
-                        <CheckCircle2 className="w-4 h-4" />
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => handlePay(sub)}
-                        disabled={payingId === sub.id}
-                        title="Bayar & Catat Transaksi"
-                        className="p-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl transition cursor-pointer active:scale-95 shadow-xs"
-                      >
-                        {payingId === sub.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-                      </button>
-                    )}
-
+                  {/* TOMBOL BAYAR */}
+                  {!isPaid && (
                     <button
                       type="button"
-                      onClick={() => { setSubToEdit(sub); setIsModalOpen(true); }}
-                      className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl transition cursor-pointer"
+                      onClick={() => handlePay(sub)}
+                      disabled={payingId === sub.id}
+                      className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-[11px] rounded-xl transition flex items-center gap-1 shadow-2xs cursor-pointer disabled:opacity-50 shrink-0 ml-auto"
                     >
-                      <Edit3 className="w-4 h-4" />
+                      {payingId === sub.id ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                      )}
+                      <span>Bayar</span>
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(sub)}
-                      className="p-2 text-rose-400 hover:text-rose-600 rounded-xl transition cursor-pointer"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
+                  )}
                 </div>
               </div>
             );
@@ -262,7 +358,7 @@ export default function SubscriptionsPage() {
         </div>
       )}
 
-      {/* SUBSCRIPTION FORM MODAL */}
+      {/* MODAL FORM & CONFIRMATION */}
       <SubscriptionModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -270,7 +366,6 @@ export default function SubscriptionsPage() {
         onSuccess={fetchSubscriptions}
       />
 
-      {/* CONFIRMATION / ALERT MODAL */}
       <ConfirmModal
         isOpen={confirmConfig.isOpen}
         onClose={() => setConfirmConfig((prev) => ({ ...prev, isOpen: false }))}

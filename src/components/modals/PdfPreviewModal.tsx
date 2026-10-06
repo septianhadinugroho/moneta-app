@@ -293,7 +293,7 @@ export default function PdfPreviewModal({ isOpen, onClose, user }: PdfPreviewMod
                     <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Periode {MONTH_NAMES[selectedMonth - 1]} {selectedYear}</p>
                   </div>
                 </div>
-                <span className="text-[9px] px-2 py-0.5 bg-slate-800 dark:bg-slate-900 text-emerald-400 font-mono font-bold rounded-md border border-slate-700 dark:border-slate-800">
+                <span className="text-[9px] px-2 py-0.5 bg-slate-800 dark:bg-slate-900 text-emerald-400 font-bold rounded-md border border-slate-700 dark:border-slate-800">
                   PDF READY
                 </span>
               </div>
