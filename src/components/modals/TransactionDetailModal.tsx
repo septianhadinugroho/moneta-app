@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { formatRupiah } from '@/lib/utils';
-import { X, Trash2, Wallet, Tag, Calendar, Clock, Edit2, ArrowRightLeft, ArrowDownRight } from 'lucide-react';
+import { X, Trash2, Wallet, Tag, Calendar, Clock, Edit2, ArrowDownRight, Info } from 'lucide-react';
 import api from '@/lib/api';
 import ConfirmModal from '@/components/modals/ConfirmModal';
 
@@ -29,6 +29,14 @@ export default function TransactionDetailModal({
   const txType = String(transaction.type || '').toUpperCase();
   const isIncome = txType === 'INCOME';
   const isTransfer = txType === 'TRANSFER';
+
+  // DETEKSI TRANSAKSI OTOMATIS SISTEM (TAGIHAN & UTANG/PIUTANG)
+  const isSystemManaged =
+    transaction?.subscriptionPayment ||
+    transaction?.description?.startsWith('Pembayaran Tagihan:') ||
+    transaction?.description?.startsWith('Pinjaman') ||
+    transaction?.description?.startsWith('Pelunasan piutang') ||
+    transaction?.description?.startsWith('Pembayaran utang');
 
   const handleDelete = async () => {
     setLoading(true);
@@ -61,8 +69,8 @@ export default function TransactionDetailModal({
 
   return (
     <>
-      <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-        <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-5 space-y-5 border border-slate-100 dark:border-slate-800 shadow-2xl relative animate-in fade-in zoom-in duration-150 text-slate-900 dark:text-slate-100 transition-colors">
+      <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 z-50 font-sans">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-5 space-y-4 border border-slate-100 dark:border-slate-800 shadow-2xl relative animate-in fade-in zoom-in duration-150 text-slate-900 dark:text-slate-100 transition-colors">
           
           {/* HEADER MODAL */}
           <div className="flex justify-between items-center">
@@ -115,7 +123,7 @@ export default function TransactionDetailModal({
           </div>
 
           {/* DETAIL ROW */}
-          <div className="space-y-3 text-xs">
+          <div className="space-y-2.5 text-xs">
             {/* DOMPET ASAL */}
             <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
               <span className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-medium">
@@ -140,7 +148,7 @@ export default function TransactionDetailModal({
               </div>
             )}
 
-            {/* KATEGORI (HANYA MUNCUL JIKA BUKAN TRANSFER) */}
+            {/* KATEGORI */}
             {!isTransfer && (
               <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
                 <span className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-medium">
@@ -166,45 +174,64 @@ export default function TransactionDetailModal({
               <span className="font-extrabold text-slate-900 dark:text-white">{formattedTime}</span>
             </div>
 
-            <div className="py-2.5 border-b border-slate-100 dark:border-slate-800 text-xs space-y-1">
+            <div className="py-2 border-b border-slate-100 dark:border-slate-800 text-xs space-y-1">
               <span className="text-slate-500 dark:text-slate-400 font-medium block">Catatan</span>
-              <p className="font-semibold text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-800 wrap-break-word leading-relaxed">
+              <p className="font-semibold text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-800 break-words leading-relaxed">
                 {transaction?.notes || transaction?.description || 'Tidak ada catatan.'}
               </p>
             </div>
           </div>
 
-          {/* AKSI: HAPUS DI KIRI, EDIT DI KANAN */}
-          <div className="grid grid-cols-2 gap-2 pt-1">
-            <button
-              type="button"
-              onClick={() => setShowConfirm(true)}
-              className="py-2.5 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 text-xs font-bold rounded-2xl transition border border-rose-200/80 dark:border-rose-900/60 flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>Hapus</span>
-            </button>
+          {/* AKSI: TAMPILAN SESUAI TIPE TRANSAKSI */}
+          {isSystemManaged ? (
+            <div className="space-y-2">
+              <div className="p-2.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/80 rounded-xl flex items-start gap-2 text-[10px] text-amber-800 dark:text-amber-300 font-bold">
+                <Info className="w-3.5 h-3.5 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
+                <span>
+                  Transaksi ini dikelola otomatis oleh sistem (Tagihan / Utang). Edit nominal dilakukan melalui menu dasbor terkait.
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowConfirm(true)}
+                className="w-full py-2.5 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 text-xs font-bold rounded-2xl transition border border-rose-200/80 dark:border-rose-900/60 flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Hapus Transaksi & Batalkan Record</span>
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => setShowConfirm(true)}
+                className="py-2.5 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 text-xs font-bold rounded-2xl transition border border-rose-200/80 dark:border-rose-900/60 flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Hapus</span>
+              </button>
 
-            {onEditClick ? (
-              <button
-                type="button"
-                onClick={() => onEditClick(transaction)}
-                className="py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold rounded-2xl transition flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-700 cursor-pointer active:scale-95"
-              >
-                <Edit2 className="w-3.5 h-3.5" />
-                <span>Edit</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                disabled
-                className="py-2.5 bg-slate-50 dark:bg-slate-800/40 text-slate-300 dark:text-slate-600 text-xs font-bold rounded-2xl flex items-center justify-center gap-1.5 cursor-not-allowed"
-              >
-                <Edit2 className="w-3.5 h-3.5" />
-                <span>Edit</span>
-              </button>
-            )}
-          </div>
+              {onEditClick ? (
+                <button
+                  type="button"
+                  onClick={() => onEditClick(transaction)}
+                  className="py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold rounded-2xl transition flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-700 cursor-pointer active:scale-95"
+                >
+                  <Edit2 className="w-3.5 h-3.5" />
+                  <span>Edit</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  disabled
+                  className="py-2.5 bg-slate-50 dark:bg-slate-800/40 text-slate-300 dark:text-slate-600 text-xs font-bold rounded-2xl flex items-center justify-center gap-1.5 cursor-not-allowed"
+                >
+                  <Edit2 className="w-3.5 h-3.5" />
+                  <span>Edit</span>
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -214,7 +241,7 @@ export default function TransactionDetailModal({
         onClose={() => setShowConfirm(false)}
         onConfirm={handleDelete}
         title="Hapus Transaksi?"
-        message="Transaksi ini akan dihapus permanen dan saldo dompet akan disesuaikan kembali."
+        message="Transaksi ini akan dihapus permanen, saldo dompet dan status terikat akan disesuaikan kembali."
         loading={loading}
       />
     </>

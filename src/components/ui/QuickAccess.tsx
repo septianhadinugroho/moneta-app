@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { PieChart, Sparkles, Target, Tag, CreditCard, FileText } from 'lucide-react';
+import { PieChart, Sparkles, Target, HandCoins, CreditCard, FileText } from 'lucide-react';
 
 export default function QuickAccess({ user }: { user?: any }) {
   const shortcuts = [
@@ -18,6 +18,12 @@ export default function QuickAccess({ user }: { user?: any }) {
       bg: 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/50',
     },
     {
+      title: 'Utang',
+      href: '/dashboard/debts',
+      icon: HandCoins,
+      bg: 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-100 dark:border-rose-900/50',
+    },
+    {
       title: 'Impian',
       href: '/dashboard/goals',
       icon: Sparkles,
@@ -28,12 +34,6 @@ export default function QuickAccess({ user }: { user?: any }) {
       href: '/dashboard/budgets',
       icon: Target,
       bg: 'bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-900/50',
-    },
-    {
-      title: 'Kategori',
-      href: '/dashboard/categories',
-      icon: Tag,
-      bg: 'bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 border-purple-100 dark:border-purple-900/50',
     },
   ];
 

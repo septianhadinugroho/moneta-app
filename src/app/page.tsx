@@ -16,7 +16,9 @@ import {
   ArrowRightLeft,
   AlertTriangle,
   Sun,
-  Moon
+  Moon,
+  BellRing,
+  CalendarCheck
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -66,7 +68,7 @@ export default function LandingPage() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-md h-80 bg-emerald-300/30 dark:bg-emerald-900/20 blur-[110px] pointer-events-none rounded-full animate-pulse" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f080_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f080_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b80_1px,transparent_1px),linear-gradient(to_bottom,#1e293b80_1px,transparent_1px)] bg-size-[3rem_3rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
 
-      {/* FIXED NAVBAR HEADER (TERKUNCI DI DALAM CONTAINER MOBILE DESKTOP) */}
+      {/* FIXED NAVBAR HEADER */}
       <header className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-x border-b border-slate-200/80 dark:border-slate-800 px-4 py-2.5 transition-colors">
         <div className="w-full flex justify-between items-center">
           {/* BRAND LOGO */}
@@ -96,7 +98,7 @@ export default function LandingPage() {
               Coba Gratis
             </Link>
 
-            {/* TOMBOL SWITCH TEMA (DI POJOK KANAN) */}
+            {/* TOMBOL SWITCH TEMA */}
             <button
               type="button"
               onClick={toggleTheme}
@@ -125,7 +127,7 @@ export default function LandingPage() {
         </h1>
 
         <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed">
-          Pantau dompet, atur limit anggaran, wujudkan target impian, hingga ekspor laporan PDF resmi dalam satu aplikasi.
+          Pantau dompet, atur tagihan rutin & langganan, set limit anggaran, wujudkan target impian, hingga ekspor laporan PDF.
         </p>
 
         <div className="pt-1 flex flex-col gap-2">
@@ -149,13 +151,13 @@ export default function LandingPage() {
           <div className="p-1.5 bg-white/80 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 rounded-3xl shadow-xl backdrop-blur-md hover:shadow-2xl hover:border-emerald-300 dark:hover:border-emerald-900/60 transition-all duration-300">
             <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-2xl p-4 space-y-3 text-left">
               
-              {/* WARNING BUDGET PREVIEW */}
-              <div className="p-2 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-xl flex items-center justify-between text-[10px] text-amber-900 dark:text-amber-300">
-                <div className="flex items-center gap-1.5 font-bold">
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
-                  <span className="truncate">Jajan terpakai 80% dari limit</span>
+              {/* BANNER TAGIHAN JATUH TEMPO (PREVIEW FITUR BARU) */}
+              <div className="p-2.5 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-xl flex items-center justify-between text-[10px] text-amber-900 dark:text-amber-300">
+                <div className="flex items-center gap-2 font-bold min-w-0">
+                  <BellRing className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0 animate-bounce" />
+                  <span className="truncate">Spotify Premium — Rp 29.900 (H-2 Jatuh Tempo)</span>
                 </div>
-                <span className="font-extrabold text-amber-700 dark:text-amber-400 shrink-0 text-[9px] bg-amber-100 dark:bg-amber-900/80 px-1.5 py-0.5 rounded-md">Peringatan</span>
+                <span className="font-extrabold text-amber-700 dark:text-amber-400 shrink-0 text-[9px] bg-amber-100 dark:bg-amber-900/80 px-2 py-0.5 rounded-md">Bayar</span>
               </div>
 
               <div className="flex justify-between items-center pb-2 border-b border-slate-100 dark:border-slate-800">
@@ -250,30 +252,17 @@ export default function LandingPage() {
             {/* FEATURE 2 */}
             <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
               <div className="p-2.5 bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-                <ArrowRightLeft className="w-4 h-4" />
+                <CalendarCheck className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-xs font-black text-slate-900 dark:text-white">Transfer Antar Dompet</h3>
+                <h3 className="text-xs font-black text-slate-900 dark:text-white">Tagihan Rutin & Langganan</h3>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug mt-0.5">
-                  Pindahkan saldo antar akun tanpa merusak statistik beban pengeluaran riil bulanan.
+                  Inventarisir Wi-Fi, Kost, Netflix, hingga Listrik dengan kalkulasi komitmen bulanan & pengingat jatuh tempo.
                 </p>
               </div>
             </div>
 
             {/* FEATURE 3 */}
-            <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
-              <div className="p-2.5 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-                <Sparkles className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="text-xs font-black text-slate-900 dark:text-white">Target Tabungan & Impian</h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug mt-0.5">
-                  Tetapkan target finansial seperti liburan, gadget, atau dana darurat dan pantau progresnya.
-                </p>
-              </div>
-            </div>
-
-            {/* FEATURE 4 */}
             <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
               <div className="p-2.5 bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                 <Target className="w-4 h-4" />
@@ -282,6 +271,19 @@ export default function LandingPage() {
                 <h3 className="text-xs font-black text-slate-900 dark:text-white">Anggaran Bulanan & Peringatan Limit</h3>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug mt-0.5">
                   Tetapkan batas maksimal belanja per kategori dan dapatkan notifikasi saat mendekati limit.
+                </p>
+              </div>
+            </div>
+
+            {/* FEATURE 4 */}
+            <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
+              <div className="p-2.5 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-xs font-black text-slate-900 dark:text-white">Target Tabungan & Impian</h3>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug mt-0.5">
+                  Tetapkan target finansial seperti liburan, gadget, atau dana darurat dan pantau progresnya.
                 </p>
               </div>
             </div>
@@ -313,7 +315,7 @@ export default function LandingPage() {
         </p>
       </footer>
 
-      {/* FLOATING SCROLL-TO-TOP BUTTON (DIPOSISIKAN DI DALAM FRAME MOBILE) */}
+      {/* FLOATING SCROLL-TO-TOP BUTTON */}
       {showScrollTop && (
         <button
           type="button"
