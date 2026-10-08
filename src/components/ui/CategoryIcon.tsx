@@ -146,7 +146,7 @@ export const ICON_TAGS: Record<string, string[]> = {
   Coins: ['koin', 'uang receh', 'cashback', 'bonus'],
   Wallet: ['dompet', 'gopay', 'e-money', 'saldo', 'ovo', 'shopeepay'],
   Landmark: ['bank', 'bca', 'mandiri', 'bsi', 'seabank', 'bank jago'],
-  HandCoins: ['pinjaman', 'piutang', 'transfer', 'kas'],
+  HandCoins: ['pinjaman', 'piutang', 'utang', 'transfer', 'kas', 'pelunasan', 'cicilan'],
   BadgePercent: ['diskon', 'promo', 'bunga', 'tax'],
   BarChart3: ['laporan', 'grafik', 'analisis', 'keuangan'],
   ReceiptText: ['laporan pajak', 'faktur', 'nota'],

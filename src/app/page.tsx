@@ -13,12 +13,15 @@ import {
   ArrowUp,
   Target,
   FileText,
-  ArrowRightLeft,
-  AlertTriangle,
   Sun,
   Moon,
   BellRing,
-  CalendarCheck
+  CalendarCheck,
+  PieChart,
+  HandCoins,
+  CheckCircle2,
+  TrendingUp,
+  Lock
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -65,7 +68,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-between relative overflow-hidden font-sans selection:bg-emerald-500 selection:text-white transition-colors duration-300">
       
       {/* GLOWING MESH BACKGROUND */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-md h-80 bg-emerald-300/30 dark:bg-emerald-900/20 blur-[110px] pointer-events-none rounded-full animate-pulse" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-96 bg-emerald-300/30 dark:bg-emerald-900/20 blur-[130px] pointer-events-none rounded-full animate-pulse" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f080_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f080_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b80_1px,transparent_1px),linear-gradient(to_bottom,#1e293b80_1px,transparent_1px)] bg-size-[3rem_3rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
 
       {/* FIXED NAVBAR HEADER */}
@@ -116,7 +119,7 @@ export default function LandingPage() {
       </header>
 
       {/* HERO SECTION */}
-      <section className="relative w-full px-4 pt-20 pb-8 text-center space-y-4 z-10">
+      <section className="relative w-full px-4 pt-20 pb-8 text-center space-y-4 z-10 max-w-md mx-auto">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-full text-[10px] font-extrabold shadow-xs transition-all hover:border-emerald-400">
           <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400 animate-spin" style={{ animationDuration: '6s' }} />
           <span>Kelola Keuangan Pribadi Lebih Rapi</span>
@@ -151,7 +154,7 @@ export default function LandingPage() {
           <div className="p-1.5 bg-white/80 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 rounded-3xl shadow-xl backdrop-blur-md hover:shadow-2xl hover:border-emerald-300 dark:hover:border-emerald-900/60 transition-all duration-300">
             <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-2xl p-4 space-y-3 text-left">
               
-              {/* BANNER TAGIHAN JATUH TEMPO (PREVIEW FITUR BARU) */}
+              {/* BANNER TAGIHAN JATUH TEMPO */}
               <div className="p-2.5 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-xl flex items-center justify-between text-[10px] text-amber-900 dark:text-amber-300">
                 <div className="flex items-center gap-2 font-bold min-w-0">
                   <BellRing className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0 animate-bounce" />
@@ -229,7 +232,7 @@ export default function LandingPage() {
 
       {/* FEATURES SECTION */}
       <section id="features" className="relative z-10 py-8 px-4 bg-white dark:bg-slate-900/60 border-t border-slate-200/80 dark:border-slate-800 transition-colors">
-        <div className="w-full space-y-5">
+        <div className="w-full max-w-md mx-auto space-y-5">
           <div className="text-center space-y-1">
             <h2 className="text-lg font-black text-slate-900 dark:text-white">Keunggulan Utama Moneta</h2>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Fitur terpadu untuk fleksibilitas arus kas harian kamu.</p>
@@ -263,6 +266,19 @@ export default function LandingPage() {
             </div>
 
             {/* FEATURE 3 */}
+            <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-rose-300 dark:hover:border-rose-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
+              <div className="p-2.5 bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
+                <HandCoins className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-xs font-black text-slate-900 dark:text-white">Kelola Utang & Piutang</h3>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug mt-0.5">
+                  Catat hak piutang dan kewajiban utang lengkap dengan fitur bayar cicilan serta arsip riwayat lunas.
+                </p>
+              </div>
+            </div>
+
+            {/* FEATURE 4 */}
             <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
               <div className="p-2.5 bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                 <Target className="w-4 h-4" />
@@ -275,7 +291,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* FEATURE 4 */}
+            {/* FEATURE 5 */}
             <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
               <div className="p-2.5 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                 <Sparkles className="w-4 h-4" />
@@ -288,8 +304,8 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* FEATURE 5 */}
-            <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
+            {/* FEATURE 6 */}
+            <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
               <div className="p-2.5 bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                 <FileText className="w-4 h-4" />
               </div>

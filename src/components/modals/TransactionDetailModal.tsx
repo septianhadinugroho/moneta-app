@@ -176,7 +176,7 @@ export default function TransactionDetailModal({
 
             <div className="py-2 border-b border-slate-100 dark:border-slate-800 text-xs space-y-1">
               <span className="text-slate-500 dark:text-slate-400 font-medium block">Catatan</span>
-              <p className="font-semibold text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-800 break-words leading-relaxed">
+              <p className="font-semibold text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-800 wrap-break-word leading-relaxed">
                 {transaction?.notes || transaction?.description || 'Tidak ada catatan.'}
               </p>
             </div>

@@ -39,27 +39,35 @@ export default function DebtModal({ isOpen, onClose, debtToEdit, onSuccess }: De
     if (!isOpen) return;
     setError('');
 
-    const fetchWallets = async () => {
+    const initData = async () => {
       try {
         const res = await api.get('/wallets');
-        setWallets(res.data.data || []);
+        const list = res.data.data || [];
+        setWallets(list);
+
+        if (debtToEdit) {
+          setType(debtToEdit.type || 'LOAN');
+          setPersonName(debtToEdit.personName || '');
+          setAmount(debtToEdit.amount?.toString() || '');
+          setDueDate(debtToEdit.dueDate ? debtToEdit.dueDate.split('T')[0] : '');
+          setWalletId(debtToEdit.walletId ? String(debtToEdit.walletId) : '');
+          setNotes(debtToEdit.notes || '');
+        } else {
+          setType('LOAN');
+          setPersonName('');
+          setAmount('');
+          setDueDate('');
+          setNotes('');
+          if (list.length > 0) {
+            setWalletId(String(list[0].id));
+          }
+        }
       } catch (err) {
         console.error('Gagal memuat wallet:', err);
       }
     };
 
-    fetchWallets();
-
-    if (debtToEdit) {
-      setType(debtToEdit.type || 'LOAN');
-      setPersonName(debtToEdit.personName || '');
-      setAmount(debtToEdit.amount?.toString() || '');
-      setDueDate(debtToEdit.dueDate ? debtToEdit.dueDate.split('T')[0] : '');
-      setWalletId(debtToEdit.walletId?.toString() || '');
-      setNotes(debtToEdit.notes || '');
-    } else {
-      setType('LOAN'); setPersonName(''); setAmount(''); setDueDate(''); setWalletId(''); setNotes('');
-    }
+    initData();
   }, [isOpen, debtToEdit]);
 
   if (!isOpen) return null;
@@ -76,6 +84,7 @@ export default function DebtModal({ isOpen, onClose, debtToEdit, onSuccess }: De
 
     if (!personName.trim()) return setError('Nama pihak terkait wajib diisi');
     if (!amount || parseFloat(amount) <= 0) return setError('Nominal harus lebih dari 0');
+    if (!walletId) return setError('Dompet wajib dipilih');
 
     setLoading(true);
     try {
@@ -84,12 +93,15 @@ export default function DebtModal({ isOpen, onClose, debtToEdit, onSuccess }: De
         personName,
         amount: parseFloat(amount),
         dueDate: dueDate ? new Date(dueDate).toISOString() : null,
-        walletId: walletId ? Number(walletId) : null,
+        walletId: Number(walletId),
         notes,
       };
 
-      if (debtToEdit) await api.put(`/debts/${debtToEdit.id}`, payload);
-      else await api.post('/debts', payload);
+      if (debtToEdit) {
+        await api.put(`/debts/${debtToEdit.id}`, payload);
+      } else {
+        await api.post('/debts', payload);
+      }
 
       onSuccess();
       onClose();
@@ -152,7 +164,7 @@ export default function DebtModal({ isOpen, onClose, debtToEdit, onSuccess }: De
             <input
               type="text"
               required
-              placeholder={type === 'LOAN' ? 'Misal: Nama Teman' : 'Misal: Nama Teman'}
+              placeholder={type === 'LOAN' ? 'Misal: Budi (Teman)' : 'Misal: Budi (Teman)'}
               value={personName}
               onChange={(e) => setPersonName(e.target.value)}
               className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400"
@@ -173,8 +185,22 @@ export default function DebtModal({ isOpen, onClose, debtToEdit, onSuccess }: De
             />
           </div>
 
+          <CustomDropdown
+            label="Dompet Terkait"
+            required
+            isOpen={isWalletOpen}
+            onToggle={() => setIsWalletOpen(!isWalletOpen)}
+            selectedOption={walletOptions.find((w) => String(w.id) === String(walletId))}
+            options={walletOptions}
+            onSelect={(id) => { setWalletId(id); setIsWalletOpen(false); }}
+            placeholder="-- Pilih Dompet --"
+            defaultIcon={Wallet}
+          />
+
           <div>
-            <label className="block font-extrabold text-slate-700 dark:text-slate-300 mb-1">Jatuh Tempo Pengembalian (Opsional)</label>
+            <label className="block font-extrabold text-slate-700 dark:text-slate-300 mb-1">
+              Jatuh Tempo Pengembalian (Opsional)
+            </label>
             <input
               type="date"
               value={dueDate}
@@ -182,17 +208,6 @@ export default function DebtModal({ isOpen, onClose, debtToEdit, onSuccess }: De
               className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-bold text-slate-900 dark:text-white"
             />
           </div>
-
-          <CustomDropdown
-            label="Dompet Terkait (Opsional)"
-            isOpen={isWalletOpen}
-            onToggle={() => setIsWalletOpen(!isWalletOpen)}
-            selectedOption={walletOptions.find((w) => String(w.id) === walletId)}
-            options={walletOptions}
-            onSelect={(id) => { setWalletId(id); setIsWalletOpen(false); }}
-            placeholder="-- Pilih Dompet --"
-            defaultIcon={Wallet}
-          />
 
           <div>
             <label className="block font-extrabold text-slate-700 dark:text-slate-300 mb-1">Catatan</label>
