@@ -1,6 +1,6 @@
 # 💸 Moneta — Smart Personal Finance & Expense Tracker
 
-Moneta adalah aplikasi web pencatatan keuangan pribadi berbasis **Next.js (App Router)** dengan tampilan **mobile-first** dan dukungan **PWA** (bisa di-install ke layar utama). Pantau banyak dompet, catat pemasukan & pengeluaran, atur anggaran bulanan, kejar target impian, lihat analitik, hingga ekspor laporan ke **PDF / Excel / Email**.
+Moneta adalah aplikasi web pencatatan keuangan pribadi berbasis **Next.js (App Router)** dengan tampilan **mobile-first** dan dukungan **PWA** (bisa di-install ke layar utama). Pantau banyak dompet, catat pemasukan & pengeluaran, kelola **tagihan rutin** dan **utang & piutang**, atur anggaran bulanan, kejar target impian, lihat analitik, hingga ekspor laporan ke **PDF / Excel / Email**.
 
 🌐 **Live Demo:** [https://moneta.my.id](https://moneta.my.id/)
 
@@ -22,7 +22,8 @@ Moneta adalah aplikasi web pencatatan keuangan pribadi berbasis **Next.js (App R
 - Ringkasan **saldo bersih**, pemasukan, dan pengeluaran bulan berjalan.
 - Grafik pengeluaran per kategori dan daftar transaksi terbaru.
 - **Banner peringatan anggaran**: muncul saat pemakaian anggaran mencapai ≥ 80% dari limit (peringatan) atau ≥ 100% (melebihi limit).
-- Akses cepat ke Analitik, Impian, Anggaran, Kategori, dan Ekspor.
+- **Banner tagihan jatuh tempo**: menampilkan tagihan rutin yang belum dibayar bulan ini dan sudah masuk masa pengingat. Satu tagihan bisa langsung dibayar dari banner (*quick pay*); jika lebih dari satu, ditampilkan ringkasan total dengan tombol menuju halaman Tagihan.
+- **Akses Cepat** (6 pintasan): Analitik, Tagihan, Utang, Anggaran, Impian, dan Cetak PDF.
 
 ### 💳 Multi Dompet & Transfer
 - Kelola banyak dompet dengan tipe: **Bank**, **E-Wallet**, **E-Money**, dan **Tunai**.
@@ -35,6 +36,7 @@ Moneta adalah aplikasi web pencatatan keuangan pribadi berbasis **Next.js (App R
 - Daftar transaksi **dikelompokkan per tanggal** dan dapat difilter per bulan/tahun.
 - **Filter lanjutan** (drawer): pencarian teks, tipe transaksi, dompet, dan rentang tanggal.
 - Lihat detail, ubah, dan hapus transaksi.
+- **Transaksi otomatis sistem**: transaksi yang lahir dari pembayaran tagihan atau utang/piutang ditandai dikelola sistem, sehingga tidak diedit langsung dan perubahannya dilakukan lewat menu Tagihan / Utang terkait.
 
 ### 🏷️ Kategori Kustom
 - Buat kategori pemasukan/pengeluaran sendiri dengan **ikon** (dengan pencarian ikon) dan **warna** pilihan.
@@ -42,6 +44,23 @@ Moneta adalah aplikasi web pencatatan keuangan pribadi berbasis **Next.js (App R
 ### 🎯 Anggaran Bulanan
 - Tetapkan batas pengeluaran per kategori dan pantau progresnya.
 - Peringatan otomatis saat mendekati atau melampaui limit.
+
+### 🔁 Tagihan Rutin & Langganan
+- Inventarisir pengeluaran rutin seperti Wi-Fi, listrik, kost, hingga langganan streaming (Netflix, Spotify, dll.).
+- Setiap tagihan memiliki **nominal**, **tanggal jatuh tempo (1–31)**, **frekuensi** (default bulanan), **dompet pembayaran default**, **kategori pengeluaran**, dan **catatan**.
+- **Pengingat jatuh tempo** fleksibel: H-1, H-3, H-5, atau H-7 sebelum tanggal jatuh tempo.
+- Ringkasan **Total Komitmen Bulanan** dan progres pembayaran bulan berjalan (mis. `3 / 5 Lunas`).
+- Tagihan yang mendekati jatuh tempo diberi penanda khusus, dan yang sudah dibayar bulan ini ditandai **Lunas**.
+- **Bayar tagihan** dengan satu ketukan: saldo dompet otomatis terpotong dan transaksi pengeluaran tercatat otomatis. Jika dompet default belum diatur, pengguna diminta mengaturnya lebih dulu.
+- Tambah, ubah, dan hapus tagihan.
+
+### 🤝 Utang & Piutang
+- Catat dua jenis kewajiban: **Piutang** (orang lain berutang kepada kamu) dan **Utang** (kamu berutang kepada orang lain), lengkap dengan nama kontak, nominal, dompet terkait, jatuh tempo opsional, dan catatan.
+- Ringkasan **total sisa piutang** dan **total sisa utang**.
+- **Bayar / terima cicilan**: nominal pembayaran bisa sebagian atau lunas (tidak boleh melebihi sisa tagihan), dengan pilihan dompet sumber/tujuan. Progress bar menunjukkan persentase yang sudah terbayar.
+- Tab **Berjalan** dan **Selesai** (arsip riwayat lunas), plus filter **Semua / Piutang / Utang** dan **pencarian** berdasarkan nama kontak atau catatan.
+- Kartu **Sering Bertransaksi** pada tab Selesai: menampilkan hingga 3 kontak dengan transaksi lunas terbanyak.
+- Ubah dan hapus catatan.
 
 ### 🌟 Target Impian & Tabungan
 - Buat target finansial (liburan, gadget, dana darurat, dll.) dengan nominal target, **tenggat waktu opsional**, dan **sumber dompet alokasi opsional**.
@@ -112,6 +131,8 @@ moneta-app/
 │   │       ├── wallets/             # Dompet, transfer, kartu virtual
 │   │       ├── categories/          # Kelola kategori
 │   │       ├── budgets/             # Anggaran bulanan
+│   │       ├── subscriptions/       # Tagihan rutin & langganan
+│   │       ├── debts/               # Utang & piutang
 │   │       ├── goals/               # Target impian
 │   │       ├── stats/               # Analitik (pie & bar chart)
 │   │       ├── export/              # Ekspor PDF / Excel / Email
@@ -121,14 +142,17 @@ moneta-app/
 │   │   ├── auth/                    # Login, Register, OTP, ForgotPassword forms
 │   │   ├── cards/                   # SummaryCards, ExpenseChart, RecentTx, VirtualWalletCard
 │   │   ├── modals/                  # Transaction, Transfer, Wallet, Budget, Goal, Category,
-│   │   │   │                        # Confirm, PdfPreview, TransactionDetail, dll.
+│   │   │   │                        # Subscription, Debt, PayDebt, Confirm, PdfPreview,
+│   │   │   │                        # TransactionDetail, dll.
 │   │   │   └── transaction-fields/  # CategoryGridSelector, QuickAmountChips, QuickDatePicker
-│   │   ├── profile/                 # ProfileForm, PasswordForm, UserCard, DangerZone, EmailOtpModal
+│   │   ├── profile/                 # ProfileForm, PasswordForm, UserCard, DangerZone, EmailOtpModal,
+│   │   │                            # MenuNavigation
 │   │   ├── transactions/            # TransactionFilterDrawer
 │   │   ├── providers/               # ThemeProvider
 │   │   └── ui/                      # BottomNav, Header, QuickAccess, CustomDropdown,
 │   │                                # CustomDatePicker, ColorPicker, CategoryIcon,
-│   │                                # BudgetWarningBanner, PwaInstallModal, ThemeToggle
+│   │                                # BudgetWarningBanner, SubscriptionWarningBanner,
+│   │                                # PwaInstallModal, ThemeToggle
 │   └── lib/
 │       ├── api.ts                   # Axios instance + request/response interceptor
 │       ├── exportPdf.ts             # Generator laporan PDF
@@ -159,6 +183,8 @@ Frontend ini berkomunikasi dengan REST API melalui `NEXT_PUBLIC_API_BASE_URL`. E
 | Kategori     | `GET/POST /categories`, `PUT/DELETE /categories/:id`                                                      |
 | Anggaran     | `GET/POST /budgets`, `PUT/DELETE /budgets/:id`                                                            |
 | Impian       | `GET/POST /goals`, `PUT/DELETE /goals/:id`                                                                |
+| Tagihan      | `GET/POST /subscriptions`, `PUT/DELETE /subscriptions/:id`, `POST /subscriptions/:id/pay`                 |
+| Utang/Piutang| `GET/POST /debts`, `PUT/DELETE /debts/:id`, `POST /debts/:id/pay`                                         |
 | Laporan      | `POST /reports/send-email`                                                                                |
 
 Semua request (kecuali auth) menyertakan header `Authorization: Bearer <token>`.

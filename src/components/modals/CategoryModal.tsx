@@ -10,13 +10,15 @@ interface CategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   categoryToEdit?: any;
-  onSuccess: () => void;
+  defaultType?: 'EXPENSE' | 'INCOME';
+  onSuccess: (newCategory?: any) => void;
 }
 
 export default function CategoryModal({
   isOpen,
   onClose,
   categoryToEdit,
+  defaultType,
   onSuccess,
 }: CategoryModalProps) {
   const [name, setName] = useState('');
@@ -34,14 +36,13 @@ export default function CategoryModal({
       setIcon(categoryToEdit.icon || 'Tag');
     } else {
       setName('');
-      setType('EXPENSE');
-      setColor('#ef4444');
-      setIcon('Tag');
+      setType(defaultType || 'EXPENSE');
+      setColor(defaultType === 'INCOME' ? '#10b981' : '#ef4444');
+      setIcon(defaultType === 'INCOME' ? 'Briefcase' : 'ShoppingBag');
     }
     setSearchIcon('');
-  }, [categoryToEdit, isOpen]);
+  }, [categoryToEdit, defaultType, isOpen]);
 
-  // AUTO-SET COLOR DEFAULT BERDASARKAN TIPE JIKA TAMBAH BARU
   const handleTypeChange = (newType: 'EXPENSE' | 'INCOME') => {
     setType(newType);
     if (!categoryToEdit) {
@@ -50,7 +51,6 @@ export default function CategoryModal({
     }
   };
 
-  // FILTER IKON BERDASARKAN QUERY PENCARIAN
   const filteredIconGroups = useMemo(() => {
     if (!searchIcon.trim()) return ICON_GROUPS;
 
@@ -59,13 +59,9 @@ export default function CategoryModal({
     return ICON_GROUPS.map((group) => ({
       ...group,
       icons: group.icons.filter((iconName) => {
-        // 1. Cek nama ikon dalam bahasa Inggris
         const matchesName = iconName.toLowerCase().includes(query);
-
-        // 2. Cek kata kunci Bahasa Indonesia dari ICON_TAGS
         const tags = ICON_TAGS[iconName] || [];
         const matchesTag = tags.some((tag) => tag.toLowerCase().includes(query));
-
         return matchesName || matchesTag;
       }),
     })).filter((group) => group.icons.length > 0);
@@ -79,12 +75,15 @@ export default function CategoryModal({
 
     setLoading(true);
     try {
+      let createdOrUpdatedCategory = null;
       if (categoryToEdit) {
-        await api.put(`/categories/${categoryToEdit.id}`, { name, type, color, icon });
+        const res = await api.put(`/categories/${categoryToEdit.id}`, { name, type, color, icon });
+        createdOrUpdatedCategory = res.data.data;
       } else {
-        await api.post('/categories', { name, type, color, icon });
+        const res = await api.post('/categories', { name, type, color, icon });
+        createdOrUpdatedCategory = res.data.data;
       }
-      onSuccess();
+      onSuccess(createdOrUpdatedCategory);
       onClose();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Gagal menyimpan kategori');
@@ -172,7 +171,6 @@ export default function CategoryModal({
               <label className="block text-slate-600 dark:text-slate-300 font-bold">Pilih Ikon</label>
             </div>
 
-            {/* SEARCH INPUT UNTUK IKON */}
             <div className="relative">
               <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
@@ -184,7 +182,6 @@ export default function CategoryModal({
               />
             </div>
 
-            {/* GRID IKON */}
             <div className="space-y-2.5 pt-1 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
               {filteredIconGroups.length === 0 ? (
                 <p className="text-[11px] text-slate-400 dark:text-slate-500 text-center py-3 font-medium">
