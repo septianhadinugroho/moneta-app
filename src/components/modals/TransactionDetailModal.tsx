@@ -105,7 +105,7 @@ export default function TransactionDetailModal({
                 : transaction.category?.name || transaction.description || 'Transaksi'}
             </h3>
             <div className="bg-slate-50 dark:bg-slate-800/60 py-3 px-4 rounded-2xl border border-slate-100 dark:border-slate-800">
-              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-300 uppercase tracking-wider">
                 Nominal Transaksi
               </p>
               <p
@@ -127,7 +127,7 @@ export default function TransactionDetailModal({
             {/* DOMPET ASAL */}
             <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
               <span className="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-medium">
-                <Wallet className="w-4 h-4 text-slate-400 dark:text-slate-600" />
+                <Wallet className="w-4 h-4 text-slate-400 dark:text-slate-300" />
                 {isTransfer ? 'Dari Dompet (Asal)' : 'Sumber Dompet'}
               </span>
               <span className="font-extrabold text-slate-900 dark:text-white">
@@ -152,7 +152,7 @@ export default function TransactionDetailModal({
             {!isTransfer && (
               <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
                 <span className="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-medium">
-                  <Tag className="w-4 h-4 text-slate-400 dark:text-slate-600" /> Kategori
+                  <Tag className="w-4 h-4 text-slate-400 dark:text-slate-300" /> Kategori
                 </span>
                 <span className="font-extrabold text-slate-900 dark:text-white">
                   {transaction.category?.name || transaction.description || 'Lain-lain'}
@@ -162,14 +162,14 @@ export default function TransactionDetailModal({
 
             <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
               <span className="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-medium">
-                <Calendar className="w-4 h-4 text-slate-400 dark:text-slate-600" /> Tanggal Catat
+                <Calendar className="w-4 h-4 text-slate-400 dark:text-slate-300" /> Tanggal Catat
               </span>
               <span className="font-extrabold text-slate-900 dark:text-white">{formattedDate}</span>
             </div>
 
             <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
               <span className="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-medium">
-                <Clock className="w-4 h-4 text-slate-400 dark:text-slate-600" /> Waktu
+                <Clock className="w-4 h-4 text-slate-400 dark:text-slate-300" /> Waktu
               </span>
               <span className="font-extrabold text-slate-900 dark:text-white">{formattedTime}</span>
             </div>
@@ -224,7 +224,7 @@ export default function TransactionDetailModal({
                 <button
                   type="button"
                   disabled
-                  className="py-2.5 bg-slate-50 dark:bg-slate-800/40 text-slate-300 dark:text-slate-600 text-xs font-bold rounded-2xl flex items-center justify-center gap-1.5 cursor-not-allowed"
+                  className="py-2.5 bg-slate-50 dark:bg-slate-800/40 text-slate-300 dark:text-slate-300 text-xs font-bold rounded-2xl flex items-center justify-center gap-1.5 cursor-not-allowed"
                 >
                   <Edit2 className="w-3.5 h-3.5" />
                   <span>Edit</span>

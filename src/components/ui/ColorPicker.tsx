@@ -114,7 +114,7 @@ export default function ColorPicker({ label = 'Warna Tema', selectedColor, onCha
             </div>
 
             <div className="flex-1 space-y-0.5">
-              <label className="text-[10px] font-bold text-slate-400 dark:text-slate-600">Kode Hex</label>
+              <label className="text-[10px] font-bold text-slate-400 dark:text-slate-300">Kode Hex</label>
               <input
                 type="text"
                 value={selectedColor}
@@ -126,7 +126,7 @@ export default function ColorPicker({ label = 'Warna Tema', selectedColor, onCha
             </div>
           </div>
 
-          <p className="text-[10px] text-slate-400 dark:text-slate-600 font-medium leading-tight">
+          <p className="text-[10px] text-slate-400 dark:text-slate-300 font-medium leading-tight">
             Klik lingkaran warna di atas untuk memilih dari spektrum warna.
           </p>
         </div>

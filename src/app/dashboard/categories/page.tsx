@@ -150,7 +150,7 @@ export default function CategoriesPage() {
       {/* DAFTAR KATEGORI */}
       {filteredCategories.length === 0 ? (
         <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center space-y-2 transition-colors">
-          <p className="text-xs text-slate-400 dark:text-slate-600 font-medium">
+          <p className="text-xs text-slate-400 dark:text-slate-300 font-medium">
             Belum ada kategori {activeTab === 'EXPENSE' ? 'pengeluaran' : 'pemasukan'}.
           </p>
         </div>
@@ -184,7 +184,7 @@ export default function CategoriesPage() {
                   <button
                     type="button"
                     onClick={() => handleOpenEdit({ ...cat, color: catColor })}
-                    className="p-1.5 text-slate-400 dark:text-slate-600 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition active:scale-95 cursor-pointer"
+                    className="p-1.5 text-slate-400 dark:text-slate-300 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition active:scale-95 cursor-pointer"
                     title="Edit Kategori"
                   >
                     <Edit2 className="w-4 h-4" />
@@ -192,7 +192,7 @@ export default function CategoriesPage() {
                   <button
                     type="button"
                     onClick={() => handleInitiateDelete(cat)}
-                    className="p-1.5 text-slate-400 dark:text-slate-600 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 rounded-xl transition active:scale-95 cursor-pointer"
+                    className="p-1.5 text-slate-400 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 rounded-xl transition active:scale-95 cursor-pointer"
                     title="Hapus Kategori"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -238,11 +238,11 @@ export default function CategoriesPage() {
               </div>
 
               {fetchingTx ? (
-                <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-center text-xs text-slate-400 dark:text-slate-600 font-medium animate-pulse">
+                <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-center text-xs text-slate-400 dark:text-slate-300 font-medium animate-pulse">
                   Memuat transaksi terkait...
                 </div>
               ) : relatedTransactions.length === 0 ? (
-                <div className="p-3 bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 rounded-2xl text-center text-xs text-slate-400 dark:text-slate-600 font-medium">
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 rounded-2xl text-center text-xs text-slate-400 dark:text-slate-300 font-medium">
                   Tidak ada transaksi di kategori ini. Aman dihapus.
                 </div>
               ) : (
@@ -257,7 +257,7 @@ export default function CategoriesPage() {
                         )}
                         <div className="truncate">
                           <p className="font-bold text-slate-900 dark:text-white truncate">{tx.description || 'Tanpa Catatan'}</p>
-                          <p className="text-[9px] text-slate-400 dark:text-slate-600">{tx.wallet?.name || 'Dompet'}</p>
+                          <p className="text-[9px] text-slate-400 dark:text-slate-300">{tx.wallet?.name || 'Dompet'}</p>
                         </div>
                       </div>
                       <span className={`font-black text-xs shrink-0 ${tx.type === 'INCOME' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-900 dark:text-white'}`}>

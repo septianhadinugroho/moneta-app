@@ -167,7 +167,7 @@ export default function SubscriptionsPage() {
       <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
         <div>
           <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">Tagihan & Langganan</h1>
-          <p className="text-[10px] text-slate-400 dark:text-slate-600 font-bold mt-0.5">Kelola Pengeluaran Rutin Bulanan</p>
+          <p className="text-[10px] text-slate-400 dark:text-slate-300 font-bold mt-0.5">Kelola Pengeluaran Rutin Bulanan</p>
         </div>
         <button
           type="button"

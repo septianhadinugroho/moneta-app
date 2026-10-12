@@ -196,14 +196,14 @@ export default function WalletsPage() {
             <Wallet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             <span>Kartu Virtual</span>
           </h3>
-          <span className="text-[10px] font-extrabold text-slate-400 dark:text-slate-600">
+          <span className="text-[10px] font-extrabold text-slate-400 dark:text-slate-300">
             {wallets.length > 0 ? `${activeIndex + 1} dari ${wallets.length}` : '0 Akun'}
           </span>
         </div>
 
         {wallets.length === 0 ? (
           <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center transition-colors">
-            <p className="text-xs text-slate-400 dark:text-slate-600 font-medium">Belum ada dompet terhubung.</p>
+            <p className="text-xs text-slate-400 dark:text-slate-300 font-medium">Belum ada dompet terhubung.</p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -273,7 +273,7 @@ export default function WalletsPage() {
                   </div>
                   <div className="truncate">
                     <p className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">{w.name}</p>
-                    <span className="text-[9px] font-bold text-slate-400 dark:text-slate-600 uppercase">
+                    <span className="text-[9px] font-bold text-slate-400 dark:text-slate-300 uppercase">
                       {w.type || 'CASH'}
                     </span>
                   </div>
@@ -336,11 +336,11 @@ export default function WalletsPage() {
               </div>
 
               {fetchingTx ? (
-                <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-center text-xs text-slate-400 dark:text-slate-600 font-medium animate-pulse">
+                <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-center text-xs text-slate-400 dark:text-slate-300 font-medium animate-pulse">
                   Memuat transaksi terkait...
                 </div>
               ) : relatedTransactions.length === 0 ? (
-                <div className="p-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl text-center text-xs text-slate-400 dark:text-slate-600 font-medium">
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl text-center text-xs text-slate-400 dark:text-slate-300 font-medium">
                   Tidak ada transaksi di dompet ini. Aman dihapus.
                 </div>
               ) : (
@@ -355,7 +355,7 @@ export default function WalletsPage() {
                         )}
                         <div className="truncate">
                           <p className="font-bold text-slate-900 dark:text-slate-100 truncate">{tx.description || 'Tanpa Catatan'}</p>
-                          <p className="text-[9px] text-slate-400 dark:text-slate-600">{tx.category?.name || 'Lain-lain'}</p>
+                          <p className="text-[9px] text-slate-400 dark:text-slate-300">{tx.category?.name || 'Lain-lain'}</p>
                         </div>
                       </div>
                       <span className={`font-black text-xs shrink-0 ${tx.type === 'INCOME' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-900 dark:text-slate-100'}`}>

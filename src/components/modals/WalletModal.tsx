@@ -88,7 +88,7 @@ export default function WalletModal({
           <button 
             type="button"
             onClick={onClose} 
-            className="p-1 text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg transition cursor-pointer"
+            className="p-1 text-slate-400 dark:text-slate-300 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>

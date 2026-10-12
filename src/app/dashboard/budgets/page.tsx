@@ -87,7 +87,7 @@ export default function BudgetsPage() {
           </div>
           <div>
             <h1 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">Anggaran Bulanan</h1>
-            <p className="text-[10px] text-slate-400 dark:text-slate-600 font-bold">
+            <p className="text-[10px] text-slate-400 dark:text-slate-300 font-bold">
               {MONTH_NAMES[month - 1]} {year}
             </p>
           </div>
@@ -181,7 +181,7 @@ export default function BudgetsPage() {
           </div>
         ) : budgets.length === 0 ? (
           <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center space-y-2 transition-colors">
-            <p className="text-xs text-slate-400 dark:text-slate-600 font-medium">Belum ada anggaran yang diatur untuk bulan ini.</p>
+            <p className="text-xs text-slate-400 dark:text-slate-300 font-medium">Belum ada anggaran yang diatur untuk bulan ini.</p>
             <button
               type="button"
               onClick={() => {
@@ -252,7 +252,7 @@ export default function BudgetsPage() {
                           setSelectedBudget(b);
                           setIsModalOpen(true);
                         }}
-                        className="p-1.5 text-slate-400 dark:text-slate-600 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition cursor-pointer active:scale-95"
+                        className="p-1.5 text-slate-400 dark:text-slate-300 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition cursor-pointer active:scale-95"
                         title="Edit Anggaran"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
@@ -262,7 +262,7 @@ export default function BudgetsPage() {
                       <button
                         type="button"
                         onClick={() => openDeleteModal(b)}
-                        className="p-1.5 text-slate-400 dark:text-slate-600 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition cursor-pointer active:scale-95"
+                        className="p-1.5 text-slate-400 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition cursor-pointer active:scale-95"
                         title="Hapus Anggaran"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -272,7 +272,7 @@ export default function BudgetsPage() {
 
                   <div className="flex justify-between items-baseline text-xs font-extrabold">
                     <span className="text-slate-900 dark:text-white font-black">
-                      {formatRupiah(spent)} <span className="text-[10px] text-slate-400 dark:text-slate-600 font-normal">/ {formatRupiah(limit)}</span>
+                      {formatRupiah(spent)} <span className="text-[10px] text-slate-400 dark:text-slate-300 font-normal">/ {formatRupiah(limit)}</span>
                     </span>
                     <span className={isOver ? 'text-rose-600 dark:text-rose-400' : 'text-slate-600 dark:text-slate-300'}>
                       {percentage}%
@@ -286,7 +286,7 @@ export default function BudgetsPage() {
                     />
                   </div>
 
-                  <p className="text-[10px] text-slate-400 dark:text-slate-600 font-medium text-right">
+                  <p className="text-[10px] text-slate-400 dark:text-slate-300 font-medium text-right">
                     {isOver ? (
                       <span className="text-rose-600 dark:text-rose-400 font-bold">
                         Over budget sebesar {formatRupiah(spent - limit)}

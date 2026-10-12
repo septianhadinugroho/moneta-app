@@ -93,7 +93,7 @@ export default function PasswordForm({ isGoogleUser }: PasswordFormProps) {
             <button
               type="button"
               onClick={() => setShowCurrPass(!showCurrPass)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-300 p-1 rounded-md z-10 cursor-pointer"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300 hover:text-slate-600 dark:hover:text-slate-300 p-1 rounded-md z-10 cursor-pointer"
             >
               {showCurrPass ? <Eye className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <EyeOff className="w-4 h-4" />}
             </button>
@@ -116,7 +116,7 @@ export default function PasswordForm({ isGoogleUser }: PasswordFormProps) {
             <button
               type="button"
               onClick={() => setShowNewPass(!showNewPass)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-300 p-1 rounded-md z-10 cursor-pointer"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300 hover:text-slate-600 dark:hover:text-slate-300 p-1 rounded-md z-10 cursor-pointer"
             >
               {showNewPass ? <Eye className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <EyeOff className="w-4 h-4" />}
             </button>
@@ -139,7 +139,7 @@ export default function PasswordForm({ isGoogleUser }: PasswordFormProps) {
             <button
               type="button"
               onClick={() => setShowConfirmNewPass(!showConfirmNewPass)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-300 p-1 rounded-md z-10 cursor-pointer"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300 hover:text-slate-600 dark:hover:text-slate-300 p-1 rounded-md z-10 cursor-pointer"
             >
               {showConfirmNewPass ? <Eye className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <EyeOff className="w-4 h-4" />}
             </button>

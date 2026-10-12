@@ -83,7 +83,7 @@ export default function GoalModal({ isOpen, onClose, goalToEdit, wallets, onSucc
           <button 
             type="button"
             onClick={onClose} 
-            className="p-1 text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-200 rounded-full cursor-pointer transition"
+            className="p-1 text-slate-400 dark:text-slate-300 hover:text-slate-600 dark:hover:text-slate-200 rounded-full cursor-pointer transition"
           >
             <X className="w-4 h-4" />
           </button>

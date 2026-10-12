@@ -34,7 +34,7 @@ export default function CategoryGridSelector({
           <span>Kategori</span>
           <span className="text-rose-500">*</span>
           {categories.length > 0 && (
-            <span className="text-[10px] text-slate-400 dark:text-slate-600 font-normal">
+            <span className="text-[10px] text-slate-400 dark:text-slate-300 font-normal">
               ({categories.length} Pilihan)
             </span>
           )}
@@ -82,7 +82,7 @@ export default function CategoryGridSelector({
         </div>
       ) : searchedCategories.length === 0 ? (
         /* SKENARIO 2: SEARCH TIDAK DITEMUKAN */
-        <p className="text-[10px] text-slate-400 dark:text-slate-600 italic py-2">
+        <p className="text-[10px] text-slate-400 dark:text-slate-300 italic py-2">
           Tidak ada kategori yang cocok dengan pencarian.
         </p>
       ) : (

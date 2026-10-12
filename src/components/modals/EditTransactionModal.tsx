@@ -156,7 +156,7 @@ export default function EditTransactionModal({
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg transition cursor-pointer"
+            className="text-slate-400 dark:text-slate-300 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg transition cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>

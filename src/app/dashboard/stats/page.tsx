@@ -180,7 +180,7 @@ export default function StatsPage() {
       <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
         <div>
           <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">Analistik & Visualisasi</h1>
-          <p className="text-[10px] text-slate-400 dark:text-slate-600 font-bold mt-0.5">Laporan Grafik & Proporsi Keuangan</p>
+          <p className="text-[10px] text-slate-400 dark:text-slate-300 font-bold mt-0.5">Laporan Grafik & Proporsi Keuangan</p>
         </div>
       </div>
 
@@ -209,7 +209,7 @@ export default function StatsPage() {
       </div>
 
       {loading ? (
-        <div className="py-20 flex flex-col items-center justify-center gap-2 text-slate-400 dark:text-slate-600">
+        <div className="py-20 flex flex-col items-center justify-center gap-2 text-slate-400 dark:text-slate-300">
           <Loader2 className="w-7 h-7 animate-spin text-emerald-600 dark:text-emerald-400" />
           <span className="text-xs font-bold">Menganalisis data...</span>
         </div>
@@ -222,13 +222,13 @@ export default function StatsPage() {
                 <PieIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <h2 className="text-xs font-black text-slate-900 dark:text-white">Porsi Pengeluaran Kategori</h2>
               </div>
-              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-600">
+              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-300">
                 {MONTH_NAMES[selectedMonth - 1]} {selectedYear}
               </span>
             </div>
 
             {categoryChartData.length === 0 ? (
-              <div className="py-10 text-center text-xs font-bold text-slate-400 dark:text-slate-600 space-y-1">
+              <div className="py-10 text-center text-xs font-bold text-slate-400 dark:text-slate-300 space-y-1">
                 <AlertCircle className="w-6 h-6 text-amber-500 dark:text-amber-400 mx-auto" />
                 <p>Tidak ada pengeluaran pada bulan ini.</p>
               </div>
@@ -286,7 +286,7 @@ export default function StatsPage() {
                           <span className="text-slate-700 dark:text-slate-300 truncate">{item.name}</span>
                         </div>
                         <div className="flex items-center gap-3 shrink-0">
-                          <span className="text-slate-400 dark:text-slate-600 text-[10px]">{percentage}%</span>
+                          <span className="text-slate-400 dark:text-slate-300 text-[10px]">{percentage}%</span>
                           <span className="text-slate-900 dark:text-white font-extrabold">{formatRupiah(item.value)}</span>
                         </div>
                       </div>

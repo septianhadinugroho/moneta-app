@@ -160,7 +160,7 @@ export default function LoginForm({ onForgotPassword, onError }: LoginFormProps)
           <div className="w-full border-t border-slate-200 dark:border-slate-800"></div>
         </div>
         <div className="relative flex justify-center text-[10px] uppercase font-extrabold">
-          <span className="bg-white/90 dark:bg-slate-900/90 px-3 text-slate-400 dark:text-slate-600">Atau masuk dengan</span>
+          <span className="bg-white/90 dark:bg-slate-900/90 px-3 text-slate-400 dark:text-slate-300">Atau masuk dengan</span>
         </div>
       </div>
 
@@ -175,7 +175,7 @@ export default function LoginForm({ onForgotPassword, onError }: LoginFormProps)
       </div>
 
       {/* TRUST BADGE */}
-      <div className="pt-2 flex items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-400 dark:text-slate-600">
+      <div className="pt-2 flex items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-400 dark:text-slate-300">
         <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
         <span>Koneksi & Data Terenkripsi Aman</span>
       </div>

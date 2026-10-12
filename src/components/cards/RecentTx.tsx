@@ -128,7 +128,7 @@ export default function RecentTx({
                     >
                       {isTransfer ? '' : isIncome ? '+' : '-'}{formatRupiah(tx.amount)}
                     </span>
-                    <ChevronRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition" />
+                    <ChevronRight className="w-4 h-4 text-slate-400 dark:text-slate-300 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition" />
                   </div>
                 </div>
               );

@@ -79,7 +79,7 @@ export default function ProfileForm({ user, isGoogleUser, onProfileUpdated, onRe
             }`}
           />
           {isGoogleUser && (
-            <p className="text-[10px] text-slate-400 dark:text-slate-600 mt-1">
+            <p className="text-[10px] text-slate-400 dark:text-slate-300 mt-1">
               Email dikelola oleh Google Sign-In dan tidak dapat diubah di sini.
             </p>
           )}

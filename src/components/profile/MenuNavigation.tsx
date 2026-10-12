@@ -76,10 +76,10 @@ export default function MenuNavigation({ user }: MenuNavigationProps) {
               </div>
               <div className="truncate">
                 <p className="text-xs font-extrabold text-slate-900 dark:text-white truncate">{item.title}</p>
-                <p className="text-[10px] text-slate-400 dark:text-slate-600 font-medium truncate">{item.desc}</p>
+                <p className="text-[10px] text-slate-400 dark:text-slate-300 font-medium truncate">{item.desc}</p>
               </div>
             </div>
-            <ChevronRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:translate-x-0.5 transition-transform shrink-0 ml-2" />
+            <ChevronRight className="w-4 h-4 text-slate-400 dark:text-slate-300 group-hover:translate-x-0.5 transition-transform shrink-0 ml-2" />
           </Link>
         );
       })}

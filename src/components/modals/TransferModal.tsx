@@ -130,7 +130,7 @@ export default function TransferModal({ isOpen, onClose, wallets, onSuccess }: T
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-400 dark:text-slate-600 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition cursor-pointer active:scale-95"
+            className="p-1.5 text-slate-400 dark:text-slate-300 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition cursor-pointer active:scale-95"
           >
             <X className="w-4 h-4" />
           </button>
@@ -220,7 +220,7 @@ export default function TransferModal({ isOpen, onClose, wallets, onSuccess }: T
           <div>
             <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Tanggal Transfer</label>
             <div className="relative">
-              <Calendar className="w-4 h-4 text-slate-400 dark:text-slate-600 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Calendar className="w-4 h-4 text-slate-400 dark:text-slate-300 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="date"
                 value={date}
@@ -233,7 +233,7 @@ export default function TransferModal({ isOpen, onClose, wallets, onSuccess }: T
           <div>
             <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Catatan / Keterangan (Opsional)</label>
             <div className="relative">
-              <FileText className="w-4 h-4 text-slate-400 dark:text-slate-600 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <FileText className="w-4 h-4 text-slate-400 dark:text-slate-300 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 placeholder="Misal: Top up GoPay dari BCA"

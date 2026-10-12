@@ -23,7 +23,6 @@ import {
 import { generateTransactionsPdf } from '@/lib/exportPdf';
 import { formatRupiah } from '@/lib/utils';
 import CustomDropdown from '@/components/ui/CustomDropdown';
-import * as XLSX from 'xlsx';
 
 const getWalletTypeBadge = (type?: string) => {
   switch (String(type || '').toUpperCase()) {
@@ -175,8 +174,11 @@ export default function ExportPage() {
     });
   };
 
-  const handleExportExcel = () => {
+  const handleExportExcel = async () => {
     if (finalTransactions.length === 0) return alert('Tidak ada data transaksi untuk diekspor');
+
+    // Load library XLSX secara dinamis HANYA saat tombol diklik
+    const XLSX = await import('xlsx');
 
     const formattedRows = [
       ['MONETA FINANCIAL REPORT'],

@@ -1,10 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
-/* CONFIG FONT UTAMA DENGAN TAILWIND V4 @theme */
+/* CONFIG FONT UTAMA DENGAN TAILWIND V4 @theme BERBASIS VARIABLE NEXT/FONT */
 @theme {
-  --font-sans: 'Inter', sans-serif;
-  --font-mono: 'Inter', sans-serif;
+  --font-sans: var(--font-inter), 'Inter', sans-serif;
+  --font-mono: var(--font-inter), 'Inter', sans-serif;
 }
 
 /* KASIH TAHU TAILWIND V4 UNTUK MEMBACA CLASS .dark DARI NEXT-THEMES */

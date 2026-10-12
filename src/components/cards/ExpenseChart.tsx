@@ -122,7 +122,7 @@ export default function ExpenseChart({
           </button>
         </div>
 
-        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-600">
+        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-300">
           {MONTH_NAMES[currentMonth - 1]} {currentYear}
         </span>
       </div>
@@ -199,7 +199,7 @@ export default function ExpenseChart({
 
       {/* 4. CHART & LIST KATEGORI */}
       {currentData.length === 0 ? (
-        <p className="text-xs text-slate-400 dark:text-slate-600 text-center py-10 font-medium">
+        <p className="text-xs text-slate-400 dark:text-slate-300 text-center py-10 font-medium">
           Belum ada data {activeTab === 'EXPENSE' ? 'pengeluaran' : 'pemasukan'} pada {MONTH_NAMES[currentMonth - 1]} {currentYear}.
         </p>
       ) : (

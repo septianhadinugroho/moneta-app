@@ -160,7 +160,7 @@ export default function DebtsPage() {
       <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
         <div>
           <h1 className="text-base font-black text-slate-900 dark:text-white">Utang & Piutang</h1>
-          <p className="text-[10px] text-slate-400 dark:text-slate-600 font-bold">Kelola Hak Piutang & Kewajiban Utang</p>
+          <p className="text-[10px] text-slate-400 dark:text-slate-300 font-bold">Kelola Hak Piutang & Kewajiban Utang</p>
         </div>
         <button
           type="button"

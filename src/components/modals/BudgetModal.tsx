@@ -123,7 +123,7 @@ export default function BudgetModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-400 dark:text-slate-600 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition active:scale-95 cursor-pointer"
+            className="p-1.5 text-slate-400 dark:text-slate-300 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition active:scale-95 cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>

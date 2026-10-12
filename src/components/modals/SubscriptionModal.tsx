@@ -193,7 +193,7 @@ export default function SubscriptionModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1 text-slate-400 dark:text-slate-600 hover:text-slate-700 rounded-full cursor-pointer"
+            className="p-1 text-slate-400 dark:text-slate-300 hover:text-slate-700 rounded-full cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
