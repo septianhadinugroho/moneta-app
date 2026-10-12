@@ -1,6 +1,6 @@
 # 💸 Moneta — Smart Personal Finance & Expense Tracker
 
-Moneta adalah aplikasi web pencatatan keuangan pribadi berbasis **Next.js (App Router)** dengan tampilan **mobile-first** dan dukungan **PWA** (bisa di-install ke layar utama). Pantau banyak dompet, catat pemasukan & pengeluaran, kelola **tagihan rutin** dan **utang & piutang**, atur anggaran bulanan, kejar target impian, lihat analitik, hingga ekspor laporan ke **PDF / Excel / Email**.
+Moneta adalah aplikasi web pencatatan keuangan pribadi berbasis **Next.js (App Router)** dengan tampilan **mobile-first** dan dukungan **PWA** (bisa di-install ke layar utama). Pantau banyak dompet, catat pemasukan & pengeluaran (termasuk **input cepat berbasis AI**), kelola **tagihan rutin** dan **utang & piutang**, atur anggaran bulanan, kejar target impian, lihat analitik, hingga ekspor laporan ke **PDF / Excel / Email**.
 
 🌐 **Live Demo:** [https://moneta.my.id](https://moneta.my.id/)
 
@@ -32,6 +32,7 @@ Moneta adalah aplikasi web pencatatan keuangan pribadi berbasis **Next.js (App R
 - Tambah, ubah, dan hapus dompet.
 
 ### 🧾 Transaksi
+- ✨ **Input Cepat dengan AI** (*AI Quick Parser*): ketik transaksi dengan bahasa sehari-hari, misalnya `somay 5rb pake cash`, lalu tekan **Isi** (atau Enter). Teks dikirim ke backend (`POST /transactions/parse-ai`) dan hasilnya otomatis mengisi form: **tipe** (pemasukan/pengeluaran), **nominal**, **dompet**, **kategori**, **tanggal**, dan **catatan**. Data tetap bisa dikoreksi manual sebelum disimpan. Jika teks gagal diurai, muncul banner error dengan saran memakai frasa yang lebih jelas. Fitur ini hanya tampil saat menambah transaksi baru (bukan saat edit).
 - Catat **pemasukan** dan **pengeluaran** dengan form cepat: *quick amount chips*, *quick date picker*, grid pemilihan kategori (dengan pencarian), dompet, dan catatan.
 - Daftar transaksi **dikelompokkan per tanggal** dan dapat difilter per bulan/tahun.
 - **Filter lanjutan** (drawer): pencarian teks, tipe transaksi, dompet, dan rentang tanggal.
@@ -141,7 +142,7 @@ moneta-app/
 │   ├── components/
 │   │   ├── auth/                    # Login, Register, OTP, ForgotPassword forms
 │   │   ├── cards/                   # SummaryCards, ExpenseChart, RecentTx, VirtualWalletCard
-│   │   ├── modals/                  # Transaction, Transfer, Wallet, Budget, Goal, Category,
+│   │   ├── modals/                  # Transaction (+ AI Quick Parser), Transfer, Wallet, Budget, Goal, Category,
 │   │   │   │                        # Subscription, Debt, PayDebt, Confirm, PdfPreview,
 │   │   │   │                        # TransactionDetail, dll.
 │   │   │   └── transaction-fields/  # CategoryGridSelector, QuickAmountChips, QuickDatePicker
@@ -178,7 +179,7 @@ Frontend ini berkomunikasi dengan REST API melalui `NEXT_PUBLIC_API_BASE_URL`. E
 | Auth         | `POST /auth/register`, `/auth/login`, `/auth/google`, `/auth/verify-otp`, `/auth/forgot-password`, `/auth/reset-password` |
 | Profil       | `GET /users/me`, `PUT /auth/profile`, `PUT /auth/verify-new-email`, `PUT /auth/change-password`, `DELETE /auth/account` |
 | Dashboard    | `GET /dashboard/summary`                                                                                  |
-| Transaksi    | `GET/POST /transactions`, `PUT/DELETE /transactions/:id`                                                  |
+| Transaksi    | `GET/POST /transactions`, `PUT/DELETE /transactions/:id`, `POST /transactions/parse-ai`                   |
 | Dompet       | `GET/POST /wallets`, `PUT/DELETE /wallets/:id`                                                            |
 | Kategori     | `GET/POST /categories`, `PUT/DELETE /categories/:id`                                                      |
 | Anggaran     | `GET/POST /budgets`, `PUT/DELETE /budgets/:id`                                                            |
@@ -188,6 +189,25 @@ Frontend ini berkomunikasi dengan REST API melalui `NEXT_PUBLIC_API_BASE_URL`. E
 | Laporan      | `POST /reports/send-email`                                                                                |
 
 Semua request (kecuali auth) menyertakan header `Authorization: Bearer <token>`.
+
+**Kontrak endpoint AI** (`POST /transactions/parse-ai`):
+
+```jsonc
+// Request
+{ "text": "somay 5rb pake cash" }
+
+// Response (field yang tidak terdeteksi boleh dikosongkan)
+{
+  "data": {
+    "type": "EXPENSE",       // EXPENSE | INCOME
+    "amount": 5000,
+    "walletId": 1,
+    "categoryId": 3,
+    "date": "2026-10-09",    // YYYY-MM-DD
+    "notes": "Somay"
+  }
+}
+```
 
 ---
 
