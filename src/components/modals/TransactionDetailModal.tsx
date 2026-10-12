@@ -90,7 +90,7 @@ export default function TransactionDetailModal({
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition cursor-pointer"
+              className="p-1.5 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition cursor-pointer"
               title="Tutup Modal"
             >
               <X className="w-4 h-4 stroke-[2.5]" />
@@ -105,7 +105,7 @@ export default function TransactionDetailModal({
                 : transaction.category?.name || transaction.description || 'Transaksi'}
             </h3>
             <div className="bg-slate-50 dark:bg-slate-800/60 py-3 px-4 rounded-2xl border border-slate-100 dark:border-slate-800">
-              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-wider">
                 Nominal Transaksi
               </p>
               <p
@@ -126,8 +126,8 @@ export default function TransactionDetailModal({
           <div className="space-y-2.5 text-xs">
             {/* DOMPET ASAL */}
             <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
-              <span className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-medium">
-                <Wallet className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+              <span className="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-medium">
+                <Wallet className="w-4 h-4 text-slate-400 dark:text-slate-600" />
                 {isTransfer ? 'Dari Dompet (Asal)' : 'Sumber Dompet'}
               </span>
               <span className="font-extrabold text-slate-900 dark:text-white">
@@ -138,7 +138,7 @@ export default function TransactionDetailModal({
             {/* JIKA TRANSFER: TAMPILKAN DOMPET TUJUAN */}
             {isTransfer && (
               <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
-                <span className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-medium">
+                <span className="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-medium">
                   <ArrowDownRight className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                   Ke Dompet (Tujuan)
                 </span>
@@ -151,8 +151,8 @@ export default function TransactionDetailModal({
             {/* KATEGORI */}
             {!isTransfer && (
               <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
-                <span className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-medium">
-                  <Tag className="w-4 h-4 text-slate-400 dark:text-slate-500" /> Kategori
+                <span className="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-medium">
+                  <Tag className="w-4 h-4 text-slate-400 dark:text-slate-600" /> Kategori
                 </span>
                 <span className="font-extrabold text-slate-900 dark:text-white">
                   {transaction.category?.name || transaction.description || 'Lain-lain'}
@@ -161,21 +161,21 @@ export default function TransactionDetailModal({
             )}
 
             <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
-              <span className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-medium">
-                <Calendar className="w-4 h-4 text-slate-400 dark:text-slate-500" /> Tanggal Catat
+              <span className="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-medium">
+                <Calendar className="w-4 h-4 text-slate-400 dark:text-slate-600" /> Tanggal Catat
               </span>
               <span className="font-extrabold text-slate-900 dark:text-white">{formattedDate}</span>
             </div>
 
             <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
-              <span className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-medium">
-                <Clock className="w-4 h-4 text-slate-400 dark:text-slate-500" /> Waktu
+              <span className="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-medium">
+                <Clock className="w-4 h-4 text-slate-400 dark:text-slate-600" /> Waktu
               </span>
               <span className="font-extrabold text-slate-900 dark:text-white">{formattedTime}</span>
             </div>
 
             <div className="py-2 border-b border-slate-100 dark:border-slate-800 text-xs space-y-1">
-              <span className="text-slate-500 dark:text-slate-400 font-medium block">Catatan</span>
+              <span className="text-slate-600 dark:text-slate-300 font-medium block">Catatan</span>
               <p className="font-semibold text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-800 wrap-break-word leading-relaxed">
                 {transaction?.notes || transaction?.description || 'Tidak ada catatan.'}
               </p>

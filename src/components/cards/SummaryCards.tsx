@@ -38,70 +38,73 @@ export default function SummaryCards({
       {/* TOTAL NET WORTH CARD */}
       <div className="bg-slate-900 dark:bg-slate-900 text-white p-5 rounded-3xl shadow-lg relative overflow-hidden space-y-2 border border-slate-800 transition-colors">
         <div className="flex justify-between items-center relative z-10">
-          <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-            TOTAL NET WORTH
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider">
+              TOTAL NET WORTH
+            </span>
             <button
               type="button"
               onClick={() => setShowBalance(!showBalance)}
-              className="text-slate-400 hover:text-white transition p-1 rounded-lg cursor-pointer"
+              aria-label={showBalance ? 'Sembunyikan Saldo' : 'Tampilkan Saldo'}
+              className="text-slate-300 hover:text-white transition p-1 rounded-lg cursor-pointer"
               title={showBalance ? 'Sembunyikan Saldo' : 'Tampilkan Saldo'}
             >
               {showBalance ? (
                 <Eye className="w-4 h-4 text-emerald-400" />
               ) : (
-                <EyeOff className="w-4 h-4 text-slate-400" />
+                <EyeOff className="w-4 h-4 text-slate-300" />
               )}
             </button>
-          </span>
+          </div>
 
-          <div className="p-2 bg-slate-800/80 text-emerald-400 rounded-2xl border border-slate-700">
+          <div className="p-2 bg-slate-800 text-emerald-400 rounded-2xl border border-slate-700">
             <Wallet className="w-5 h-5" />
           </div>
         </div>
 
-        <h2 className="text-2xl sm:text-3xl font-black tracking-tight relative z-10">
+        <h2 className="text-2xl sm:text-3xl font-black tracking-tight relative z-10 text-white">
           {showBalance ? formatRupiah(totalNetWorth) : '••••••••'}
         </h2>
-        <p className="text-[10px] text-slate-400 font-medium">Total akumulasi seluruh akun</p>
+        <p className="text-[10px] text-slate-300 font-medium">Total akumulasi seluruh akun</p>
       </div>
 
-      {/* CARDS PEMASUKAN & PENGELUARAN (GRID 2 KOLOM COMPACT) */}
+      {/* CARDS PEMASUKAN & PENGELUARAN */}
       <div className="grid grid-cols-2 gap-3">
         {/* PEMASUKAN */}
-        <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-2 transition-colors">
+        <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-2 transition-colors">
           <div className="flex justify-between items-center">
-            <span className="text-[10px] font-extrabold text-slate-400 dark:text-slate-400 truncate">
+            <span className="text-[10px] font-extrabold text-slate-700 dark:text-slate-300 truncate">
               Pemasukan
             </span>
-            <div className="p-1.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-xl shrink-0">
+            <div className="p-1.5 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 rounded-xl shrink-0">
               <TrendingUp className="w-3.5 h-3.5" />
             </div>
           </div>
           <div>
-            <p className="text-sm sm:text-base font-black text-emerald-600 dark:text-emerald-400 truncate">
+            <p className="text-sm sm:text-base font-black text-emerald-700 dark:text-emerald-400 truncate">
               {showBalance ? formatRupiah(income) : '••••••••'}
             </p>
-            <p className="text-[9px] text-slate-400 dark:text-slate-500 font-bold truncate mt-0.5">
+            <p className="text-[9px] text-slate-600 dark:text-slate-300 font-bold truncate mt-0.5">
               {activePeriodLabel}
             </p>
           </div>
         </div>
 
         {/* PENGELUARAN */}
-        <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-2 transition-colors">
+        <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-2 transition-colors">
           <div className="flex justify-between items-center">
-            <span className="text-[10px] font-extrabold text-slate-400 dark:text-slate-400 truncate">
+            <span className="text-[10px] font-extrabold text-slate-700 dark:text-slate-300 truncate">
               Pengeluaran
             </span>
-            <div className="p-1.5 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 rounded-xl shrink-0">
+            <div className="p-1.5 bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 rounded-xl shrink-0">
               <TrendingDown className="w-3.5 h-3.5" />
             </div>
           </div>
           <div>
-            <p className="text-sm sm:text-base font-black text-rose-600 dark:text-rose-400 truncate">
+            <p className="text-sm sm:text-base font-black text-rose-700 dark:text-rose-400 truncate">
               {showBalance ? formatRupiah(expense) : '••••••••'}
             </p>
-            <p className="text-[9px] text-slate-400 dark:text-slate-500 font-bold truncate mt-0.5">
+            <p className="text-[9px] text-slate-600 dark:text-slate-300 font-bold truncate mt-0.5">
               {activePeriodLabel}
             </p>
           </div>

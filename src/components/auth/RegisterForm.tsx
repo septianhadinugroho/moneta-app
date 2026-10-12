@@ -65,7 +65,7 @@ export default function RegisterForm({ onSuccess, onError }: RegisterFormProps) 
               setName(e.target.value);
               if (errors.name) setErrors((p) => ({ ...p, name: '' }));
             }}
-            className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all ${
+            className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 transition-all ${
               errors.name
                 ? 'bg-rose-50/60 dark:bg-rose-950/40 border border-rose-500 ring-1 ring-rose-500'
                 : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 focus:bg-white dark:focus:bg-slate-800'
@@ -88,7 +88,7 @@ export default function RegisterForm({ onSuccess, onError }: RegisterFormProps) 
               setEmail(e.target.value);
               if (errors.email) setErrors((p) => ({ ...p, email: '' }));
             }}
-            className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all ${
+            className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 transition-all ${
               errors.email
                 ? 'bg-rose-50/60 dark:bg-rose-950/40 border border-rose-500 ring-1 ring-rose-500'
                 : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 focus:bg-white dark:focus:bg-slate-800'
@@ -111,7 +111,7 @@ export default function RegisterForm({ onSuccess, onError }: RegisterFormProps) 
               setPassword(e.target.value);
               if (errors.password) setErrors((p) => ({ ...p, password: '' }));
             }}
-            className={`w-full pl-10 pr-10 py-2.5 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all ${
+            className={`w-full pl-10 pr-10 py-2.5 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 transition-all ${
               errors.password
                 ? 'bg-rose-50/60 dark:bg-rose-950/40 border border-rose-500 ring-1 ring-rose-500'
                 : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 focus:bg-white dark:focus:bg-slate-800'
@@ -141,7 +141,7 @@ export default function RegisterForm({ onSuccess, onError }: RegisterFormProps) 
               setConfirmPassword(e.target.value);
               if (errors.confirmPassword) setErrors((p) => ({ ...p, confirmPassword: '' }));
             }}
-            className={`w-full pl-10 pr-10 py-2.5 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all ${
+            className={`w-full pl-10 pr-10 py-2.5 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 transition-all ${
               errors.confirmPassword
                 ? 'bg-rose-50/60 dark:bg-rose-950/40 border border-rose-500 ring-1 ring-rose-500'
                 : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 focus:bg-white dark:focus:bg-slate-800'

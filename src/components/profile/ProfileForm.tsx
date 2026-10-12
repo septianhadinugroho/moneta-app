@@ -60,7 +60,7 @@ export default function ProfileForm({ user, isGoogleUser, onProfileUpdated, onRe
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 focus:bg-white dark:focus:bg-slate-800 transition font-medium"
+            className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 focus:bg-white dark:focus:bg-slate-800 transition font-medium"
           />
         </div>
 
@@ -74,12 +74,12 @@ export default function ProfileForm({ user, isGoogleUser, onProfileUpdated, onRe
             onChange={(e) => setEmail(e.target.value)}
             className={`w-full px-3.5 py-2.5 border rounded-xl text-xs transition font-medium ${
               isGoogleUser
-                ? 'bg-slate-100 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700/60 cursor-not-allowed'
+                ? 'bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700/60 cursor-not-allowed'
                 : 'bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white border-slate-200 dark:border-slate-700/80 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 focus:bg-white dark:focus:bg-slate-800'
             }`}
           />
           {isGoogleUser && (
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">
+            <p className="text-[10px] text-slate-400 dark:text-slate-600 mt-1">
               Email dikelola oleh Google Sign-In dan tidak dapat diubah di sini.
             </p>
           )}

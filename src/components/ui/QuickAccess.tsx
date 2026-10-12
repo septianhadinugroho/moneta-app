@@ -16,48 +16,51 @@ export default function QuickAccess({ user }: { user?: any }) {
       title: 'Analitik',
       href: '/dashboard/stats',
       icon: PieChart,
-      bg: 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border-indigo-100 dark:border-indigo-900/50',
+      bg: 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-300 border-indigo-300 dark:border-indigo-800',
     },
     {
       title: 'Tagihan',
       href: '/dashboard/subscriptions',
       icon: CreditCard,
-      bg: 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/50',
+      bg: 'bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-800',
     },
     {
       title: 'Utang',
       href: '/dashboard/debts',
       icon: HandCoins,
-      bg: 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-100 dark:border-rose-900/50',
+      bg: 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border-rose-300 dark:border-rose-800',
     },
     {
       title: 'Anggaran',
       href: '/dashboard/budgets',
       icon: Target,
-      bg: 'bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-900/50',
+      bg: 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800',
     },
     {
       title: 'Impian',
       href: '/dashboard/goals',
       icon: Sparkles,
-      bg: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/50',
+      bg: 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800',
     },
     {
       title: 'Cetak PDF',
       href: '/dashboard/export',
       icon: FileText,
-      bg: 'bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 border-purple-100 dark:border-purple-900/50',
+      bg: 'bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border-purple-300 dark:border-purple-800',
     },
   ];
 
   return (
-    <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs font-sans transition-colors">
+    <section 
+      aria-label="Menu Akses Cepat"
+      className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs font-sans transition-colors"
+    >
       <div className="flex items-center justify-between mb-2.5">
-        <h2 className="text-xs font-black text-slate-900 dark:text-slate-100">Akses Cepat</h2>
-        <span className="text-[10px] font-extrabold text-slate-400">6 Fitur Utama</span>
+        <h2 className="text-xs font-black text-slate-900 dark:text-white">Akses Cepat</h2>
+        <span className="text-[10px] font-extrabold text-slate-600 dark:text-slate-300">6 Fitur Utama</span>
       </div>
 
-      {/* GRID 3 KOLOM x 2 BARIS (RAPAT & TIDAK POTONG TULISAN) */}
+      {/* GRID 3 KOLOM x 2 BARIS */}
       <div className="grid grid-cols-3 gap-2">
         {shortcuts.map((item) => {
           const Icon = item.icon;
@@ -65,18 +68,19 @@ export default function QuickAccess({ user }: { user?: any }) {
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-2 p-2 rounded-xl bg-slate-50/80 dark:bg-slate-800/40 hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-slate-100 dark:border-slate-800 transition active:scale-95 cursor-pointer group"
+              aria-label={`Menu ${item.title}`}
+              className="flex items-center gap-2 p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition active:scale-95 cursor-pointer group"
             >
               <div className={`p-1.5 rounded-lg border ${item.bg} group-hover:scale-105 transition-transform shrink-0`}>
                 <Icon className="w-3.5 h-3.5" />
               </div>
-              <span className="text-[10px] font-extrabold text-slate-800 dark:text-slate-200 truncate">
+              <span className="text-[10px] font-extrabold text-slate-900 dark:text-slate-100 truncate">
                 {item.title}
               </span>
             </Link>
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }

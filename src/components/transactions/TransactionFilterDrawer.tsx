@@ -67,7 +67,7 @@ export default function TransactionFilterDrawer({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition cursor-pointer"
+            className="p-1.5 text-slate-400 dark:text-slate-600 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -85,7 +85,7 @@ export default function TransactionFilterDrawer({
                 className={`py-2 rounded-lg transition text-xs cursor-pointer ${
                   typeFilter === 'ALL'
                     ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 shadow-xs'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 Semua
@@ -96,7 +96,7 @@ export default function TransactionFilterDrawer({
                 className={`py-2 rounded-lg transition text-xs cursor-pointer ${
                   typeFilter === 'EXPENSE'
                     ? 'bg-rose-600 text-white shadow-xs'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 Pengeluaran
@@ -107,7 +107,7 @@ export default function TransactionFilterDrawer({
                 className={`py-2 rounded-lg transition text-xs cursor-pointer ${
                   typeFilter === 'INCOME'
                     ? 'bg-emerald-600 text-white shadow-xs'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 Pemasukan

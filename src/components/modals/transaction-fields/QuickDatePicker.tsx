@@ -20,7 +20,7 @@ export default function QuickDatePicker({
   return (
     <div className="space-y-1.5">
       <label className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-1.5">
-        <Calendar className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+        <Calendar className="w-3.5 h-3.5 text-slate-600 dark:text-slate-300" />
         <span>Tanggal Transaksi <span className="text-rose-500">*</span></span>
       </label>
 

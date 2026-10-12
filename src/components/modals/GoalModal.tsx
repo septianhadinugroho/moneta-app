@@ -83,7 +83,7 @@ export default function GoalModal({ isOpen, onClose, goalToEdit, wallets, onSucc
           <button 
             type="button"
             onClick={onClose} 
-            className="p-1 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-200 rounded-full cursor-pointer transition"
+            className="p-1 text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-200 rounded-full cursor-pointer transition"
           >
             <X className="w-4 h-4" />
           </button>
@@ -97,7 +97,7 @@ export default function GoalModal({ isOpen, onClose, goalToEdit, wallets, onSucc
               placeholder="Misal: Beli Laptop Baru, Dana Darurat"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
+              className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
             />
           </div>
 
@@ -108,7 +108,7 @@ export default function GoalModal({ isOpen, onClose, goalToEdit, wallets, onSucc
               placeholder="15000000"
               value={targetAmount}
               onChange={(e) => setTargetAmount(e.target.value)}
-              className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
+              className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
             />
           </div>
 

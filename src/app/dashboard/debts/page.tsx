@@ -155,12 +155,12 @@ export default function DebtsPage() {
   };
 
   return (
-    <div className="p-3.5 sm:p-5 space-y-3.5 text-slate-900 dark:text-slate-100 transition-colors pb-24 font-sans max-w-lg mx-auto">
+    <div className="p-3.5 sm:p-5 space-y-3.5 text-slate-900 dark:text-slate-100 transition-colors font-sans max-w-lg mx-auto">
       {/* 1. HEADER HALAMAN */}
       <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
         <div>
           <h1 className="text-base font-black text-slate-900 dark:text-white">Utang & Piutang</h1>
-          <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold">Kelola Hak Piutang & Kewajiban Utang</p>
+          <p className="text-[10px] text-slate-400 dark:text-slate-600 font-bold">Kelola Hak Piutang & Kewajiban Utang</p>
         </div>
         <button
           type="button"
@@ -203,7 +203,7 @@ export default function DebtsPage() {
           className={`flex-1 py-2 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer ${
             mainTab === 'ACTIVE'
               ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-2xs'
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200'
           }`}
         >
           <Clock className="w-3.5 h-3.5 text-amber-500" />
@@ -216,7 +216,7 @@ export default function DebtsPage() {
           className={`flex-1 py-2 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer ${
             mainTab === 'COMPLETED'
               ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-2xs'
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200'
           }`}
         >
           <History className="w-3.5 h-3.5 text-emerald-500" />
@@ -457,7 +457,7 @@ export default function DebtsPage() {
                     <button
                       type="button"
                       onClick={() => handleDelete(item)}
-                      className="p-1 text-slate-500 hover:text-rose-400 transition cursor-pointer ml-auto flex items-center gap-1 text-[9px] font-bold"
+                      className="p-1 text-slate-600 hover:text-rose-400 transition cursor-pointer ml-auto flex items-center gap-1 text-[9px] font-bold"
                     >
                       <Trash2 className="w-3 h-3" />
                       <span>Hapus</span>

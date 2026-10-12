@@ -44,7 +44,7 @@ export default function EmailOtpModal({ isOpen, onClose, pendingEmail, onSuccess
             <Mail className="w-5 h-5" />
           </div>
           <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">Verifikasi Email Baru</h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
             Masukkan 6 digit kode OTP yang dikirim ke <span className="font-bold text-slate-800 dark:text-slate-200">{pendingEmail}</span>
           </p>
         </div>
@@ -56,7 +56,7 @@ export default function EmailOtpModal({ isOpen, onClose, pendingEmail, onSuccess
             maxLength={6}
             value={otpCode}
             onChange={(e) => setOtpCode(e.target.value)}
-            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl text-center text-xl tracking-[0.4em] font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
+            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl text-center text-xl tracking-[0.4em] font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
             placeholder="000000"
           />
           <div className="flex space-x-2 pt-1">

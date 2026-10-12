@@ -66,7 +66,7 @@ export default function GoalsPage() {
       <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
         <div>
           <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">Target Impian & Tabungan</h1>
-          <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold mt-0.5">Rencanakan Masa Depan Finansialmu</p>
+          <p className="text-[10px] text-slate-400 dark:text-slate-600 font-bold mt-0.5">Rencanakan Masa Depan Finansialmu</p>
         </div>
         <button
           type="button"
@@ -86,7 +86,7 @@ export default function GoalsPage() {
       ) : goals.length === 0 ? (
         <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-center space-y-2 transition-colors">
           <Target className="w-8 h-8 text-slate-300 dark:text-slate-600 mx-auto" />
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-bold">Belum ada target impian yang dibuat.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-300 font-bold">Belum ada target impian yang dibuat.</p>
           <button
             onClick={() => { setSelectedGoal(null); setIsModalOpen(true); }}
             className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer"
@@ -108,8 +108,8 @@ export default function GoalsPage() {
                   <div>
                     <h3 className="text-xs font-black text-slate-900 dark:text-white">{g.name}</h3>
                     {g.wallet && (
-                      <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold flex items-center gap-1 mt-0.5">
-                        <WalletIcon className="w-3 h-3 text-slate-400 dark:text-slate-500" />
+                      <p className="text-[10px] text-slate-400 dark:text-slate-600 font-bold flex items-center gap-1 mt-0.5">
+                        <WalletIcon className="w-3 h-3 text-slate-400 dark:text-slate-600" />
                         <span>Alokasi: {g.wallet.name}</span>
                       </p>
                     )}
@@ -118,7 +118,7 @@ export default function GoalsPage() {
                     <button
                       type="button"
                       onClick={() => { setSelectedGoal(g); setIsModalOpen(true); }}
-                      className="p-1 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg cursor-pointer transition"
+                      className="p-1 text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg cursor-pointer transition"
                       title="Edit Target"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
@@ -126,7 +126,7 @@ export default function GoalsPage() {
                     <button
                       type="button"
                       onClick={() => openDeleteModal(g)}
-                      className="p-1 text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg cursor-pointer transition"
+                      className="p-1 text-slate-400 dark:text-slate-600 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg cursor-pointer transition"
                       title="Hapus Target"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -139,9 +139,9 @@ export default function GoalsPage() {
                   <div className="flex justify-between items-baseline text-xs font-black">
                     <span className="text-slate-900 dark:text-white">
                       {formatRupiah(currentWalletBalance)}
-                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium"> / {formatRupiah(targetAmt)}</span>
+                      <span className="text-[10px] text-slate-400 dark:text-slate-600 font-medium"> / {formatRupiah(targetAmt)}</span>
                     </span>
-                    <span className={isReached ? 'text-emerald-600 dark:text-emerald-400 flex items-center gap-1' : 'text-slate-500 dark:text-slate-400'}>
+                    <span className={isReached ? 'text-emerald-600 dark:text-emerald-400 flex items-center gap-1' : 'text-slate-600 dark:text-slate-300'}>
                       {isReached && <CheckCircle2 className="w-3 h-3 inline" />}
                       {percentage}%
                     </span>
@@ -155,7 +155,7 @@ export default function GoalsPage() {
                 </div>
 
                 {g.targetDate && (
-                  <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold flex items-center gap-1">
+                  <p className="text-[10px] text-slate-400 dark:text-slate-600 font-bold flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
                     <span>Tenggat: {new Date(g.targetDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                   </p>

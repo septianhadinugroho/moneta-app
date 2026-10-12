@@ -8,7 +8,10 @@ export default function BottomNav({ onOpenTxModal }: { onOpenTxModal?: () => voi
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 z-30 px-2 py-2 shadow-lg font-sans transition-colors duration-200">
+    <nav 
+      aria-label="Navigasi Utama"
+      className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 z-30 px-2 py-2 shadow-lg font-sans transition-colors duration-200"
+    >
       <div className="grid grid-cols-5 items-center justify-items-center">
         {/* 1. Dasbor */}
         <Link
@@ -16,7 +19,7 @@ export default function BottomNav({ onOpenTxModal }: { onOpenTxModal?: () => voi
           className={`flex flex-col items-center space-y-1 transition ${
             pathname === '/dashboard'
               ? 'text-emerald-600 dark:text-emerald-400 font-black'
-              : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-semibold'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-semibold'
           }`}
         >
           <LayoutDashboard className="w-5 h-5" />
@@ -29,7 +32,7 @@ export default function BottomNav({ onOpenTxModal }: { onOpenTxModal?: () => voi
           className={`flex flex-col items-center space-y-1 transition ${
             pathname === '/dashboard/transactions'
               ? 'text-emerald-600 dark:text-emerald-400 font-black'
-              : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-semibold'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-semibold'
           }`}
         >
           <History className="w-5 h-5" />
@@ -39,9 +42,11 @@ export default function BottomNav({ onOpenTxModal }: { onOpenTxModal?: () => voi
         {/* 3. Catat (+) PERSIS DI TENGAH */}
         <div className="relative flex justify-center">
           <button
+            type="button"
             onClick={onOpenTxModal}
-            className="relative -top-5 bg-emerald-600 hover:bg-emerald-700 text-white p-3.5 rounded-full shadow-lg border-4 border-slate-50 dark:border-slate-900 transition transform active:scale-95 flex items-center justify-center shrink-0 cursor-pointer"
+            aria-label="Catat Transaksi Baru"
             title="Catat Transaksi Baru"
+            className="relative -top-5 bg-emerald-600 hover:bg-emerald-700 text-white p-3.5 rounded-full shadow-lg border-4 border-slate-50 dark:border-slate-900 transition transform active:scale-95 flex items-center justify-center shrink-0 cursor-pointer"
           >
             <Plus className="w-6 h-6 stroke-3" />
           </button>
@@ -53,7 +58,7 @@ export default function BottomNav({ onOpenTxModal }: { onOpenTxModal?: () => voi
           className={`flex flex-col items-center space-y-1 transition ${
             pathname === '/dashboard/wallets'
               ? 'text-emerald-600 dark:text-emerald-400 font-black'
-              : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-semibold'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-semibold'
           }`}
         >
           <Wallet className="w-5 h-5" />
@@ -66,7 +71,7 @@ export default function BottomNav({ onOpenTxModal }: { onOpenTxModal?: () => voi
           className={`flex flex-col items-center space-y-1 transition ${
             pathname.startsWith('/dashboard/menu')
               ? 'text-emerald-600 dark:text-emerald-400 font-black'
-              : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-semibold'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-semibold'
           }`}
         >
           <LayoutGrid className="w-5 h-5" />

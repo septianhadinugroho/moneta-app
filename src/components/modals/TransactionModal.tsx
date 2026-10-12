@@ -250,7 +250,7 @@ export default function TransactionModal({
             <button
               type="button"
               onClick={onClose}
-              className="p-1 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg transition cursor-pointer"
+              className="p-1 text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -291,7 +291,7 @@ export default function TransactionModal({
                       }
                     }}
                     disabled={isParsing}
-                    className="flex-1 min-w-0 px-2.5 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 disabled:opacity-60"
+                    className="flex-1 min-w-0 px-2.5 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-emerald-500 disabled:opacity-60"
                   />
                   <button
                     type="button"
@@ -331,7 +331,7 @@ export default function TransactionModal({
                   type="button"
                   onClick={() => { setType('EXPENSE'); setCategoryId(''); setCategorySearch(''); }}
                   className={`py-2 rounded-lg font-extrabold transition cursor-pointer ${
-                    type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   Pengeluaran
@@ -340,7 +340,7 @@ export default function TransactionModal({
                   type="button"
                   onClick={() => { setType('INCOME'); setCategoryId(''); setCategorySearch(''); }}
                   className={`py-2 rounded-lg font-extrabold transition cursor-pointer ${
-                    type === 'INCOME' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    type === 'INCOME' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   Pemasukan
@@ -357,7 +357,7 @@ export default function TransactionModal({
                   placeholder="0"
                   value={amount}
                   onChange={(e) => { setAmount(e.target.value); setFormErrors((p) => ({ ...p, amount: '' })); }}
-                  className={`w-full px-3.5 py-2.5 rounded-xl font-black text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition ${
+                  className={`w-full px-3.5 py-2.5 rounded-xl font-black text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition ${
                     formErrors.amount
                       ? 'bg-rose-50/60 dark:bg-rose-950/40 border border-rose-500 ring-1 ring-rose-500'
                       : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80'
@@ -428,7 +428,7 @@ export default function TransactionModal({
                   placeholder="Misal: Kopi Kenangan"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
                 />
               </div>
 

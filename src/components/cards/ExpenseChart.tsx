@@ -122,7 +122,7 @@ export default function ExpenseChart({
           </button>
         </div>
 
-        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">
+        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-600">
           {MONTH_NAMES[currentMonth - 1]} {currentYear}
         </span>
       </div>
@@ -176,7 +176,7 @@ export default function ExpenseChart({
           className={`py-1.5 rounded-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 ${
             activeTab === 'EXPENSE'
               ? 'bg-rose-600 text-white shadow-xs'
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           <span className="w-1.5 h-1.5 rounded-full bg-rose-300" />
@@ -189,7 +189,7 @@ export default function ExpenseChart({
           className={`py-1.5 rounded-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 ${
             activeTab === 'INCOME'
               ? 'bg-emerald-600 text-white shadow-xs'
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-300" />
@@ -199,7 +199,7 @@ export default function ExpenseChart({
 
       {/* 4. CHART & LIST KATEGORI */}
       {currentData.length === 0 ? (
-        <p className="text-xs text-slate-400 dark:text-slate-500 text-center py-10 font-medium">
+        <p className="text-xs text-slate-400 dark:text-slate-600 text-center py-10 font-medium">
           Belum ada data {activeTab === 'EXPENSE' ? 'pengeluaran' : 'pemasukan'} pada {MONTH_NAMES[currentMonth - 1]} {currentYear}.
         </p>
       ) : (

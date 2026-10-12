@@ -190,19 +190,19 @@ export default function TransactionsPage() {
         <div className="flex items-center gap-2">
           {/* SEARCH INPUT */}
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 dark:text-slate-600 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Cari transaksi bulan ini..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-8 pr-8 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:border-slate-400 dark:focus:border-slate-500 transition"
+              className="w-full pl-8 pr-8 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-hidden focus:border-slate-400 dark:focus:border-slate-500 transition"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-slate-600 dark:hover:text-slate-300"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -260,14 +260,14 @@ export default function TransactionsPage() {
 
       {/* 3. LIST TRANSAKSI DI-GROUP BERDASARKAN TANGGAL */}
       {loading ? (
-        <div className="py-12 flex flex-col justify-center items-center gap-2 text-slate-400 dark:text-slate-500 text-xs font-bold">
+        <div className="py-12 flex flex-col justify-center items-center gap-2 text-slate-400 dark:text-slate-600 text-xs font-bold">
           <Loader2 className="animate-spin w-6 h-6 text-emerald-600 dark:text-emerald-400" />
           <span>Memuat transaksi {formattedMonthLabel}...</span>
         </div>
       ) : groupedKeys.length === 0 ? (
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-8 text-center space-y-1">
           <p className="text-xs font-extrabold text-slate-700 dark:text-slate-300">Belum Ada Transaksi</p>
-          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
+          <p className="text-[11px] text-slate-400 dark:text-slate-600 font-medium">
             Tidak ada transaksi dicatat pada bulan {formattedMonthLabel}.
           </p>
         </div>
@@ -276,7 +276,7 @@ export default function TransactionsPage() {
           {groupedKeys.map((dateGroup) => (
             <div key={dateGroup} className="space-y-1.5">
               {/* TANGGAL HEADER */}
-              <div className="px-1 text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+              <div className="px-1 text-[11px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-wider">
                 {dateGroup}
               </div>
 
@@ -332,7 +332,7 @@ export default function TransactionsPage() {
                               : tx.description || tx.notes || tx.category?.name || 'Transaksi'}
                           </p>
                           {/* BARIS KEDUA: NAMA DOMPET */}
-                          <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate mt-0.5">
+                          <p className="text-[10px] text-slate-400 dark:text-slate-600 font-medium truncate mt-0.5">
                             {isTransfer
                               ? 'Transfer Internal'
                               : tx.wallet?.name || 'Dompet'}

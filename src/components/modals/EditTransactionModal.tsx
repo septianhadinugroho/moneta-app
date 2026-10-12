@@ -156,7 +156,7 @@ export default function EditTransactionModal({
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg transition cursor-pointer"
+            className="text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg transition cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -172,7 +172,7 @@ export default function EditTransactionModal({
                 setCategoryId('');
               }}
               className={`py-1.5 rounded-lg transition cursor-pointer ${
-                type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Pengeluaran
@@ -184,7 +184,7 @@ export default function EditTransactionModal({
                 setCategoryId('');
               }}
               className={`py-1.5 rounded-lg transition cursor-pointer ${
-                type === 'INCOME' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                type === 'INCOME' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Pemasukan
@@ -211,7 +211,7 @@ export default function EditTransactionModal({
 
           <div>
             <label className="text-slate-700 dark:text-slate-300 font-bold mb-1 flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+              <Calendar className="w-3.5 h-3.5 text-slate-600 dark:text-slate-300" />
               Tanggal Transaksi
             </label>
             <input
@@ -291,7 +291,7 @@ export default function EditTransactionModal({
               placeholder="Contoh: Beli Kopi / Top Up E-Wallet"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
             />
           </div>
 

@@ -69,13 +69,13 @@ export default function CustomDropdown({
             </>
           ) : (
             <>
-              {DefaultIcon && <DefaultIcon className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />}
-              <span className="text-slate-400 dark:text-slate-500 font-medium text-xs">{placeholder}</span>
+              {DefaultIcon && <DefaultIcon className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600 shrink-0" />}
+              <span className="text-slate-400 dark:text-slate-600 font-medium text-xs">{placeholder}</span>
             </>
           )}
         </span>
         <ChevronDown
-          className={`w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0 transition-transform ${
+          className={`w-3.5 h-3.5 text-slate-400 dark:text-slate-600 shrink-0 transition-transform ${
             isOpen ? 'rotate-180' : ''
           }`}
         />

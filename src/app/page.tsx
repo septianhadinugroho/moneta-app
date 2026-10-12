@@ -18,11 +18,7 @@ import {
   Moon,
   BellRing,
   CalendarCheck,
-  PieChart,
-  HandCoins,
-  CheckCircle2,
-  TrendingUp,
-  Lock
+  HandCoins
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -45,7 +41,7 @@ export default function LandingPage() {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 200);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -68,16 +64,15 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-between relative overflow-hidden font-sans selection:bg-emerald-500 selection:text-white transition-colors duration-300">
       
-      {/* GLOWING MESH BACKGROUND */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-96 bg-emerald-300/30 dark:bg-emerald-900/20 blur-[130px] pointer-events-none rounded-full animate-pulse" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f080_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f080_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b80_1px,transparent_1px),linear-gradient(to_bottom,#1e293b80_1px,transparent_1px)] bg-size-[3rem_3rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
+      {/* GLOWING MESH BACKGROUND (Hardware Accelerated Pulse Animation) */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-96 bg-emerald-400/20 dark:bg-emerald-900/20 blur-[120px] pointer-events-none rounded-full animate-pulse transform-gpu" />
 
       {/* FIXED NAVBAR HEADER */}
-      <header className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-x border-b border-slate-200/80 dark:border-slate-800 px-4 py-2.5 transition-colors">
+      <header className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-x border-b border-slate-200/80 dark:border-slate-800 px-4 py-2.5 transition-colors">
         <div className="w-full flex justify-between items-center">
           {/* BRAND LOGO */}
           <div className="flex items-center gap-2 group cursor-pointer">
-            <div className="w-8 h-8 relative shrink-0 transition-transform group-hover:scale-105">
+            <div className="w-8 h-8 relative shrink-0 transition-transform duration-300 ease-out group-hover:scale-110">
               <Image 
                 src="/icon-512x512.png" 
                 alt="Moneta Logo" 
@@ -85,19 +80,16 @@ export default function LandingPage() {
                 height={32} 
                 className="object-contain"
                 priority 
-                onError={(e) => {
-                  e.currentTarget.src = "/favicon.ico";
-                }}
               />
             </div>
-            <span className="text-lg font-black tracking-tight text-slate-900 dark:text-white">Moneta</span>
+            <span className="text-lg font-black tracking-tight text-slate-900 dark:text-white transition-colors">Moneta</span>
           </div>
 
           {/* AKSI: COBA GRATIS -> THEME TOGGLE */}
           <div className="flex items-center gap-2">
             <Link
               href="/auth"
-              className="px-3.5 py-1.5 text-xs font-extrabold bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-white text-white dark:text-slate-900 rounded-xl shadow-md shadow-slate-900/10 transition-all transform hover:-translate-y-0.5 active:scale-95"
+              className="px-3.5 py-1.5 text-xs font-extrabold bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-white text-white dark:text-slate-900 rounded-xl shadow-md shadow-slate-900/10 transition-all duration-200 transform hover:-translate-y-0.5 active:scale-95"
             >
               Coba Gratis
             </Link>
@@ -106,271 +98,278 @@ export default function LandingPage() {
             <button
               type="button"
               onClick={toggleTheme}
-              className="p-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition active:scale-95 cursor-pointer"
+              aria-label={isDark ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap'}
+              className="p-1.5 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white bg-slate-200/80 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 rounded-xl transition-all duration-200 active:scale-90 cursor-pointer"
               title={isDark ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap'}
             >
               {isDark ? (
-                <Sun className="w-4 h-4 text-amber-400" />
+                <Sun className="w-4 h-4 text-amber-400 transition-transform duration-300 hover:rotate-45" />
               ) : (
-                <Moon className="w-4 h-4 text-slate-700" />
+                <Moon className="w-4 h-4 text-slate-700 transition-transform duration-300 hover:-rotate-12" />
               )}
             </button>
           </div>
         </div>
       </header>
 
-      {/* HERO SECTION */}
-      <section className="relative w-full px-4 pt-20 pb-8 text-center space-y-4 z-10 max-w-md mx-auto">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-full text-[10px] font-extrabold shadow-xs transition-all hover:border-emerald-400">
-          <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400 animate-spin" style={{ animationDuration: '6s' }} />
-          <span>Kelola Keuangan Pribadi Lebih Rapi</span>
-        </div>
+      {/* MAIN CONTENT LANDMARK */}
+      <main className="flex-1 w-full">
+        {/* HERO SECTION */}
+        <section className="relative w-full px-4 pt-20 pb-8 text-center space-y-4 z-10 max-w-md mx-auto">
+          
+          {/* BADGE DENGAN ROTASI SPARKLE */}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100/80 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-300 rounded-full text-[10px] font-extrabold shadow-xs transition-all hover:scale-105 hover:border-emerald-400">
+            <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400 animate-spin" style={{ animationDuration: '8s' }} />
+            <span>Kelola Keuangan Pribadi Lebih Rapi</span>
+          </div>
 
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-snug">
-          Arus Kas Terkontrol, Finansial Makin <span className="text-emerald-600 dark:text-emerald-400 underline decoration-emerald-300 dark:decoration-emerald-700 decoration-wavy decoration-2">Tenang</span>
-        </h1>
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-snug">
+            Arus Kas Terkontrol, Finansial Makin <span className="text-emerald-600 dark:text-emerald-400 underline decoration-emerald-300 dark:decoration-emerald-700 decoration-wavy decoration-2">Tenang</span>
+          </h1>
 
-        <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed">
-          Catat transaksi cukup dengan mengetik, pantau dompet, atur tagihan rutin & langganan, set limit anggaran, wujudkan target impian, hingga ekspor laporan PDF.
-        </p>
+          <p className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 max-w-xs mx-auto leading-relaxed">
+            Catat transaksi cukup dengan mengetik, pantau dompet, atur tagihan rutin & langganan, set limit anggaran, wujudkan target impian, hingga ekspor laporan PDF.
+          </p>
 
-        <div className="pt-1 flex flex-col gap-2">
-          <Link
-            href="/auth"
-            className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-600/25 transition-all transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 group cursor-pointer"
-          >
-            <span>Mulai Catat Keuangan</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <a
-            href="#features"
-            className="w-full py-2.5 bg-white/80 dark:bg-slate-900/80 hover:bg-white dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-extrabold text-xs rounded-xl transition shadow-xs hover:shadow-sm"
-          >
-            Pelajari Fitur
-          </a>
-        </div>
+          <div className="pt-1 flex flex-col gap-2">
+            <Link
+              href="/auth"
+              className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-600/25 transition-all duration-200 transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 group cursor-pointer"
+            >
+              <span>Mulai Catat Keuangan</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
+            </Link>
+            <a
+              href="#features"
+              className="w-full py-2.5 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-800 text-slate-800 dark:text-slate-200 font-extrabold text-xs rounded-xl transition-all duration-200 shadow-xs hover:border-slate-400 dark:hover:border-slate-700"
+            >
+              Pelajari Fitur
+            </a>
+          </div>
 
-        {/* PREVIEW CARD */}
-        <div className="pt-3">
-          <div className="p-1.5 bg-white/80 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 rounded-3xl shadow-xl backdrop-blur-md hover:shadow-2xl hover:border-emerald-300 dark:hover:border-emerald-900/60 transition-all duration-300">
-            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-2xl p-4 space-y-3 text-left">
-              
-              {/* PREVIEW INPUT CEPAT AI */}
-              <div className="p-2.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl space-y-1.5">
-                <span className="text-[10px] font-extrabold text-emerald-800 dark:text-emerald-300 flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400 animate-pulse shrink-0" />
-                  <span>Input Cepat dengan AI</span>
-                </span>
-                <div className="flex gap-1.5 items-center">
-                  <div className="flex-1 min-w-0 px-2.5 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                    somay 5rb pake cash
-                  </div>
-                  <span className="px-2.5 py-1.5 bg-emerald-600 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 shrink-0">
-                    <Sparkles className="w-3 h-3" />
-                    Isi
-                  </span>
-                </div>
-              </div>
-
-              {/* BANNER TAGIHAN JATUH TEMPO */}
-              <div className="p-2.5 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-xl flex items-center justify-between text-[10px] text-amber-900 dark:text-amber-300">
-                <div className="flex items-center gap-2 font-bold min-w-0">
-                  <BellRing className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0 animate-bounce" />
-                  <span className="truncate">Spotify Premium — Rp 29.900 (H-2 Jatuh Tempo)</span>
-                </div>
-                <span className="font-extrabold text-amber-700 dark:text-amber-400 shrink-0 text-[9px] bg-amber-100 dark:bg-amber-900/80 px-2 py-0.5 rounded-md">Bayar</span>
-              </div>
-
-              <div className="flex justify-between items-center pb-2 border-b border-slate-100 dark:border-slate-800">
-                <div>
-                  <p className="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Total Saldo Bersih</p>
-                  <p className="text-lg font-black text-slate-900 dark:text-white mt-0.5">Rp 14.250.000</p>
-                </div>
-                <div className="p-2.5 bg-linear-to-br from-emerald-50 to-teal-100 dark:from-emerald-950 dark:to-teal-900/50 text-emerald-600 dark:text-emerald-400 rounded-2xl border border-emerald-200/80 dark:border-emerald-800/80 shadow-xs">
-                  <Wallet className="w-5 h-5" />
-                </div>
-              </div>
-
-              {/* STATS ROW */}
-              <div className="grid grid-cols-2 gap-2">
-                <div className="p-2 bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/60 rounded-xl transition-transform hover:scale-[1.02]">
-                  <p className="text-[9px] font-extrabold text-emerald-800 dark:text-emerald-400">Pemasukan</p>
-                  <p className="text-[11px] font-black text-emerald-700 dark:text-emerald-300 mt-0.5">+Rp 8.500.000</p>
-                </div>
-                <div className="p-2 bg-rose-50/70 dark:bg-rose-950/40 border border-rose-100 dark:border-rose-900/60 rounded-xl transition-transform hover:scale-[1.02]">
-                  <p className="text-[9px] font-extrabold text-rose-800 dark:text-rose-400">Pengeluaran</p>
-                  <p className="text-[11px] font-black text-rose-700 dark:text-rose-300 mt-0.5">-Rp 2.150.000</p>
-                </div>
-              </div>
-
-              {/* BUDGET PROGRESS INDICATOR PREVIEW */}
-              <div className="p-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 rounded-xl space-y-1.5">
-                <div className="flex justify-between items-center text-[10px]">
-                  <span className="font-extrabold text-slate-700 dark:text-slate-300 flex items-center gap-1">
-                    <Target className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                    <span>Anggaran Jajan & Hiburan</span>
-                  </span>
-                  <span className="font-black text-amber-600 dark:text-amber-400">80%</span>
-                </div>
-                <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
-                  <div className="bg-amber-500 dark:bg-amber-400 h-full rounded-full w-[80%]" />
-                </div>
-              </div>
-
-              {/* TRANSACTIONS LIST */}
-              <div className="space-y-1.5 pt-0.5">
-                <p className="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Transaksi Terbaru</p>
+          {/* PREVIEW CARD (DENGAN EFEK ELEVATE / FLOAT SAAT HOVER) */}
+          <div className="pt-3">
+            <div className="p-1.5 bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl backdrop-blur-md transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:border-emerald-400/60 dark:hover:border-emerald-800/60">
+              <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-2xl p-4 space-y-3 text-left">
                 
-                <div className="p-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 rounded-xl flex justify-between items-center text-[11px] hover:bg-slate-100/80 dark:hover:bg-slate-800 transition">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                    <div>
-                      <p className="font-bold text-slate-900 dark:text-white">Gaji Utama</p>
-                      <p className="text-[9px] text-slate-400 dark:text-slate-500 font-medium">BCA • Hari ini</p>
+                {/* PREVIEW INPUT CEPAT AI */}
+                <div className="p-2.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl space-y-1.5 transition-colors hover:bg-emerald-500/15">
+                  <span className="text-[10px] font-extrabold text-emerald-900 dark:text-emerald-300 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400 shrink-0 animate-pulse" />
+                    <span>Input Cepat dengan AI</span>
+                  </span>
+                  <div className="flex gap-1.5 items-center">
+                    <div className="flex-1 min-w-0 px-2.5 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-[10px] text-slate-700 dark:text-slate-300 truncate font-medium">
+                      somay 5rb pake cash
                     </div>
+                    <span className="px-2.5 py-1.5 bg-emerald-600 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 shrink-0 transition-transform active:scale-95">
+                      <Sparkles className="w-3 h-3" />
+                      Isi
+                    </span>
                   </div>
-                  <span className="font-black text-emerald-600 dark:text-emerald-400">+Rp 8.500.000</span>
                 </div>
 
-                <div className="p-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 rounded-xl flex justify-between items-center text-[11px] hover:bg-slate-100/80 dark:hover:bg-slate-800 transition">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-blue-500" />
-                    <div>
-                      <p className="font-bold text-slate-900 dark:text-white">Transfer ke Mandiri</p>
-                      <p className="text-[9px] text-slate-400 dark:text-slate-500 font-medium">Top Up Tabungan</p>
-                    </div>
+                {/* BANNER TAGIHAN JATUH TEMPO */}
+                <div className="p-2.5 bg-amber-50 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-800/80 rounded-xl flex items-center justify-between text-[10px] text-amber-950 dark:text-amber-300">
+                  <div className="flex items-center gap-2 font-bold min-w-0">
+                    <BellRing className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0 animate-bounce" style={{ animationDuration: '3s' }} />
+                    <span className="truncate">Spotify Premium — Rp 29.900 (H-2 Jatuh Tempo)</span>
                   </div>
-                  <span className="font-black text-slate-700 dark:text-slate-300">Rp 1.000.000</span>
+                  <span className="font-extrabold text-amber-800 dark:text-amber-300 shrink-0 text-[9px] bg-amber-200/80 dark:bg-amber-900/80 px-2 py-0.5 rounded-md">Bayar</span>
+                </div>
+
+                <div className="flex justify-between items-center pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <div>
+                    <p className="text-[9px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-widest">Total Saldo Bersih</p>
+                    <p className="text-lg font-black text-slate-900 dark:text-white mt-0.5">Rp 14.250.000</p>
+                  </div>
+                  <div className="p-2.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 rounded-2xl border border-emerald-200 dark:border-emerald-800 shadow-xs transition-transform hover:rotate-6">
+                    <Wallet className="w-5 h-5" />
+                  </div>
+                </div>
+
+                {/* STATS ROW */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="p-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 rounded-xl transition-transform duration-200 hover:scale-[1.02]">
+                    <p className="text-[9px] font-extrabold text-emerald-900 dark:text-emerald-400">Pemasukan</p>
+                    <p className="text-[11px] font-black text-emerald-700 dark:text-emerald-300 mt-0.5">+Rp 8.500.000</p>
+                  </div>
+                  <div className="p-2 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 rounded-xl transition-transform duration-200 hover:scale-[1.02]">
+                    <p className="text-[9px] font-extrabold text-rose-900 dark:text-rose-400">Pengeluaran</p>
+                    <p className="text-[11px] font-black text-rose-700 dark:text-rose-300 mt-0.5">-Rp 2.150.000</p>
+                  </div>
+                </div>
+
+                {/* BUDGET PROGRESS INDICATOR PREVIEW */}
+                <div className="p-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl space-y-1.5">
+                  <div className="flex justify-between items-center text-[10px]">
+                    <span className="font-extrabold text-slate-800 dark:text-slate-200 flex items-center gap-1">
+                      <Target className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                      <span>Anggaran Jajan & Hiburan</span>
+                    </span>
+                    <span className="font-black text-amber-700 dark:text-amber-400">80%</span>
+                  </div>
+                  <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-amber-500 dark:bg-amber-400 h-full rounded-full w-[80%] transition-all duration-500" />
+                  </div>
+                </div>
+
+                {/* TRANSACTIONS LIST */}
+                <div className="space-y-1.5 pt-0.5">
+                  <p className="text-[9px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Transaksi Terbaru</p>
+                  
+                  <div className="p-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-xl flex justify-between items-center text-[11px] transition-all hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                      <div>
+                        <p className="font-bold text-slate-900 dark:text-white">Gaji Utama</p>
+                        <p className="text-[9px] text-slate-600 dark:text-slate-300 font-medium">BCA • Hari ini</p>
+                      </div>
+                    </div>
+                    <span className="font-black text-emerald-600 dark:text-emerald-400">+Rp 8.500.000</span>
+                  </div>
+
+                  <div className="p-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-xl flex justify-between items-center text-[11px] transition-all hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-blue-500" />
+                      <div>
+                        <p className="font-bold text-slate-900 dark:text-white">Transfer ke Mandiri</p>
+                        <p className="text-[9px] text-slate-600 dark:text-slate-300 font-medium">Top Up Tabungan</p>
+                      </div>
+                    </div>
+                    <span className="font-black text-slate-800 dark:text-slate-200">Rp 1.000.000</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* FEATURES SECTION */}
-      <section id="features" className="relative z-10 py-8 px-4 bg-white dark:bg-slate-900/60 border-t border-slate-200/80 dark:border-slate-800 transition-colors">
-        <div className="w-full max-w-md mx-auto space-y-5">
-          <div className="text-center space-y-1">
-            <h2 className="text-lg font-black text-slate-900 dark:text-white">Keunggulan Utama Moneta</h2>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Fitur terpadu untuk fleksibilitas arus kas harian kamu.</p>
+        {/* FEATURES SECTION (HOVER GLOW & INTERACTIVE CARDS) */}
+        <section id="features" className="relative z-10 py-8 px-4 bg-white dark:bg-slate-900/60 border-t border-slate-200 dark:border-slate-800 transition-colors">
+          <div className="w-full max-w-md mx-auto space-y-5">
+            <div className="text-center space-y-1">
+              <h2 className="text-lg font-black text-slate-900 dark:text-white">Keunggulan Utama Moneta</h2>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 font-semibold">Fitur terpadu untuk fleksibilitas arus kas harian kamu.</p>
+            </div>
+
+            <div className="space-y-3">
+              {/* FEATURE AI */}
+              <div className="p-4 bg-emerald-50 dark:bg-emerald-950/30 rounded-2xl border border-emerald-200 dark:border-emerald-900/60 flex items-start gap-3.5 group hover:border-emerald-400 dark:hover:border-emerald-700 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+                <div className="p-2.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-300">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <span>Input Cepat dengan AI</span>
+                    <span className="text-[8px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 bg-emerald-600 text-white rounded-md">Baru</span>
+                  </h3>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium leading-snug mt-0.5">
+                    Cukup ketik seperti ngobrol, misalnya &quot;somay 5rb pake cash&quot;. Nominal, dompet, kategori, dan tanggal terisi otomatis, tinggal simpan.
+                  </p>
+                </div>
+              </div>
+
+              {/* FEATURE 1 */}
+              <div className="p-4 bg-slate-50 dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-start gap-3.5 group hover:border-sky-300 dark:hover:border-sky-800 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+                <div className="p-2.5 bg-sky-100 dark:bg-sky-950 text-sky-800 dark:text-sky-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-300">
+                  <CreditCard className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 dark:text-white">Multi Rekening & Dompet</h3>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium leading-snug mt-0.5">
+                    Pisahkan saldo kas tunai, rekening bank, hingga e-wallet secara akurat dan terisolasi.
+                  </p>
+                </div>
+              </div>
+
+              {/* FEATURE 2 */}
+              <div className="p-4 bg-slate-50 dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-start gap-3.5 group hover:border-indigo-300 dark:hover:border-indigo-800 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+                <div className="p-2.5 bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-300">
+                  <CalendarCheck className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 dark:text-white">Tagihan Rutin & Langganan</h3>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium leading-snug mt-0.5">
+                    Inventarisir Wi-Fi, Kost, Netflix, hingga Listrik dengan kalkulasi komitmen bulanan & pengingat jatuh tempo.
+                  </p>
+                </div>
+              </div>
+
+              {/* FEATURE 3 */}
+              <div className="p-4 bg-slate-50 dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-start gap-3.5 group hover:border-rose-300 dark:hover:border-rose-800 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+                <div className="p-2.5 bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-300">
+                  <HandCoins className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 dark:text-white">Kelola Utang & Piutang</h3>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium leading-snug mt-0.5">
+                    Catat hak piutang dan kewajiban utang lengkap dengan fitur bayar cicilan serta arsip riwayat lunas.
+                  </p>
+                </div>
+              </div>
+
+              {/* FEATURE 4 */}
+              <div className="p-4 bg-slate-50 dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-start gap-3.5 group hover:border-amber-300 dark:hover:border-amber-800 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+                <div className="p-2.5 bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-300">
+                  <Target className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 dark:text-white">Anggaran Bulanan & Peringatan Limit</h3>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium leading-snug mt-0.5">
+                    Tetapkan batas maksimal belanja per kategori dan dapatkan notifikasi saat mendekati limit.
+                  </p>
+                </div>
+              </div>
+
+              {/* FEATURE 5 */}
+              <div className="p-4 bg-slate-50 dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-start gap-3.5 group hover:border-emerald-300 dark:hover:border-emerald-800 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+                <div className="p-2.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-300">
+                  <PiggyBank className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 dark:text-white">Target Tabungan & Impian</h3>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium leading-snug mt-0.5">
+                    Tetapkan target finansial seperti liburan, gadget, atau dana darurat dan pantau progresnya.
+                  </p>
+                </div>
+              </div>
+
+              {/* FEATURE 6 */}
+              <div className="p-4 bg-slate-50 dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-start gap-3.5 group hover:border-purple-300 dark:hover:border-purple-800 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+                <div className="p-2.5 bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-300">
+                  <FileText className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 dark:text-white">Ekspor Laporan PDF & Email</h3>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium leading-snug mt-0.5">
+                    Pratinjau laporan resmi berlogo Moneta, unduh PDF, atau kirimkan otomatis ke email kamu.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div className="space-y-3">
-            {/* FEATURE AI */}
-            <div className="p-4 bg-emerald-50/80 dark:bg-emerald-950/30 rounded-2xl border border-emerald-200 dark:border-emerald-900/60 hover:border-emerald-400 dark:hover:border-emerald-700 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
-              <div className="p-2.5 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-                <Sparkles className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1.5">
-                  <span>Input Cepat dengan AI</span>
-                  <span className="text-[8px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 bg-emerald-600 text-white rounded-md">Baru</span>
-                </h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug mt-0.5">
-                  Cukup ketik seperti ngobrol, misalnya &quot;somay 5rb pake cash&quot;. Nominal, dompet, kategori, dan tanggal terisi otomatis, tinggal simpan.
-                </p>
-              </div>
-            </div>
-
-            {/* FEATURE 1 */}
-            <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
-              <div className="p-2.5 bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-                <CreditCard className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="text-xs font-black text-slate-900 dark:text-white">Multi Rekening & Dompet</h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug mt-0.5">
-                  Pisahkan saldo kas tunai, rekening bank, hingga e-wallet secara akurat dan terisolasi.
-                </p>
-              </div>
-            </div>
-
-            {/* FEATURE 2 */}
-            <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
-              <div className="p-2.5 bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-                <CalendarCheck className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="text-xs font-black text-slate-900 dark:text-white">Tagihan Rutin & Langganan</h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug mt-0.5">
-                  Inventarisir Wi-Fi, Kost, Netflix, hingga Listrik dengan kalkulasi komitmen bulanan & pengingat jatuh tempo.
-                </p>
-              </div>
-            </div>
-
-            {/* FEATURE 3 */}
-            <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-rose-300 dark:hover:border-rose-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
-              <div className="p-2.5 bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-                <HandCoins className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="text-xs font-black text-slate-900 dark:text-white">Kelola Utang & Piutang</h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug mt-0.5">
-                  Catat hak piutang dan kewajiban utang lengkap dengan fitur bayar cicilan serta arsip riwayat lunas.
-                </p>
-              </div>
-            </div>
-
-            {/* FEATURE 4 */}
-            <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
-              <div className="p-2.5 bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-                <Target className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="text-xs font-black text-slate-900 dark:text-white">Anggaran Bulanan & Peringatan Limit</h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug mt-0.5">
-                  Tetapkan batas maksimal belanja per kategori dan dapatkan notifikasi saat mendekati limit.
-                </p>
-              </div>
-            </div>
-
-            {/* FEATURE 5 */}
-            <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
-              <div className="p-2.5 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-                <PiggyBank className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="text-xs font-black text-slate-900 dark:text-white">Target Tabungan & Impian</h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug mt-0.5">
-                  Tetapkan target finansial seperti liburan, gadget, atau dana darurat dan pantau progresnya.
-                </p>
-              </div>
-            </div>
-
-            {/* FEATURE 6 */}
-            <div className="p-4 bg-slate-50/80 dark:bg-slate-900/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-800 hover:shadow-md transition-all duration-300 flex items-start gap-3.5 group">
-              <div className="p-2.5 bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-400 rounded-xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-                <FileText className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="text-xs font-black text-slate-900 dark:text-white">Ekspor Laporan PDF & Email</h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug mt-0.5">
-                  Pratinjau laporan resmi berlogo Moneta, unduh PDF, atau kirimkan otomatis ke email kamu.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
       {/* FOOTER */}
-      <footer className="relative z-10 py-6 px-4 text-center border-t border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 space-y-2 transition-colors">
-        <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold text-slate-500 dark:text-slate-400">
+      <footer className="relative z-10 py-6 px-4 text-center border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 space-y-2 transition-colors">
+        <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold text-slate-600 dark:text-slate-300">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
           <span>Keamanan & Data Terenkripsi</span>
         </div>
-        <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">
+        <p className="text-[10px] text-slate-600 dark:text-slate-300 font-medium">
           Moneta &copy; {new Date().getFullYear()} • Kelola Keuangan Pribadi Lebih Mudah
         </p>
       </footer>
 
-      {/* FLOATING SCROLL-TO-TOP BUTTON */}
+      {/* FLOATING SCROLL-TO-TOP BUTTON (SMOOTH APPEARANCE) */}
       {showScrollTop && (
         <button
           type="button"
           onClick={scrollToTop}
-          className="fixed bottom-5 left-[calc(50%+140px)] -translate-x-1/2 z-50 p-3 bg-slate-900/90 dark:bg-slate-800/90 hover:bg-slate-900 dark:hover:bg-slate-700 text-white rounded-full shadow-xl border border-slate-700/50 backdrop-blur-md transition-all transform active:scale-90 animate-in fade-in zoom-in duration-200 cursor-pointer"
+          aria-label="Kembali ke Atas"
+          className="fixed bottom-5 left-[calc(50%+140px)] -translate-x-1/2 z-50 p-3 bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white rounded-full shadow-xl border border-slate-700/50 backdrop-blur-md transition-all duration-200 transform hover:scale-110 active:scale-90 cursor-pointer"
           title="Kembali ke Atas"
         >
           <ArrowUp className="w-4 h-4" />

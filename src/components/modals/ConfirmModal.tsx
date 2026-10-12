@@ -83,14 +83,14 @@ export default function ConfirmModal({
           </div>
           <h3 className="text-sm font-black text-slate-900 dark:text-white">{title}</h3>
           {contentText && (
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed mt-1">{contentText}</p>
+            <p className="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed mt-1">{contentText}</p>
           )}
         </div>
 
         {/* INPUT SAFETY CHECK (IF REQUIRED) */}
         {typeToConfirm && (
           <div className="pt-1">
-            <p className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1.5 text-center">
+            <p className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 mb-1.5 text-center">
               Ketik <span className="font-extrabold text-slate-900 dark:text-white">{typeToConfirm}</span> untuk mengonfirmasi:
             </p>
             <input
@@ -98,7 +98,7 @@ export default function ConfirmModal({
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder={typeToConfirm}
-              className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-rose-500 text-center transition"
+              className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-hidden focus:ring-2 focus:ring-rose-500 text-center transition"
             />
           </div>
         )}

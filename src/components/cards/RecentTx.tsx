@@ -30,7 +30,10 @@ export default function RecentTx({
 
   return (
     <>
-      <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3 font-sans text-slate-900 dark:text-slate-100 transition-colors">
+      <section 
+        aria-label="Transaksi Terakhir"
+        className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3 font-sans text-slate-900 dark:text-slate-100 transition-colors"
+      >
         <div className="flex justify-between items-center">
           <h2 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <History className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -38,18 +41,18 @@ export default function RecentTx({
           </h2>
           <Link
             href="/dashboard/transactions"
-            className="text-[11px] font-extrabold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-xl transition"
+            className="text-[11px] font-extrabold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-xl transition"
           >
             Lihat Semua <ChevronRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
         {transactions.length === 0 ? (
-          <p className="text-xs text-slate-400 dark:text-slate-500 text-center py-6 font-medium">
+          <p className="text-xs text-slate-600 dark:text-slate-300 text-center py-6 font-semibold">
             Belum ada transaksi dicatat.
           </p>
         ) : (
-          <div className="divide-y divide-slate-100 dark:divide-slate-800/60">
+          <div className="divide-y divide-slate-100 dark:divide-slate-800/80">
             {transactions.map((tx: any) => {
               const txType = String(tx.type || '').toUpperCase();
               const isTransfer = txType === 'TRANSFER';
@@ -61,7 +64,12 @@ export default function RecentTx({
                 <div
                   key={tx.id}
                   onClick={() => setSelectedTx(tx)}
-                  className="py-2.5 flex justify-between items-center cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-800/50 px-1 rounded-xl transition group"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') setSelectedTx(tx);
+                  }}
+                  className="py-2.5 flex justify-between items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60 px-1.5 rounded-xl transition group"
                 >
                   <div className="flex items-center space-x-3 min-w-0 pr-2">
                     {/* IKON KATEGORI KUSTOM ATAU TIPE TRANSAKSI */}
@@ -76,10 +84,10 @@ export default function RecentTx({
                       <div
                         className={`p-2 rounded-xl shrink-0 ${
                           isTransfer
-                            ? 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                            ? 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200'
                             : isIncome
-                            ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400'
-                            : 'bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400'
+                            ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300'
+                            : 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300'
                         }`}
                       >
                         {isTransfer ? (
@@ -99,7 +107,7 @@ export default function RecentTx({
                           ? `Transfer (${tx.wallet?.name || 'Dompet'} ➔ ${tx.destinationWallet?.name || 'Tujuan'})`
                           : tx.category?.name || tx.description || 'Transaksi'}
                       </p>
-                      <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate">
+                      <p className="text-[10px] text-slate-600 dark:text-slate-300 font-medium truncate">
                         {isTransfer
                           ? `Transfer Internal • ${formatDate(tx.date || tx.createdAt)}`
                           : `${tx.wallet?.name || 'Dompet'} • ${formatDate(tx.date || tx.createdAt)}`}
@@ -107,49 +115,53 @@ export default function RecentTx({
                     </div>
                   </div>
 
-                  {/* NOMINAL (SEKARANG EXPENSE WARNA MERAH) */}
+                  {/* NOMINAL */}
                   <div className="flex items-center space-x-1.5 shrink-0 pl-2">
                     <span
                       className={`text-xs font-black whitespace-nowrap ${
                         isTransfer
-                          ? 'text-slate-600 dark:text-slate-400'
+                          ? 'text-slate-800 dark:text-slate-200'
                           : isIncome
-                          ? 'text-emerald-600 dark:text-emerald-400'
-                          : 'text-rose-600 dark:text-rose-400' // 👈 UBAH WARNA DI SINI JADI MERAH
+                          ? 'text-emerald-700 dark:text-emerald-400'
+                          : 'text-rose-700 dark:text-rose-400'
                       }`}
                     >
                       {isTransfer ? '' : isIncome ? '+' : '-'}{formatRupiah(tx.amount)}
                     </span>
-                    <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition" />
+                    <ChevronRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition" />
                   </div>
                 </div>
               );
             })}
           </div>
         )}
-      </div>
+      </section>
 
       {/* MODAL DETAIL */}
-      <TransactionDetailModal
-        isOpen={Boolean(selectedTx)}
-        onClose={() => setSelectedTx(null)}
-        transaction={selectedTx}
-        onSuccess={onRefresh}
-        onEditClick={(tx) => {
-          setSelectedTx(null);
-          setEditingTx(tx);
-        }}
-      />
+      {selectedTx && (
+        <TransactionDetailModal
+          isOpen={Boolean(selectedTx)}
+          onClose={() => setSelectedTx(null)}
+          transaction={selectedTx}
+          onSuccess={onRefresh}
+          onEditClick={(tx) => {
+            setSelectedTx(null);
+            setEditingTx(tx);
+          }}
+        />
+      )}
 
       {/* MODAL EDIT */}
-      <EditTransactionModal
-        isOpen={Boolean(editingTx)}
-        onClose={() => setEditingTx(null)}
-        transaction={editingTx}
-        onSuccess={() => {
-          if (onRefresh) onRefresh();
-        }}
-      />
+      {editingTx && (
+        <EditTransactionModal
+          isOpen={Boolean(editingTx)}
+          onClose={() => setEditingTx(null)}
+          transaction={editingTx}
+          onSuccess={() => {
+            if (onRefresh) onRefresh();
+          }}
+        />
+      )}
     </>
   );
 }

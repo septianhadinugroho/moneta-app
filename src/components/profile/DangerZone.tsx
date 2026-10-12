@@ -29,7 +29,7 @@ export default function DangerZone() {
       <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-rose-100 dark:border-rose-900/40 shadow-xs flex items-center justify-between transition-colors">
         <div>
           <h3 className="text-xs font-extrabold text-rose-600 dark:text-rose-400 uppercase tracking-wider">Hapus Akun</h3>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Hapus akun dan data finansial secara permanen.</p>
+          <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">Hapus akun dan data finansial secara permanen.</p>
         </div>
         <button
           type="button"

@@ -141,7 +141,7 @@ export default function DebtModal({ isOpen, onClose, debtToEdit, onSuccess }: De
               type="button"
               onClick={() => setType('LOAN')}
               className={`py-2 rounded-lg font-extrabold transition cursor-pointer ${
-                type === 'LOAN' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-500 hover:text-white'
+                type === 'LOAN' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-white'
               }`}
             >
               Piutang (Dia Utang)
@@ -150,7 +150,7 @@ export default function DebtModal({ isOpen, onClose, debtToEdit, onSuccess }: De
               type="button"
               onClick={() => setType('DEBT')}
               className={`py-2 rounded-lg font-extrabold transition cursor-pointer ${
-                type === 'DEBT' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-500 hover:text-white'
+                type === 'DEBT' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-600 hover:text-white'
               }`}
             >
               Utang (Saya Utang)

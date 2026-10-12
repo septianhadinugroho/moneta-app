@@ -105,7 +105,7 @@ export default function CategoryModal({
           <button 
             type="button"
             onClick={onClose} 
-            className="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition active:scale-95 cursor-pointer"
+            className="p-1.5 text-slate-400 dark:text-slate-600 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition active:scale-95 cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -121,7 +121,7 @@ export default function CategoryModal({
                 type="button"
                 onClick={() => handleTypeChange('EXPENSE')}
                 className={`py-1.5 rounded-lg font-extrabold transition cursor-pointer active:scale-95 ${
-                  type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                  type === 'EXPENSE' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
                 Pengeluaran
@@ -130,7 +130,7 @@ export default function CategoryModal({
                 type="button"
                 onClick={() => handleTypeChange('INCOME')}
                 className={`py-1.5 rounded-lg font-extrabold transition cursor-pointer active:scale-95 ${
-                  type === 'INCOME' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                  type === 'INCOME' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
                 Pemasukan
@@ -153,7 +153,7 @@ export default function CategoryModal({
                 placeholder="Misal: Jajan, Servis Motor, Bonus"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-extrabold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-xs focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
+                className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl font-extrabold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 text-xs focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
               />
             </div>
           </div>
@@ -178,19 +178,19 @@ export default function CategoryModal({
                 placeholder="Cari ikon (misal: coffee, car, cat)..."
                 value={searchIcon}
                 onChange={(e) => setSearchIcon(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl text-[11px] font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
+                className="w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl text-[11px] font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-hidden focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 transition"
               />
             </div>
 
             <div className="space-y-2.5 pt-1 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
               {filteredIconGroups.length === 0 ? (
-                <p className="text-[11px] text-slate-400 dark:text-slate-500 text-center py-3 font-medium">
+                <p className="text-[11px] text-slate-400 dark:text-slate-600 text-center py-3 font-medium">
                   Ikon "{searchIcon}" tidak ditemukan.
                 </p>
               ) : (
                 filteredIconGroups.map((group) => (
                   <div key={group.category} className="space-y-1">
-                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500">{group.category}</p>
+                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-600">{group.category}</p>
                     <div className="grid grid-cols-6 gap-1.5">
                       {group.icons.map((iconName) => {
                         const isSelected = icon === iconName;

@@ -101,7 +101,7 @@ export default function PwaInstallModal() {
                 PWA
               </span>
             </div>
-            <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-[11px] font-medium text-slate-600 dark:text-slate-300 mt-0.5">
               Aplikasi Keuangan Pribadi
             </p>
           </div>
@@ -113,7 +113,7 @@ export default function PwaInstallModal() {
             <Smartphone className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>Instal ke Layar Utama</span>
           </div>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+          <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
             Akses aplikasi lebih cepat seperti aplikasi native tanpa perlu lewat browser.
           </p>
         </div>

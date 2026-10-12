@@ -33,7 +33,7 @@ export default function ColorPicker({ label = 'Warna Tema', selectedColor, onCha
     <div className="space-y-1.5 font-sans relative">
       <div className="flex justify-between items-center">
         <label className="text-xs font-extrabold text-slate-700 dark:text-slate-300">{label}</label>
-        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">
+        <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">
           {selectedColor}
         </span>
       </div>
@@ -93,7 +93,7 @@ export default function ColorPicker({ label = 'Warna Tema', selectedColor, onCha
             <button
               type="button"
               onClick={() => setIsCustomOpen(false)}
-              className="p-1 text-slate-400 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-200 rounded-lg transition cursor-pointer"
+              className="p-1 text-slate-400 hover:text-slate-600 dark:text-slate-300 dark:hover:text-slate-200 rounded-lg transition cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -114,7 +114,7 @@ export default function ColorPicker({ label = 'Warna Tema', selectedColor, onCha
             </div>
 
             <div className="flex-1 space-y-0.5">
-              <label className="text-[10px] font-bold text-slate-400 dark:text-slate-500">Kode Hex</label>
+              <label className="text-[10px] font-bold text-slate-400 dark:text-slate-600">Kode Hex</label>
               <input
                 type="text"
                 value={selectedColor}
@@ -126,7 +126,7 @@ export default function ColorPicker({ label = 'Warna Tema', selectedColor, onCha
             </div>
           </div>
 
-          <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium leading-tight">
+          <p className="text-[10px] text-slate-400 dark:text-slate-600 font-medium leading-tight">
             Klik lingkaran warna di atas untuk memilih dari spektrum warna.
           </p>
         </div>

@@ -1,5 +1,3 @@
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import { formatRupiah } from '@/lib/utils';
 
 interface ExportPdfParams {
@@ -12,7 +10,6 @@ interface ExportPdfParams {
   returnBlob?: boolean;
 }
 
-// Helper untuk load image dari public folder ke Base64
 const loadImageAsBase64 = (url: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -43,6 +40,9 @@ export const generateTransactionsPdf = async ({
   userEmail = '',
   returnBlob = false,
 }: ExportPdfParams) => {
+  const { default: jsPDF } = await import('jspdf');
+  const { default: autoTable } = await import('jspdf-autotable');
+
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -51,30 +51,32 @@ export const generateTransactionsPdf = async ({
 
   const netBalance = totalIncome - totalExpense;
 
-  // 1. BRANDING HEADER MONETA (DARK SLATE)
-  doc.setFillColor(15, 23, 42); // slate-900
-  doc.rect(0, 0, 210, 34, 'F');
-
-  // LOAD LOGO DARI /public/icon-512x512.png
+  // Load Logo Base64
+  let logoBase64 = '';
   try {
-    const logoBase64 = await loadImageAsBase64('/icon-512x512.png');
-    doc.addImage(logoBase64, 'PNG', 14, 7, 20, 20);
+    logoBase64 = await loadImageAsBase64('/icon-512x512.png');
   } catch (err) {
-    console.warn('Gagal memuat logo PNG, fallback ke teks:', err);
+    console.warn('Gagal memuat logo PNG:', err);
   }
 
-  // TITLE BRAND & SLOGAN
+  // --- HEADER HALAMAN PERTAMA ---
+  doc.setFillColor(15, 23, 42); // Slate 900
+  doc.rect(0, 0, 210, 32, 'F');
+
+  if (logoBase64) {
+    doc.addImage(logoBase64, 'PNG', 14, 6, 20, 20);
+  }
+
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(18);
-  doc.text('Moneta', 38, 18);
+  doc.text('Moneta', 38, 17);
 
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(148, 163, 184); // slate-400
-  doc.text('Laporan Ringkasan Keuangan & Arus Kas', 38, 23);
+  doc.setTextColor(148, 163, 184);
+  doc.text('Laporan Ringkasan Keuangan & Mutasi Arus Kas', 38, 22);
 
-  // INFO CETAK & USER (KANAN HEADER)
   const today = new Date().toLocaleDateString('id-ID', {
     day: 'numeric',
     month: 'long',
@@ -82,54 +84,49 @@ export const generateTransactionsPdf = async ({
   });
   doc.setFontSize(7.5);
   doc.setTextColor(203, 213, 225);
-  doc.text(`Dicetak: ${today}`, 196, 16, { align: 'right' });
-  if (userEmail) {
-    doc.text(`Pemilik: ${userName}`, 196, 20.5, { align: 'right' });
-    doc.text(`Email: ${userEmail}`, 196, 25, { align: 'right' });
-  }
+  doc.text(`Dicetak: ${today}`, 196, 14, { align: 'right' });
+  if (userName) doc.text(`Pemilik: ${userName}`, 196, 18.5, { align: 'right' });
+  if (userEmail) doc.text(`Email: ${userEmail}`, 196, 23, { align: 'right' });
 
-  // 2. JUDUL PERIODE
+  // --- JUDUL PERIODE ---
   doc.setTextColor(15, 23, 42);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
-  doc.text(`PERIODE LAPORAN: ${periodText.toUpperCase()}`, 14, 43);
+  doc.text(`PERIODE LAPORAN: ${periodText.toUpperCase()}`, 14, 41);
 
-  // 3. RINGKASAN SALDO & ARUS KAS (CARD BOX)
-  doc.setFillColor(248, 250, 252); // slate-50
-  doc.setDrawColor(226, 232, 240); // slate-200
-  doc.roundedRect(14, 47, 182, 22, 3, 3, 'FD');
+  // --- RINGKASAN SALDO (HANYA HALAMAN 1) ---
+  doc.setFillColor(248, 250, 252);
+  doc.setDrawColor(226, 232, 240);
+  doc.roundedRect(14, 45, 182, 22, 3, 3, 'FD');
 
-  // Total Pemasukan
   doc.setFontSize(7.5);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(100, 116, 139);
-  doc.text('TOTAL PEMASUKAN', 20, 53);
+  doc.text('TOTAL PEMASUKAN', 20, 51);
   doc.setFontSize(10.5);
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(16, 185, 129); // emerald
-  doc.text(formatRupiah(totalIncome), 20, 62);
+  doc.setTextColor(16, 185, 129);
+  doc.text(formatRupiah(totalIncome), 20, 60);
 
-  // Total Pengeluaran
   doc.setFontSize(7.5);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(100, 116, 139);
-  doc.text('TOTAL PENGELUARAN', 80, 53);
+  doc.text('TOTAL PENGELUARAN', 80, 51);
   doc.setFontSize(10.5);
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(225, 29, 72); // rose
-  doc.text(formatRupiah(totalExpense), 80, 62);
+  doc.setTextColor(225, 29, 72);
+  doc.text(formatRupiah(totalExpense), 80, 60);
 
-  // Arus Kas Bersih
   doc.setFontSize(7.5);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(100, 116, 139);
-  doc.text('ARUS KAS BERSIH', 140, 53);
+  doc.text('ARUS KAS BERSIH', 140, 51);
   doc.setFontSize(10.5);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(netBalance >= 0 ? 15 : 225, netBalance >= 0 ? 23 : 29, netBalance >= 0 ? 42 : 72);
-  doc.text(`${netBalance >= 0 ? '+' : ''}${formatRupiah(netBalance)}`, 140, 62);
+  doc.text(`${netBalance >= 0 ? '+' : ''}${formatRupiah(netBalance)}`, 140, 60);
 
-  // 4. TABEL MUTASI TRANSAKSI
+  // --- TABEL DATA ---
   const tableData = transactions.map((tx, idx) => {
     const formattedDate = new Date(tx.date || tx.createdAt).toLocaleDateString('id-ID', {
       day: '2-digit',
@@ -148,14 +145,14 @@ export const generateTransactionsPdf = async ({
       formattedDate,
       tx.description || tx.notes || '-',
       tx.category?.name || 'Umum',
-      tx.wallet?.name || 'Dompet Utama',
+      tx.wallet?.name || 'Dompet',
       typeLabel,
       amountStr,
     ];
   });
 
   autoTable(doc, {
-    startY: 75,
+    startY: 73,
     head: [['No', 'Tanggal', 'Deskripsi / Catatan', 'Kategori', 'Dompet', 'Tipe', 'Nominal']],
     body: tableData,
     theme: 'striped',
@@ -190,10 +187,32 @@ export const generateTransactionsPdf = async ({
         }
       }
     },
-    margin: { top: 75, bottom: 20, left: 14, right: 14 },
+    // CALLBACK UNTUK MENCETAK LOGO & HEADER DI HALAMAN 2, 3, 4 DSK.
+    didDrawPage: (data) => {
+      if (data.pageNumber > 1) {
+        // Cetak Header Ringkas di Halaman Lanjutan
+        doc.setFillColor(15, 23, 42);
+        doc.rect(0, 0, 210, 16, 'F');
+
+        if (logoBase64) {
+          doc.addImage(logoBase64, 'PNG', 14, 2.5, 11, 11);
+        }
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text('Moneta Financial Report', 28, 9.5);
+
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(203, 213, 225);
+        doc.text(`Periode: ${periodText.toUpperCase()}`, 196, 9.5, { align: 'right' });
+      }
+    },
+    margin: { top: 22, bottom: 20, left: 14, right: 14 },
   });
 
-  // 5. FOOTER NUMERASI
+  // --- FOOTER HALAMAN ---
   const pageCount = (doc as any).internal.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
@@ -202,7 +221,7 @@ export const generateTransactionsPdf = async ({
     doc.text(
       `Moneta Financial Report — Halaman ${i} dari ${pageCount}`,
       105,
-      290,
+      287,
       { align: 'center' }
     );
   }
